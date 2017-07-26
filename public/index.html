@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="js/jquery-3.2.1.min.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="js/placeholder.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/myStyle.css">
+    </head>
+    <body>
+        <script>
+            $(document).ready(function() {
+                $('.carousel').carousel({
+                interval: 5000
+                })
+            });  
+        </script>
+        <div id="wrap">
+            <!-- Navigation bar, code is in menu.html-->
+            <div id="nav-placeholder">
+            </div> 
+
+             <!-- Header Carousel, looped photos at top of the screen -->
+            <header id="myCarousel" class="carousel slide">
+
+                 <!-- Indicators , carousel skeleton-->
+                <ol class="carousel-indicators">
+                    <li data-target="#myCarousel" data-slide-to="0" class='active'></li>
+                    <li data-target="#myCarousel" data-slide-to="1"></li>
+                    <li data-target="#myCarousel" data-slide-to="2"></li>
+                </ol>
+
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner">
+                    <div class="item active">
+                        <img src="img/Slide1.jpg">
+                        <div class="carousel-caption">
+                            <h1>Golf1</h1>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <img src="img/Slide2.jpg">
+                        <div class="carousel-caption">
+                            <h1>Golf2</h1>
+                        </div>
+                    </div>
+
+                    <div class="item ">
+                        <img src="img/Slide3.jpg">
+                        <div class="carousel-caption">
+                            <h1>Golf3</h1>
+                        </div>
+                    </div>
+
+                <!-- Controls -->
+                <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                    <span class="icon-prev"></span>
+                </a>
+                <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                    <span class="icon-next"></span>
+                </a>
+                </div>
+            </header>
+
+              <!-- Let's get started frame-->
+
+            <div class="container ">
+
+                <div class="row" style="margin-top: 50px">
+                    <div  class="col-md-6 col-md-offset-3  text-center well">
+                        <h1>Welcome to Nexperia Golf Club Webpage!</h1>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- About content-->
+
+            <div class="container" id="about">
+                <div class="row">
+
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+             <!-- Footer - Contact content -->
+            <div id="footer-placeholder">
+            </div>
+        </footer>
+
+    </body>
+</html>

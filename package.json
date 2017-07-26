@@ -1,0 +1,26 @@
+{
+  "name": "golf",
+  "version": "1.0.0",
+  "description": "Golf club webpage",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krogul222/golfclub.git"
+  },
+  "keywords": [
+    "golf",
+    "website"
+  ],
+  "author": "Krzysztof Krogulski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/krogul222/golfclub/issues"
+  },
+  "homepage": "https://github.com/krogul222/golfclub#readme",
+  "dependencies": {
+    "express": "^4.15.3"
+  }
+}
