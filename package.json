@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/krogul222/golfclub#readme",
   "dependencies": {
-    "express": "^4.15.3"
+    "express": "^4.15.3",
+    "mongojs": "^2.4.0",
+    "socketio": "^1.0.0"
   }
 }
