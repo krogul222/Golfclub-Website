@@ -29,6 +29,22 @@ var listener = server.listen(process.env.PORT || 2000, function(){
      console.log("Listening on port", listener.address().port); 
  }); 
 
+let isValidPassword = function(data, cb){ 
+     db.account.find({username:data.username, password:data.password}, function(err, res){ 
+        console.log(data.username + ' ' + data.password);
+         if(res.length > 0){ 
+            console.log("success");
+            cb(true); 
+         } else{ 
+            console.log("failure");
+            cb(false); 
+         } 
+     }); 
+ } 
+ 
+ 
+
+
 
 const SOCKET_LIST = {};
 
@@ -56,7 +72,18 @@ io.sockets.on('connection', function(socket){
                   });
                  break;
             }
-     }); 
+     });
+    
+    socket.on('signIn',function(data){
+        isValidPassword(data, function(res){ 
+            if(res){ 
+                 socket.emit('signInResponse',{success: true, username: data["username"]}); 
+            } else{ 
+                 socket.emit('signInResponse',{success: false}); 
+            } 
+         }); 
+
+    });
 
     
 });

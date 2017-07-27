@@ -10,8 +10,47 @@
     <body>
         <div id="wrap">
             <!-- Navigation bar, code is in menu.html-->
-            <div id="nav-placeholder">
+   <!--         <div id="nav-placeholder">
             </div> 
+
+            <!-- Navigation -->
+            <div class='navbar navbar-default navbar-static-top'>
+                <div class="container">
+                    <a href='index.html' class='navbar-brand'><text style="color:rgb(44,164,176)">Ne</text><text style="color:red">x</text><text style="color:rgb(44,164,176)">peria Golf Society</text></a>
+                    <ul class="nav nav-pills navbar-right">
+                       
+                        <li id="login-menu"><a href="#"  data-toggle="dropdown">Log in<span class="caret"></span></a>
+                            <ul id="login-dp" class="dropdown-menu">
+                                <li>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <form class="form" role="form" method="post" action="login" accept-charset="UTF-8" id="login-nav">
+                                                <div class="form-group">
+                                                         <label class="sr-only" for="loginUsername">Username</label>
+                                                         <input type="text" class="form-control" id="loginUsername" placeholder="Username" required>
+                                                 </div>
+                                                 <div class="form-group">
+                                                         <label class="sr-only" for="loginPassword">Password</label>
+                                                         <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
+                                                         <div class="help-block text-right"><a href="">Forget the password ?</a></div>
+                                                  </div>
+
+                                                  <div class="form-group">
+                                                         <button id="loginbtn" type="button" class="btn btn-primary btn-block">Sign in</button>
+                                                  </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul></li>
+                         <li id="loggedin" style="display:none">
+                            </li>                   
+                        <li><a href="index.html#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+
+                    </ul>
+                </div>
+            </div>            
 
              <!-- Header Carousel, looped photos at top of the screen -->
             <header id="myCarousel" class="carousel slide" data-interval="10000" data-ride="carousel">
@@ -166,6 +205,16 @@
                      }    
                     });
                 
+                $("#loginbtn").on("click" , function(event){
+                    socket.emit('signIn', {username: $('#loginUsername').val(), password: $('#loginPassword').val()} );
+                });
+                
+                $("#loggedin").on("click" , function(event){
+                   $("#login-menu").show();
+                   $("#loggedin").empty();
+                   $("#loggedin").hide();
+                });
+                
             });  
         </script>
         
@@ -194,7 +243,13 @@
                                   
             }); 
 
-            
+            socket.on('signInResponse', function(data){
+                if(data.success){
+                   $("#login-menu").hide();
+                   $("#loggedin").show();
+                   $("#loggedin").append('<a href="#" >'+data.username+' (log out)</a>');
+                   }
+            });
         </script> 
         
     </body>
