@@ -61,21 +61,41 @@
             <div class="container ">
 
                 <div class="row" style="margin-top: 50px">
-                    <div  class="col-md-3 text-center well">
-                        <ul class="list-group">
+                    <div  class="col-md-3 text-center well" style="float:left">
+                        <ul class="list-group" id="glofmenu">
                              <li class="list-group-item"><a href="#">Membership</a></li>
-                             <li class="list-group-item"><a href="#">The Committee</a></li>
+                             <li class="list-group-item" id="committee"><a href="#">The Committee</a></li>
                              <li class="list-group-item"><a href="#">Society Constitution</a></li>
                              <li class="list-group-item"><a href="#">Society Events</a></li>
                              <li class="list-group-item"><a href="#">Competition Results</a></li>
                              <li class="list-group-item"><a href="#">Player of the Year</a></li>
                         </ul>
                     </div>
-                    
-                    <div  class="col-md-4 col-md-offset-1 text-center well">
-                        <h1>Welcome to Nexperia Golf Society Home Page!</h1>
+                        <div class="col-md-6 col-md-offset-1" >
+                        <div id="welcome" class="text-center well">
+                            <h1>Welcome to Nexperia Golf Society Home Page!</h1>
+                        </div>
+                        <div id="committeecontent" style="display:none">
+                                <div class="well  text-center" >  <h1>The Committee</h1> 
+                                <h4>Below is a listing of the current Society Committee. If you have any queries about your current handicap or any other specific enquiries then please direct them to the relevant committee member.</h4></div>
+     
+                              <table id="committeetable" class="table table-hover">
+                                <thead>
+                                  <tr>
+                                    <th>Members Name</th>
+                                    <th>Position</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                              </table>
+                        </div>
+                        </div>
                     </div>
-                </div>
+                
             </div>
 
 
@@ -98,13 +118,33 @@
                 $('#myCarousel').carousel({
                 interval: 10000
                 })
+                
+                $("#glofmenu").on("click", "#committee", function(event){
+                    console.log('clicked');
+                     $("#welcome").hide();
+                     $("#committeecontent").show();
+                     socket.emit('dataRequest', "committee");  
+                    });
+                
             });  
         </script>
         
         <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script> 
         
         <script> 
-            let socket = io();  
+            let socket = io(); 
+            
+            
+            socket.on('committeeData', function(data){ 
+                $(document).ready(function() {
+                    for(let i =0, length = data.length; i < length; i++){
+                       $('#committeetable tr:last').after('<tr><td>'+data[i]["name"]+'</td><td>'+data[i]["position"]+'</td><td>'+data[i]["email"]+'</td><td>'+data[i]["phone"]+'</td></tr>'); 
+                    }
+                });
+                                  
+            }); 
+
+            
         </script> 
         
     </body>
