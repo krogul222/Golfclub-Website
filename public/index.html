@@ -180,6 +180,10 @@
                 interval: 10000
                 })
                 
+                $('a').click(function(e){
+                    e.preventDefault();            
+                });
+                
                 $("#glofmenu").on("click", "#committee", function(event){
                     console.log('clicked');
                      //$("#committeetable tr").remove();
