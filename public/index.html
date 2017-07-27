@@ -63,7 +63,7 @@
                 <div class="row" style="margin-top: 50px">
                     <div  class="col-md-3 text-center well" style="float:left">
                         <ul class="list-group" id="glofmenu">
-                             <li class="list-group-item"><a href="#">Membership</a></li>
+                             <li class="list-group-item" id="membershiplisting"><a href="#">Membership</a></li>
                              <li class="list-group-item" id="committee"><a href="#">The Committee</a></li>
                              <li class="list-group-item"><a href="#">Society Constitution</a></li>
                              <li class="list-group-item"><a href="#">Society Events</a></li>
@@ -93,6 +93,29 @@
                                 </tbody>
                               </table>
                         </div>
+                            
+                        <div id="membershiplistingcontent" style="display:none">
+                            <div class="well  text-center" >
+                                <h1>Membership Listing</h1>
+                                <h4>Below is a current list of Members handicaps and contact information. If you have any queries about your current handicap or if you need to change your contact information then please get in touch with one of the society organisers. To view a members handicap record click on the persons name. For a group email list, scroll down to the bottom of the page. </h4>
+                            </div>
+                                <table id="memberstable" class="table table-hover">
+                                <thead>
+                                  <tr>
+                                    <th>Members Name</th>
+                                    <th>Handicap (Exact)</th>
+                                    <th>Handicap (Playing)</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                              </table>
+                            </div>
+                            
+                            
                         </div>
                     </div>
                 
@@ -121,9 +144,26 @@
                 
                 $("#glofmenu").on("click", "#committee", function(event){
                     console.log('clicked');
+                     //$("#committeetable tr").remove();
                      $("#welcome").hide();
+                     $("#membershiplistingcontent").hide();
                      $("#committeecontent").show();
-                     socket.emit('dataRequest', "committee");  
+                     if(committeDataLoaded == false){
+                         socket.emit('dataRequest', "committee");  
+                         committeDataLoaded = true;
+                     }    
+                     
+                    });
+                
+                $("#glofmenu").on("click", "#membershiplisting", function(event){
+                    console.log('clicked');
+                     $("#welcome").hide();
+                     $("#membershiplistingcontent").show();
+                     $("#committeecontent").hide();
+                    if(membersDataLoaded == false){
+                        socket.emit('dataRequest', "membershiplisting");  
+                        membersDataLoaded = true;
+                     }    
                     });
                 
             });  
@@ -133,12 +173,22 @@
         
         <script> 
             let socket = io(); 
-            
+            var committeDataLoaded = false;
+            var membersDataLoaded = false;
             
             socket.on('committeeData', function(data){ 
                 $(document).ready(function() {
                     for(let i =0, length = data.length; i < length; i++){
                        $('#committeetable tr:last').after('<tr><td>'+data[i]["name"]+'</td><td>'+data[i]["position"]+'</td><td>'+data[i]["email"]+'</td><td>'+data[i]["phone"]+'</td></tr>'); 
+                    }
+                });
+                                  
+            }); 
+            
+            socket.on('membershiplistingData', function(data){ 
+                $(document).ready(function() {
+                    for(let i =0, length = data.length; i < length; i++){
+                       $('#memberstable tr:last').after('<tr><td>'+data[i]["name"]+'</td><td>'+data[i]["handicapExact"]+'</td><td>'+data[i]["handicapPlaying"]+'</td><td>'+data[i]["email"]+'</td><td>'+data[i]["phone"]+'</td></tr>'); 
                     }
                 });
                                   
