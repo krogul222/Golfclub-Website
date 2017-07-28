@@ -16,7 +16,7 @@
             <!-- Navigation -->
             <div class='navbar navbar-default navbar-static-top'>
                 <div class="container">
-                    <a href='index.html' class='navbar-brand'><text style="color:rgb(44,164,176)">Ne</text><text style="color:red">x</text><text style="color:rgb(44,164,176)">peria Golf Society</text></a>
+                    <a href='#' class='navbar-brand'><text style="color:rgb(44,164,176)">Ne</text><text style="color:red">x</text><text style="color:rgb(44,164,176)">peria Golf Society</text></a>
                     <ul class="nav nav-pills navbar-right">
                        
                         <li id="login-menu"><a href="#"  data-toggle="dropdown">Log in<span class="caret"></span></a>
@@ -44,6 +44,14 @@
                                 </li>
                             </ul></li>
                          <li id="loggedin" style="display:none">
+                             <a href="#" data-toggle="dropdown"> <span class="text" id="userMenuTitle">User</span><span class="caret"></span></a>
+                              <ul id="userMenu" class="dropdown-menu">
+                                    <li><a href="#"><span class="glyphicon glyphicon-cog pull-right"></span><span class="dropdown-link-text" style="margin-right:40px">Account Settings </span></a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#"><span class="glyphicon glyphicon-stats pull-right"></span><span class="dropdown-link-text">User stats </span></a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#" id="logoutLink"><span class="glyphicon glyphicon-log-out pull-right"></span><span class="dropdown-link-text">Log Out </span></a></li>
+                             </ul>
                             </li>                   
                         <li><a href="#contact">Contact</a></li>
 
@@ -99,14 +107,18 @@
             <div class="container ">
 
                 <div class="row" style="margin-top: 50px">
-                    <div  class="col-md-3 text-center well" style="float:left">
-                        <ul class="list-group" id="glofmenu">
+                    <div  class="col-md-3 text-center" style="float:left">
+                        <ul class="list-group well" id="glofmenu">
                              <li class="list-group-item" id="membershiplisting"><a class="notop" href="javascript:void(0)">Membership</a></li>
                              <li class="list-group-item" id="committee"><a class="notop" href="javascript:void(0)">The Committee</a></li>
                              <li class="list-group-item"><a class="notop" href="javascript:void(0)">Society Constitution</a></li>
                              <li class="list-group-item"><a class="notop" href="javascript:void(0)">Society Events</a></li>
                              <li class="list-group-item"><a class="notop" href="javascript:void(0)">Competition Results</a></li>
                              <li class="list-group-item"><a class="notop" href="javascript:void(0)">Player of the Year</a></li>
+                        </ul>
+                        
+                        <ul class="list-group well" id="adminpanel" style="display:none">
+                            <li class="list-group-item" id="addmemberpanel"><a class="notop" href="javascript:void(0)">Add member</a></li>
                         </ul>
                     </div>
                         <div class="col-md-6 col-md-offset-1" >
@@ -179,6 +191,7 @@
                 $('#myCarousel').carousel({
                 interval: 10000
                 })
+            
                 
                 $('a .notop').click(function(e){
                     e.preventDefault();            
@@ -206,25 +219,24 @@
                         socket.emit('dataRequest', "membershiplisting");  
                         membersDataLoaded = true;
                      }    
-                    });
-                
-                $("#loginbtn").on("click" , function(event){
-                    socket.emit('signIn', {username: $('#loginUsername').val(), password: $('#loginPassword').val()} );
-                });
-                
-                $("#loggedin").on("click" , function(event){
-                   $("#login-menu").show();
-                   $("#loggedin").empty();
-                   $("#loggedin").hide();
-                });
-                
+                    });     
             });  
         </script>
         
         <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script> 
         
         <script> 
-            let socket = io(); 
+            
+            let User = function(){
+                let self = {};
+                self.loggedin = false;
+                
+                return self;
+            }
+            
+            var user = User();
+            
+            var socket = io(); 
             var committeDataLoaded = false;
             var membersDataLoaded = false;
             
@@ -248,11 +260,37 @@
 
             socket.on('signInResponse', function(data){
                 if(data.success){
-                   $("#login-menu").hide();
-                   $("#loggedin").show();
-                   $("#loggedin").append('<a href="#" >'+data.username+' (log out)</a>');
+                   user.loggedin = true;
+                   user["data"] = data;
+                   showUserTab();
+                    console.log("Admin "+ user["data"].admin);
+                   if(user["data"].admin === "true"){
+                       $("#adminpanel").show();
+                   }    
                    }
             });
+            
+            $(document).ready(function() {
+                $("#loginbtn").on("click" , function(event){
+                    socket.emit('signIn', {username: $('#loginUsername').val(), password: $('#loginPassword').val()} );
+                });
+            
+            
+                $("#logoutLink").on("click" , function(event){
+                    $("#login-menu").show();
+                    user.loggedin = false;
+                    $("#loggedin").hide();
+                    $("#adminpanel").hide();
+                });
+            });
+            
+                function showUserTab(){
+                    $("#login-menu").hide();
+                    $("#loggedin").show();
+                    $("#userMenuTitle").text(user["data"].username);
+
+                }
+            
         </script> 
         
     </body>

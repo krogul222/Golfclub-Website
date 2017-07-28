@@ -1,9 +1,9 @@
 var mongojs = require('mongojs');
 var express = require('express');
-var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account']);
+//var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account']);
 
-//var db = mongojs('localhost:27017/golf', ['account']);
-/*
+var db = mongojs('localhost:27017/golf', ['account']);
+
 db.account.remove();
 
 db.account.insert({username:"johnhart", name: "John Hart", password: "johnhart", email: "johnymike@hotmail.com", phone: "07930980836", committee: "true", position: "President", handicapPlaying: "14", handicapExact: "14.2"});
@@ -16,7 +16,7 @@ db.account.insert({username:"craighulton", name: "Craig Hulton", password: "crai
 
 db.account.insert({username:"paulcraneybarnie", name: "Paul Craney Barnie", password: "paulcraneybarnie", email: "paulbarniedecor@sol.com", phone: "07402958921", committee: "true", position: "Handicap Secratary", handicapPlaying: "8", handicapExact: "8" });
 
-db.account.insert({username:"stephenpercy", name: "Stephen Percy", password: "stephenpercy", email: "steve.percy@nxp.com", phone: "07910751885", committee: "false", position: "", handicapPlaying: "18", handicapExact: "18.3" });*/
+db.account.insert({username:"stephenpercy", name: "Stephen Percy", password: "stephenpercy", email: "steve.percy@nxp.com", phone: "07910751885", committee: "false", position: "", handicapPlaying: "18", handicapExact: "18.3", admin: "true" });
 
 
 
@@ -42,7 +42,18 @@ let isValidPassword = function(data, cb){
      }); 
  } 
  
- 
+let isUserAdmin = function(data, cb){ 
+     db.account.find({username:data.username, admin: "true"}, function(err, res){ 
+        console.log(data.username + ' ' + data.password);
+         if(res.length > 0){ 
+            console.log("success");
+            cb(true); 
+         } else{ 
+            console.log("failure");
+            cb(false); 
+         } 
+     }); 
+ } 
 
 
 
@@ -77,7 +88,14 @@ io.sockets.on('connection', function(socket){
     socket.on('signIn',function(data){
         isValidPassword(data, function(res){ 
             if(res){ 
-                 socket.emit('signInResponse',{success: true, username: data["username"]}); 
+                 isUserAdmin(data, function(res2){
+                     if(res2){
+                         socket.emit('signInResponse',{success: true, username: data["username"], admin: "true"}); 
+                     } else{
+                        socket.emit('signInResponse',{success: true, username: data["username"], admin: "false"});  
+                     }
+                 });
+                 
             } else{ 
                  socket.emit('signInResponse',{success: false}); 
             } 
