@@ -46,9 +46,9 @@
                          <li id="loggedin" style="display:none">
                              <a href="#" data-toggle="dropdown"> <span class="text" id="userMenuTitle">User</span><span class="caret"></span></a>
                               <ul id="userMenu" class="dropdown-menu">
-                                    <li><a href="#"><span class="glyphicon glyphicon-cog pull-right"></span><span class="dropdown-link-text" style="margin-right:40px">Account Settings </span></a></li>
+                                    <li><a href="#accountsettings" id="accountsettingsLink"><span class="glyphicon glyphicon-cog pull-right"></span><span class="dropdown-link-text" style="margin-right:40px">Account Settings </span></a></li>
                                     <li class="divider"></li>
-                                    <li><a href="#"><span class="glyphicon glyphicon-stats pull-right"></span><span class="dropdown-link-text">User stats </span></a></li>
+                                    <li><a href="#userstats" id="userstatsLink"><span class="glyphicon glyphicon-stats pull-right"></span><span class="dropdown-link-text">User stats </span></a></li>
                                     <li class="divider"></li>
                                     <li><a href="#" id="logoutLink"><span class="glyphicon glyphicon-log-out pull-right"></span><span class="dropdown-link-text">Log Out </span></a></li>
                              </ul>
@@ -118,7 +118,7 @@
                         </ul>
                         
                         <ul class="list-group well" id="adminpanel" style="display:none">
-                            <li class="list-group-item" id="addmemberpanel"><a class="notop" href="javascript:void(0)">Add member</a></li>
+                            <li class="list-group-item" id="addmemberLink"><a class="notop" href="javascript:void(0)">Add member</a></li>
                         </ul>
                     </div>
                         <div class="col-md-6 col-md-offset-1" >
@@ -165,6 +165,41 @@
                               </table>
                             </div>
                             
+                        <div id="accountsettings" style="display:none">
+                                <div class="well  text-center" >  
+                                    <h1>Account Settings</h1> 
+                                </div>
+                        </div>
+                        <div id="userstats" style="display:none">
+                                <div class="well  text-center" >  
+                                    <h1>User Stats</h1> 
+                                </div>
+                        </div>
+                            
+                        <div id="addmember" style="display:none">
+                                <div class="well  text-center" >  
+                                    <h1>Add member</h1> 
+                                </div>
+                            
+                                    <form class="form" role="form" method="post" action="addmemberform" accept-charset="UTF-8" id="addmemberpanel">
+                                            <div class="form-group">
+                                                    <label for="addmemberusername">Username:</label>
+                                                    <input type="text" class="form-control" id="addmemberusername" placeholder="Username" required>
+                                            </div>
+                                            <div class="form-group">
+                                                    <label for="addmembername">Member name:</label>
+                                                    <input type="text" class="form-control" id="addmembername" placeholder="Albert Einstein" required>
+                                            </div>
+                                            <div class="form-group">
+                                                    <label for="addmemberhandicap">Handicap:</label>
+                                                    <input type="text" class="form-control" id="addmemberhandicap" placeholder="20" required>
+                                            </div>
+                                        
+                                            <div class="form-group">
+                                                    <button id="addmemberbtn" type="button" class="btn btn-primary btn-block">Add member</button>
+                                            </div>
+                                    </form>
+                        </div>
                             
                         </div>
                     </div>
@@ -200,8 +235,7 @@
                 $("#glofmenu").on("click", "#committee", function(event){
                     console.log('clicked');
                      //$("#committeetable tr").remove();
-                     $("#welcome").hide();
-                     $("#membershiplistingcontent").hide();
+                     hideAll();
                      $("#committeecontent").show();
                      if(committeDataLoaded == false){
                          socket.emit('dataRequest', "committee");  
@@ -212,14 +246,38 @@
                 
                 $("#glofmenu").on("click", "#membershiplisting", function(event){
                     console.log('clicked');
-                     $("#welcome").hide();
+                     hideAll();
                      $("#membershiplistingcontent").show();
-                     $("#committeecontent").hide();
                     if(membersDataLoaded == false){
                         socket.emit('dataRequest', "membershiplisting");  
                         membersDataLoaded = true;
                      }    
-                    });     
+                    });  
+                
+                $("#accountsettingsLink").on("click" , function(event){
+                    hideAll();
+                    $("#accountsettings").show();
+                });
+
+                $("#userstatsLink").on("click" , function(event){
+                    hideAll();
+                    $("#userstats").show();
+                });
+                
+                $("#addmemberLink").on("click" , function(event){
+                    hideAll();
+                    $("#addmember").show();
+                });
+                
+                function hideAll(){
+                    $("#welcome").hide();
+                    $("#committeecontent").hide();
+                    $("#membershiplistingcontent").hide();
+                    $("#accountsettings").hide();
+                    $("#userstats").hide();
+                    $("#addmember").hide();
+
+                }
             });  
         </script>
         
@@ -281,6 +339,9 @@
                     user.loggedin = false;
                     $("#loggedin").hide();
                     $("#adminpanel").hide();
+                    $("#accountsettings").hide();
+                    $("#userstats").hide();
+                    $("#addmember").hide();
                 });
             });
             
