@@ -119,6 +119,7 @@
                         
                         <ul class="list-group well" id="adminpanel" style="display:none">
                             <li class="list-group-item" id="addmemberLink"><a class="notop" href="javascript:void(0)">Add member</a></li>
+                            <li class="list-group-item" id="editmembersLink"><a class="notop" href="javascript:void(0)">Edit members</a></li>
                         </ul>
                     </div>
                         <div class="col-md-6 col-md-offset-1" >
@@ -201,6 +202,16 @@
                                     </form>
                         </div>
                             
+                        <div id="editmembers" style="display:none">
+                                <div class="well  text-center" >  
+                                    <h1>Edit members</h1> 
+                                
+                                </div>
+                            
+                                <div class="list-group" id = "editmemberslist">
+                                </div> 
+                            </div>
+                            
                         </div>
                     </div>
                 
@@ -234,14 +245,8 @@
                 
                 $("#glofmenu").on("click", "#committee", function(event){
                     console.log('clicked');
-                     //$("#committeetable tr").remove();
                      hideAll();
                      $("#committeecontent").show();
-
-                     if(committeDataLoaded == false){
-                         socket.emit('dataRequest', "committee");  
-                         committeDataLoaded = true;
-                     }    
                      
                     });
                 
@@ -253,13 +258,7 @@
                     console.log('-----------------------------');
                     for(let i=0; i<MEMBERS.length; i++){
                         console.log(MEMBERS[i]);
-                    }
-                    
-                    
-                    if(membersDataLoaded == false){
-                        socket.emit('dataRequest', "membershiplisting");  
-                        membersDataLoaded = true;
-                     }    
+                    }   
                     });  
                 
                 $("#accountsettingsLink").on("click" , function(event){
@@ -276,6 +275,11 @@
                     hideAll();
                     $("#addmember").show();
                 });
+
+               $("#editmembersLink").on("click" , function(event){
+                    hideAll();
+                    $("#editmembers").show();
+                });
                 
                 function hideAll(){
                     $("#welcome").hide();
@@ -284,6 +288,7 @@
                     $("#accountsettings").hide();
                     $("#userstats").hide();
                     $("#addmember").hide();
+                    $("#editmembers").hide();
 
                 }
                 
@@ -304,31 +309,33 @@
             
             var user = User();
             const MEMBERS = [];
+            let committee = [];
             var socket = io(); 
             var committeDataLoaded = false;
-            var membersDataLoaded = false;
-            
-            socket.on('committeeData', function(data){ 
-                $(document).ready(function() {
-                    for(let i =0, length = data.length; i < length; i++){
-                       $('#committeetable tr:last').after('<tr><td>'+data[i]["name"]+'</td><td>'+data[i]["position"]+'</td><td>'+data[i]["email"]+'</td><td>'+data[i]["phone"]+'</td></tr>'); 
-                    }
-                });
-                                  
-            }); 
+            socket.emit('dataRequest', "membershiplisting");  
+
             
              socket.on('memberAdded', function(data){
-                    $('#committeetable tr:last').after('<tr><td>'+data["name"]+'</td><td>'+data["position"]+'</td><td>'+data["email"]+'</td><td>'+data["phone"]+'</td></tr>'); 
-                 
                     MEMBERS.push(data);
                     updateMemberList();
+                    alert("Member has been added.");
              });
             
             socket.on('membershiplistingData', function(data){ 
                 $(document).ready(function() {
                     for(let i =0, length = data.length; i < length; i++){
                        MEMBERS.push(data[i]);        
-                       $('#memberstable tr:last').after('<tr><td>'+data[i]["name"]+'</td><td>'+data[i]["handicapExact"]+'</td><td>'+data[i]["handicapPlaying"]+'</td><td>'+data[i]["email"]+'</td><td>'+data[i]["phone"]+'</td></tr>'); 
+                       $('#memberstable tr:last').after('<tr><td>'+data[i]["name"]+'</td><td>'+data[i]["handicapExact"]+'</td><td>'+data[i]["handicapPlaying"]+'</td><td>'+data[i]["email"]+'</td><td>'+data[i]["phone"]+'</td></tr>');
+                        
+                        $('#editmemberslist').append('<a href="javascript:void(0)" class="list-group-item notop list-group-item-info" id="'+i+'">'+MEMBERS[i]["name"]+'</a><ul class="list-group" style="display:none" id="member'+i+'"></ul><br>');
+                        
+                        $("#member"+i).append('<li class="list-group-item">Test</li>');
+                    }
+                    
+                    committee = getCommittee();
+                    
+                    for(let i =0, length = committee.length; i < length; i++){
+                        $('#committeetable tr:last').after('<tr><td>'+committee[i]["name"]+'</td><td>'+committee[i]["position"]+'</td><td>'+committee[i]["email"]+'</td><td>'+committee[i]["phone"]+'</td></tr>');       
                     }
                 });
                                   
@@ -354,11 +361,17 @@
                 $("#addmemberbtn").on("click",function(event){
                     if(checkMemberFormValidation()){
                         console.log("Form validate.");
-                        alert("submited");
                         socket.emit('addMember', {username:$("#addmemberusername").val(), password: $("#addmemberusername").val(), name: $("#addmembername").val(), 
-                        handicapExact:$("#addmemberhandicap").val(), email:"", admin:"false", handicapPlaying:$("#addmemberhandicap").val(), phone:""});
+                        handicapExact:$("#addmemberhandicap").val(), email:"", admin:"false", handicapPlaying:$("#addmemberhandicap").val(), phone:"", committee: "false"});
                     }
                     
+                });
+                
+                $("#editmemberslist").on("click","a",function(event){
+                    let id = $(this).attr('id');
+                    let propertiesId = "#member"+id;
+                    
+                    $(propertiesId).toggle();
                 });
             
             
@@ -382,9 +395,12 @@
             
             function updateMemberList(){
                   $('#memberstable').find('tbody').empty();
-                  
+                  $('#editmemberslist').empty();      
+                
                   for(let i =0, length = MEMBERS.length; i < length; i++){     
                        $('#memberstable').find('tbody').append('<tr><td>'+MEMBERS[i]["name"]+'</td><td>'+MEMBERS[i]["handicapExact"]+'</td><td>'+MEMBERS[i]["handicapPlaying"]+'</td><td>'+MEMBERS[i]["email"]+'</td><td>'+MEMBERS[i]["phone"]+'</td></tr>'); 
+                      
+                      $('#editmemberslist').append('<a href="javascript:void(0)" class="list-group-item notop">'+MEMBERS[i]["name"]+'</a>');
                     }
             }
             
@@ -406,6 +422,18 @@
                        } else {
                         return false;
                     }
+            }
+            
+            function getCommittee(){
+                let arr =[];
+                
+                for(let i = 0, length = MEMBERS.length; i < length; i++){
+                    if(MEMBERS[i]["committee"] == "true"){
+                        arr.push(MEMBERS[i]);
+                    }
+                }
+                
+                return arr;
             }
 
         </script> 
