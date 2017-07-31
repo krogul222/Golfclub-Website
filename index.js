@@ -1,9 +1,9 @@
 var mongojs = require('mongojs');
 var express = require('express');
-var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account']);
+//var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account']);
 
-//var db = mongojs('localhost:27017/golf', ['account']);
-/*
+var db = mongojs('localhost:27017/golf', ['account']);
+
 db.account.remove();
 
 db.account.insert({username:"johnhart", name: "John Hart", password: "johnhart", email: "johnymike@hotmail.com", phone: "07930980836", committee: "true", position: "President", handicapPlaying: "14", handicapExact: "14.2"});
@@ -18,14 +18,14 @@ db.account.insert({username:"paulcraneybarnie", name: "Paul Craney Barnie", pass
 
 db.account.insert({username:"stephenpercy", name: "Stephen Percy", password: "stephenpercy", email: "steve.percy@nxp.com", phone: "07910751885", committee: "false", position: "", handicapPlaying: "18", handicapExact: "18.3", admin: "true" });
 
-*/
+
 
 var app = express();
 var server = require('http').Server(app);
 
 app.use(express.static('public'));
 
-var listener = server.listen(process.env.PORT || 2000, function(){ 
+var listener = server.listen(process.env.PORT || 3000, function(){ 
      console.log("Listening on port", listener.address().port); 
  }); 
 
@@ -84,6 +84,11 @@ io.sockets.on('connection', function(socket){
                  break;
             }
      });
+    
+    socket.on('addMember',function(data){
+        db.account.insert(data);
+        socket.emit('memberAdded',data);
+    });
     
     socket.on('signIn',function(data){
         isValidPassword(data, function(res){ 

@@ -133,3 +133,8 @@ body {
     right: 14px;
     z-index: 9;
 }
+
+.dropdown-link-text {
+    display: inline-block;
+    margin-right: 20px;
+}

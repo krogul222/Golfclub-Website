@@ -196,7 +196,7 @@
                                             </div>
                                         
                                             <div class="form-group">
-                                                    <button id="addmemberbtn" type="submit" class="btn btn-primary btn-block">Add member</button>
+                                                    <button id="addmemberbtn" type="button" class="btn btn-primary btn-block">Add member</button>
                                             </div>
                                     </form>
                         </div>
@@ -237,6 +237,7 @@
                      //$("#committeetable tr").remove();
                      hideAll();
                      $("#committeecontent").show();
+
                      if(committeDataLoaded == false){
                          socket.emit('dataRequest', "committee");  
                          committeDataLoaded = true;
@@ -248,6 +249,13 @@
                     console.log('clicked');
                      hideAll();
                      $("#membershiplistingcontent").show();
+                    
+                    console.log('-----------------------------');
+                    for(let i=0; i<MEMBERS.length; i++){
+                        console.log(MEMBERS[i]);
+                    }
+                    
+                    
                     if(membersDataLoaded == false){
                         socket.emit('dataRequest', "membershiplisting");  
                         membersDataLoaded = true;
@@ -278,6 +286,8 @@
                     $("#addmember").hide();
 
                 }
+                
+               
             });  
         </script>
         
@@ -293,7 +303,7 @@
             }
             
             var user = User();
-            
+            const MEMBERS = [];
             var socket = io(); 
             var committeDataLoaded = false;
             var membersDataLoaded = false;
@@ -307,9 +317,17 @@
                                   
             }); 
             
+             socket.on('memberAdded', function(data){
+                    $('#committeetable tr:last').after('<tr><td>'+data["name"]+'</td><td>'+data["position"]+'</td><td>'+data["email"]+'</td><td>'+data["phone"]+'</td></tr>'); 
+                 
+                    MEMBERS.push(data);
+                    updateMemberList();
+             });
+            
             socket.on('membershiplistingData', function(data){ 
                 $(document).ready(function() {
                     for(let i =0, length = data.length; i < length; i++){
+                       MEMBERS.push(data[i]);        
                        $('#memberstable tr:last').after('<tr><td>'+data[i]["name"]+'</td><td>'+data[i]["handicapExact"]+'</td><td>'+data[i]["handicapPlaying"]+'</td><td>'+data[i]["email"]+'</td><td>'+data[i]["phone"]+'</td></tr>'); 
                     }
                 });
@@ -332,6 +350,16 @@
                 $("#loginbtn").on("click" , function(event){
                     socket.emit('signIn', {username: $('#loginUsername').val(), password: $('#loginPassword').val()} );
                 });
+                
+                $("#addmemberbtn").on("click",function(event){
+                    if(checkMemberFormValidation()){
+                        console.log("Form validate.");
+                        alert("submited");
+                        socket.emit('addMember', {username:$("#addmemberusername").val(), password: $("#addmemberusername").val(), name: $("#addmembername").val(), 
+                        handicapExact:$("#addmemberhandicap").val(), email:"", admin:"false", handicapPlaying:$("#addmemberhandicap").val(), phone:""});
+                    }
+                    
+                });
             
             
                 $("#logoutLink").on("click" , function(event){
@@ -352,6 +380,34 @@
 
                 }
             
+            function updateMemberList(){
+                  $('#memberstable').find('tbody').empty();
+                  
+                  for(let i =0, length = MEMBERS.length; i < length; i++){     
+                       $('#memberstable').find('tbody').append('<tr><td>'+MEMBERS[i]["name"]+'</td><td>'+MEMBERS[i]["handicapExact"]+'</td><td>'+MEMBERS[i]["handicapPlaying"]+'</td><td>'+MEMBERS[i]["email"]+'</td><td>'+MEMBERS[i]["phone"]+'</td></tr>'); 
+                    }
+            }
+            
+            // Function to check letters and numbers  
+            function alphanumeric(inputtxt)  
+                {  
+                var letterNumber = /^[0-9a-zA-Z]+$/;  
+                if(inputtxt.match(letterNumber)){  
+                    return true;  
+                }  else {   
+                    alert("message");   
+                    return false;   
+                    }  
+                }
+            
+            function checkMemberFormValidation(){
+                 if(alphanumeric($("#addmemberusername").val()) && $("#addmemberusername").val().length > 0 ){
+                        return true;
+                       } else {
+                        return false;
+                    }
+            }
+
         </script> 
         
     </body>
