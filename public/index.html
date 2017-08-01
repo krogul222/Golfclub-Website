@@ -320,6 +320,25 @@
                     updateMemberList();
                     alert("Member has been added.");
              });
+
+             socket.on('memberEdited', function(data){
+
+                    updateMember(data);
+                    updateMemberList();
+                    alert("Member has been edited.");
+             });          
+            
+             socket.on('memberDeleted', function(data){
+
+                    deleteMember(data);
+                    updateMemberList();
+                    alert("Member has been deleted.");
+             });   
+            
+             socket.on('memberNotAdded', function(data){
+                    alert("Username already taken. Member has not been added.");
+             });
+            
             
             socket.on('membershiplistingData', function(data){ 
                 $(document).ready(function() {
@@ -329,15 +348,17 @@
                         
                         $('#editmemberslist').append('<a href="javascript:void(0)" class="list-group-item notop list-group-item-info" id="'+i+'">'+MEMBERS[i]["name"]+'</a><ul class="list-group well" style="display:none" id="member'+i+'"></ul><br>');
                         
-                        //edit panel - adding memvers information
+                        //edit panel - adding members information
                         
-                        $("#member"+i).append('<label for="editmemberusername" style="margin-top:20px">Username:</label><input type="text" class="form-control list-group-item" id="editmemberusername" placeholder="'+MEMBERS[i]["username"]+'">');
+                        $("#member"+i).append('<button id="deletemember" type="button" style="margin-top:20px" class="btn btn-danger btn-block">Delete Member</button>');                        
                         
-                        $("#member"+i).append('<label for="editmembername" style="margin-top:20px">Member name:</label><input type="text" class="form-control list-group-item" id="editmembername" placeholder="'+MEMBERS[i]["name"]+'">');
+                        $("#member"+i).append('<label for="editmemberusername" style="margin-top:20px">Username:</label><input type="text" class="form-control list-group-item" id="editmemberusername" placeholder="'+MEMBERS[i]["username"]+'" value="'+MEMBERS[i]["username"]+'" readonly>');
                         
-                        $("#member"+i).append('<label for="editmemberhandicap" style="margin-top:20px">Handicap:</label><input type="text" class="form-control list-group-item" id="editmemberhandicap" placeholder="'+MEMBERS[i]["handicapExact"]+'">');
+                        $("#member"+i).append('<label for="editmembername" style="margin-top:20px">Member name:</label><input type="text" class="form-control list-group-item" id="editmembername" placeholder="'+MEMBERS[i]["name"]+'" value="'+MEMBERS[i]["name"]+'">');
                         
-                        $("#member"+i).append('<button id="editmemberbtn'+i+'" type="button" style="margin-top:20px" class="btn btn-primary btn-block">Apply changes</button>');
+                        $("#member"+i).append('<label for="editmemberhandicap" style="margin-top:20px">Handicap:</label><input type="text" class="form-control list-group-item" id="editmemberhandicap" placeholder="'+MEMBERS[i]["handicapExact"]+'"  value="'+MEMBERS[i]["handicapExact"]+'">');
+                        
+                        $("#member"+i).append('<button id="editmember" type="button" style="margin-top:20px" class="btn btn-primary btn-block">Apply changes</button>');
                     }
                     
                     committee = getCommittee();
@@ -381,6 +402,39 @@
                     
                     $(propertiesId).slideToggle();
                 });
+                
+                 $("#editmemberslist").on("click","button",function(event){
+                     
+                     console.log("Apply changes clicked");
+                     //let id = $(this).attr('id');
+                     let username = "";
+                     let name = "";
+                     let handicap = "";
+                     
+                     $(this).parent().find('input').each(function(){
+                     
+                        switch($(this).attr('id')){
+                                case "editmemberusername" : 
+                                    username = $(this).val();
+                                break;
+                                case "editmembername" : 
+                                    name = $(this).val();
+                                break;
+                                case "editmemberhandicap" :
+                                    handicap = $(this).val();
+                                break;
+                                                }    
+                     
+                     });
+
+                     if($(this).attr('id') == "editmember"){
+                      socket.emit('editMember',{username: username, name: name, handicapExact: handicap});
+                     } else{
+                      socket.emit('deleteMember',{username: username, name: name, handicapExact: handicap});
+                     }
+                     
+                     
+                 });
             
             
                 $("#logoutLink").on("click" , function(event){
@@ -391,6 +445,7 @@
                     $("#accountsettings").hide();
                     $("#userstats").hide();
                     $("#addmember").hide();
+                    $("#editmembers").hide();
                 });
             });
             
@@ -401,6 +456,32 @@
 
                 }
             
+            function updateMember(member){
+                
+                for(let i = 0, length = MEMBERS.length; i < length; i++){
+                    if(MEMBERS[i]["username"] === member.username){
+                        
+                        MEMBERS[i]["name"] = member.name;
+                        MEMBERS[i]["handicapExact"] = member.handicapExact;
+                        
+                        break;
+                    }
+                }
+                
+            }
+
+            function deleteMember(member){
+                
+                for(let i = 0, length = MEMBERS.length; i < length; i++){
+                    if(MEMBERS[i]["username"] === member.username){
+                        
+                        MEMBERS.splice(i, 1);;
+                        break;
+                    }
+                }
+                
+            }            
+            
             function updateMemberList(){
                   $('#memberstable').find('tbody').empty();
                   $('#editmemberslist').empty();      
@@ -408,26 +489,57 @@
                   for(let i =0, length = MEMBERS.length; i < length; i++){     
                        $('#memberstable').find('tbody').append('<tr><td>'+MEMBERS[i]["name"]+'</td><td>'+MEMBERS[i]["handicapExact"]+'</td><td>'+MEMBERS[i]["handicapPlaying"]+'</td><td>'+MEMBERS[i]["email"]+'</td><td>'+MEMBERS[i]["phone"]+'</td></tr>'); 
                       
-                      $('#editmemberslist').append('<a href="javascript:void(0)" class="list-group-item notop">'+MEMBERS[i]["name"]+'</a>');
+                      $('#editmemberslist').append('<a href="javascript:void(0)" class="list-group-item notop list-group-item-info" id="'+i+'">'+MEMBERS[i]["name"]+'</a><ul class="list-group well" style="display:none" id="member'+i+'"></ul><br>');
+                      
+                        //edit panel - adding members information
+                        
+                        $("#member"+i).append('<button id="deletemember" type="button" style="margin-top:20px" class="btn btn-danger btn-block">Delete Member</button>');                        
+                        
+                        $("#member"+i).append('<label for="editmemberusername" style="margin-top:20px">Username:</label><input type="text" class="form-control list-group-item" id="editmemberusername" placeholder="'+MEMBERS[i]["username"]+'" value="'+MEMBERS[i]["username"]+'" readonly>');
+                        
+                        $("#member"+i).append('<label for="editmembername" style="margin-top:20px">Member name:</label><input type="text" class="form-control list-group-item" id="editmembername" placeholder="'+MEMBERS[i]["name"]+'" value="'+MEMBERS[i]["name"]+'">');
+                        
+                        $("#member"+i).append('<label for="editmemberhandicap" style="margin-top:20px">Handicap:</label><input type="text" class="form-control list-group-item" id="editmemberhandicap" placeholder="'+MEMBERS[i]["handicapExact"]+'"  value="'+MEMBERS[i]["handicapExact"]+'">');
+                        
+                        $("#member"+i).append('<button id="editmember" type="button" style="margin-top:20px" class="btn btn-primary btn-block">Apply changes</button>');
                     }
             }
             
             // Function to check letters and numbers  
-            function alphanumeric(inputtxt)  
+            function alphanumeric(inputtxt, plusSpace)  
                 {  
-                var letterNumber = /^[0-9a-zA-Z]+$/;  
+                let letterNumber;
+                    
+                if(plusSpace === true){
+                    letterNumber = /^[0-9a-zA-Z]+$/;
+                    letterNumber = /^[\w\-\s]+$/;
+                } else{
+                    letterNumber = /^[\w\-\s]+$/;
+                    letterNumber = /^[0-9a-zA-Z]+$/;
+                }
                 if(inputtxt.match(letterNumber)){  
                     return true;  
                 }  else {   
-                    alert("message");   
+                //    alert("message");   
                     return false;   
                     }  
                 }
             
             function checkMemberFormValidation(){
-                 if(alphanumeric($("#addmemberusername").val()) && $("#addmemberusername").val().length > 0 ){
-                        return true;
+                 if(alphanumeric($("#addmemberusername").val(), false) && $("#addmemberusername").val().length > 0 ){
+                        if(alphanumeric($("#addmembername").val(), true) && $("#addmembername").val().length > 0 ){
+                            if($.isNumeric($("#addmemberhandicap").val())){
+                               return true;
+                               } else{
+                                   alert("Handicap data incorrect. Only numbers allowed.");
+                               return false;
+                               }
+                        } else{
+                           alert("Name data incorrect. Only letters, numbers and space allowed."); 
+                           return false;
+                        }
                        } else {
+                           alert("Username data incorrect. Only letters and numbers allowed.");
                         return false;
                     }
             }
