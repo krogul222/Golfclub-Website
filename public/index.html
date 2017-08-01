@@ -3,6 +3,7 @@
     <head>
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="js/bootstrap.js"></script>
+        <script src="js/bootbox.min.js"></script>
         <script src="js/placeholder.js"></script>
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
         <link rel="stylesheet" type="text/css" href="css/myStyle.css">
@@ -318,25 +319,25 @@
              socket.on('memberAdded', function(data){
                     MEMBERS.push(data);
                     updateMemberList();
-                    alert("Member has been added.");
+                    bootbox.alert({message: "Member has been added.", backdrop: true});
              });
 
              socket.on('memberEdited', function(data){
 
                     updateMember(data);
                     updateMemberList();
-                    alert("Member has been edited.");
+                    bootbox.alert({message: "Member has been edited.", backdrop: true});
              });          
             
              socket.on('memberDeleted', function(data){
 
                     deleteMember(data);
                     updateMemberList();
-                    alert("Member has been deleted.");
+                    bootbox.alert({message: "Member has been deleted.", backdrop: true});
              });   
             
              socket.on('memberNotAdded', function(data){
-                    alert("Username already taken. Member has not been added.");
+                    bootbox.alert({message: "Username already taken. Member has not been added.", backdrop: true});
              });
             
             
@@ -543,6 +544,7 @@
                         return false;
                     }
             }
+
             
             function getCommittee(){
                 let arr =[];
