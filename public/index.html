@@ -431,7 +431,13 @@
                      if($(this).attr('id') == "editmember"){
                       socket.emit('editMember',{username: username, name: name, handicapExact: handicap});
                      } else{
-                      socket.emit('deleteMember',{username: username, name: name, handicapExact: handicap});
+                         
+                     bootbox.confirm("Are you sure to delete "+username+" ?" , function(result){
+                         if(result){
+                            socket.emit('deleteMember',{username: username, name: name, handicapExact: handicap});  
+                         }
+                     }); 
+
                      }
                      
                      
