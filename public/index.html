@@ -168,9 +168,33 @@
                             </div>
                             
                         <div id="accountsettings" style="display:none">
-                                <div class="well  text-center" >  
-                                    <h1>Account Settings</h1> 
-                                </div>
+                            <div class="well  text-center" >  
+                                <h1>Account Settings</h1>
+                            </div>
+                            
+                            <div class = "well">
+                                <label style = "margin-top:20px" for="accountusername">Login:</label>
+                                <input type="text" class="form-control" id="accountusername">
+                                
+                                <label style = "margin-top:20px" for="accountname">Name:</label>
+                                <input type="text" class="form-control" id="accountname">
+                                
+                                <button id="updateaccountdetails" style = "margin-top:20px" type="button" class="btn btn-primary btn-block">Apply changes</button>
+                            </div>
+                            
+                            <div class = "well">
+                                <label style = "margin-top:20px" for="accountcurrentpassword">Current password:</label>
+                                <input type="password" class="form-control" id="accountcurrentpassword">
+                                
+                                <label style = "margin-top:20px" for="accountnewpassword">New password:</label>
+                                <input type="password" class="form-control" id="accountnewpassword">
+                                
+                                <label style = "margin-top:20px" for="accountrepeatnewpassword">Repeat new password:</label>
+                                <input type="password" class="form-control" id="accountrepeatnewpassword">
+                                
+                                <button id="changeaccountpassword" style = "margin-top:20px" type="button" class="btn btn-primary btn-block">Change password</button>
+                            </div>
+                            
                         </div>
                         <div id="userstats" style="display:none">
                                 <div class="well  text-center" >  
@@ -345,21 +369,7 @@
                 $(document).ready(function() {
                     for(let i =0, length = data.length; i < length; i++){
                        MEMBERS.push(data[i]);        
-                       $('#memberstable tr:last').after('<tr><td>'+data[i]["name"]+'</td><td>'+data[i]["handicapExact"]+'</td><td>'+data[i]["handicapPlaying"]+'</td><td>'+data[i]["email"]+'</td><td>'+data[i]["phone"]+'</td></tr>');
-                        
-                        $('#editmemberslist').append('<a href="javascript:void(0)" class="list-group-item notop list-group-item-info" id="'+i+'">'+MEMBERS[i]["name"]+'</a><ul class="list-group well" style="display:none" id="member'+i+'"></ul><br>');
-                        
-                        //edit panel - adding members information
-                        
-                        $("#member"+i).append('<button id="deletemember" type="button" style="margin-top:20px" class="btn btn-danger btn-block">Delete Member</button>');                        
-                        
-                        $("#member"+i).append('<label for="editmemberusername" style="margin-top:20px">Username:</label><input type="text" class="form-control list-group-item" id="editmemberusername" placeholder="'+MEMBERS[i]["username"]+'" value="'+MEMBERS[i]["username"]+'" readonly>');
-                        
-                        $("#member"+i).append('<label for="editmembername" style="margin-top:20px">Member name:</label><input type="text" class="form-control list-group-item" id="editmembername" placeholder="'+MEMBERS[i]["name"]+'" value="'+MEMBERS[i]["name"]+'">');
-                        
-                        $("#member"+i).append('<label for="editmemberhandicap" style="margin-top:20px">Handicap:</label><input type="text" class="form-control list-group-item" id="editmemberhandicap" placeholder="'+MEMBERS[i]["handicapExact"]+'"  value="'+MEMBERS[i]["handicapExact"]+'">');
-                        
-                        $("#member"+i).append('<button id="editmember" type="button" style="margin-top:20px" class="btn btn-primary btn-block">Apply changes</button>');
+                       updateMemberPanels(i);
                     }
                     
                     committee = getCommittee();
@@ -427,12 +437,13 @@
                                                 }    
                      
                      });
-
+                     
                      if($(this).attr('id') == "editmember"){
-                      socket.emit('editMember',{username: username, name: name, handicapExact: handicap});
+                         if(checkEditFormValidation($(this))){
+                            socket.emit('editMember',{username: username, name: name, handicapExact: handicap});
+                         }
                      } else{
-                         
-                     bootbox.confirm("Are you sure to delete "+username+" ?" , function(result){
+                         bootbox.confirm("Are you sure to delete "+username+" ?" , function(result){
                          if(result){
                             socket.emit('deleteMember',{username: username, name: name, handicapExact: handicap});  
                          }
@@ -494,21 +505,7 @@
                   $('#editmemberslist').empty();      
                 
                   for(let i =0, length = MEMBERS.length; i < length; i++){     
-                       $('#memberstable').find('tbody').append('<tr><td>'+MEMBERS[i]["name"]+'</td><td>'+MEMBERS[i]["handicapExact"]+'</td><td>'+MEMBERS[i]["handicapPlaying"]+'</td><td>'+MEMBERS[i]["email"]+'</td><td>'+MEMBERS[i]["phone"]+'</td></tr>'); 
-                      
-                      $('#editmemberslist').append('<a href="javascript:void(0)" class="list-group-item notop list-group-item-info" id="'+i+'">'+MEMBERS[i]["name"]+'</a><ul class="list-group well" style="display:none" id="member'+i+'"></ul><br>');
-                      
-                        //edit panel - adding members information
-                        
-                        $("#member"+i).append('<button id="deletemember" type="button" style="margin-top:20px" class="btn btn-danger btn-block">Delete Member</button>');                        
-                        
-                        $("#member"+i).append('<label for="editmemberusername" style="margin-top:20px">Username:</label><input type="text" class="form-control list-group-item" id="editmemberusername" placeholder="'+MEMBERS[i]["username"]+'" value="'+MEMBERS[i]["username"]+'" readonly>');
-                        
-                        $("#member"+i).append('<label for="editmembername" style="margin-top:20px">Member name:</label><input type="text" class="form-control list-group-item" id="editmembername" placeholder="'+MEMBERS[i]["name"]+'" value="'+MEMBERS[i]["name"]+'">');
-                        
-                        $("#member"+i).append('<label for="editmemberhandicap" style="margin-top:20px">Handicap:</label><input type="text" class="form-control list-group-item" id="editmemberhandicap" placeholder="'+MEMBERS[i]["handicapExact"]+'"  value="'+MEMBERS[i]["handicapExact"]+'">');
-                        
-                        $("#member"+i).append('<button id="editmember" type="button" style="margin-top:20px" class="btn btn-primary btn-block">Apply changes</button>');
+                       updateMemberPanels(i);
                     }
             }
             
@@ -532,21 +529,52 @@
                     }  
                 }
             
+            
+            function checkEditFormValidation(btn){
+            
+            let name = "";
+            let handicap = "";    
+                
+            btn.parent().find('input').each(function(){
+                
+                switch($(this).attr('id')){
+                        case "editmembername" : 
+                            name = $(this).val();
+                            break;
+                        case "editmemberhandicap" :
+                            handicap = $(this).val();
+                            break;
+                        }    
+                     
+                });                
+                if(alphanumeric(name, true) && name.length > 0 ){
+                            if($.isNumeric(handicap)){
+                               return true;
+                               } else{
+                                bootbox.alert({message: "Handicap data incorrect. Only numbers allowed.", backdrop: true});
+                               return false;
+                               }
+                        } else{
+                           bootbox.alert({message:"Name data incorrect. Only letters, numbers and space allowed.", backdrop: true});
+                           return false;
+                        }
+            }
+            
             function checkMemberFormValidation(){
                  if(alphanumeric($("#addmemberusername").val(), false) && $("#addmemberusername").val().length > 0 ){
                         if(alphanumeric($("#addmembername").val(), true) && $("#addmembername").val().length > 0 ){
                             if($.isNumeric($("#addmemberhandicap").val())){
                                return true;
                                } else{
-                                   alert("Handicap data incorrect. Only numbers allowed.");
+                                   bootbox.alert({message: "Handicap data incorrect. Only numbers allowed.", backdrop: true});
                                return false;
                                }
                         } else{
-                           alert("Name data incorrect. Only letters, numbers and space allowed."); 
+                           bootbox.alert({message:"Name data incorrect. Only letters, numbers and space allowed.", backdrop: true});
                            return false;
                         }
                        } else {
-                           alert("Username data incorrect. Only letters and numbers allowed.");
+                           bootbox.alert({message: "Username data incorrect. Only letters and numbers allowed.", backdrop: true});
                         return false;
                     }
             }
@@ -562,6 +590,24 @@
                 }
                 
                 return arr;
+            }
+            
+            function updateMemberPanels(i){
+                $('#memberstable tr:last').after('<tr><td>'+MEMBERS[i]["name"]+'</td><td>'+MEMBERS[i]["handicapExact"]+'</td><td>'+Math.round(Number(MEMBERS[i]["handicapExact"]))+'</td><td>'+MEMBERS[i]["email"]+'</td><td>'+MEMBERS[i]["phone"]+'</td></tr>');
+                        
+                $('#editmemberslist').append('<a href="javascript:void(0)" class="list-group-item notop list-group-item-info" id="'+i+'">'+MEMBERS[i]["name"]+'</a><ul class="list-group well" style="display:none" id="member'+i+'"></ul><br>');
+                        
+                //edit panel - adding members information
+                        
+                $("#member"+i).append('<button id="deletemember" type="button" style="margin-top:20px" class="btn btn-danger btn-block">Delete Member</button>');                        
+                        
+                $("#member"+i).append('<label for="editmemberusername" style="margin-top:20px">Username:</label><input type="text" class="form-control list-group-item" id="editmemberusername" placeholder="'+MEMBERS[i]["username"]+'" value="'+MEMBERS[i]["username"]+'" readonly>');
+                        
+                $("#member"+i).append('<label for="editmembername" style="margin-top:20px">Member name:</label><input type="text" class="form-control list-group-item" id="editmembername" placeholder="'+MEMBERS[i]["name"]+'" value="'+MEMBERS[i]["name"]+'">');
+                        
+                $("#member"+i).append('<label for="editmemberhandicap" style="margin-top:20px">Handicap:</label><input type="text" class="form-control list-group-item" id="editmemberhandicap" placeholder="'+MEMBERS[i]["handicapExact"]+'"  value="'+MEMBERS[i]["handicapExact"]+'">');
+                        
+                $("#member"+i).append('<button id="editmember" type="button" style="margin-top:20px" class="btn btn-primary btn-block">Apply changes</button>');
             }
 
         </script> 
