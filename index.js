@@ -109,6 +109,11 @@ io.sockets.on('connection', function(socket){
         });
     });
     
+    socket.on('changePassword',function(data){
+        db.account.update({username: data.username},{$set:{password: data.password}});
+        socket.emit('passwordChanged',data);
+    });
+    
     socket.on('checkCurrentPassword',function(data){
         isValidPassword(data, function(res){
             if(res){ 

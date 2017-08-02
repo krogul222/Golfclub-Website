@@ -314,9 +314,16 @@
                     $("#userstats").hide();
                     $("#addmember").hide();
                     $("#editmembers").hide();
+                    
+                    clearSecureData();
 
                 }
                 
+                function clearSecureData(){
+                    $("#accountrepeatnewpassword").val("");
+                    $("#accountnewpassword").val("");
+                    $("#accountcurrentpassword").val("");
+                }
                
             });  
         </script>
@@ -382,11 +389,20 @@
             }); 
             
             socket.on('passwordCorrect', function(data){
-                 bootbox.alert({message: "Password correct.", backdrop: true});
+                 
+                 if($("#accountnewpassword").val() === $("#accountrepeatnewpassword").val()){
+                     socket.emit('changePassword', {username: user.data.username, password: $('#accountnewpassword').val()} );
+                 } else{
+                     bootbox.alert({message: "New password doesn't match repeat password. Try again.", backdrop: true});
+                 }
             });
             
             socket.on('passwordIncorrect', function(data){
-                 bootbox.alert({message: "Password incorrect!", backdrop: true});
+                 bootbox.alert({message: "Current password incorrect!", backdrop: true});
+            });
+            
+            socket.on('passwordChanged', function(data){
+                 bootbox.alert({message: "Password was changed!", backdrop: true});
             });
 
             socket.on('signInResponse', function(data){
@@ -543,10 +559,6 @@
                     }  
                 }
             
-            function checkChangePasswordFormValidation(btn){
-            
-                
-            }
             
             function checkEditFormValidation(btn){
             
