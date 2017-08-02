@@ -172,7 +172,7 @@
                                 <h1>Account Settings</h1>
                             </div>
                             
-                            <div class = "well">
+                            <div class = "well" id = "changedetailspanel">
                                 <label style = "margin-top:20px" for="accountusername">Login:</label>
                                 <input type="text" class="form-control" id="accountusername">
                                 
@@ -182,7 +182,7 @@
                                 <button id="updateaccountdetails" style = "margin-top:20px" type="button" class="btn btn-primary btn-block">Apply changes</button>
                             </div>
                             
-                            <div class = "well">
+                            <div class = "well" id = "changepasswordpanel">
                                 <label style = "margin-top:20px" for="accountcurrentpassword">Current password:</label>
                                 <input type="password" class="form-control" id="accountcurrentpassword">
                                 
@@ -380,6 +380,14 @@
                 });
                                   
             }); 
+            
+            socket.on('passwordCorrect', function(data){
+                 bootbox.alert({message: "Password correct.", backdrop: true});
+            });
+            
+            socket.on('passwordIncorrect', function(data){
+                 bootbox.alert({message: "Password incorrect!", backdrop: true});
+            });
 
             socket.on('signInResponse', function(data){
                 if(data.success){
@@ -412,6 +420,12 @@
                     let propertiesId = "#member"+id;
                     
                     $(propertiesId).slideToggle();
+                });
+                
+                $("#changepasswordpanel").on("click","button",function(event){
+                
+                 socket.emit('checkCurrentPassword',{username: user.data.username, password: $("#accountcurrentpassword").val()});
+                    
                 });
                 
                  $("#editmemberslist").on("click","button",function(event){
@@ -529,6 +543,10 @@
                     }  
                 }
             
+            function checkChangePasswordFormValidation(btn){
+            
+                
+            }
             
             function checkEditFormValidation(btn){
             

@@ -109,7 +109,18 @@ io.sockets.on('connection', function(socket){
         });
     });
     
-     socket.on('editMember',function(data){
+    socket.on('checkCurrentPassword',function(data){
+        isValidPassword(data, function(res){
+            if(res){ 
+                socket.emit('passwordCorrect',data);
+            } else{
+                socket.emit('passwordIncorrect',data);
+            }
+        });
+        
+    });
+    
+    socket.on('editMember',function(data){
          console.log("Edit data: "+data.username+" "+ data.name+" "+ data.handicapExact);
          
          db.account.update({username: data.username},{$set:{username: data.username, name: data.name, handicapExact: data.handicapExact}});
