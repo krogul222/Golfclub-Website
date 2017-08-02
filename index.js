@@ -6,17 +6,19 @@ var db = mongojs('localhost:27017/golf', ['account']);
 
 //db.account.remove();
 /*
-db.account.insert({username:"johnhart", name: "John Hart", password: "johnhart", email: "johnymike@hotmail.com", phone: "07930980836", committee: "true", position: "President", handicapExact: "14.2"});
+db.account.insert({username:"johnhart", name: "John Hart", password: "johnhart", email: "johnymike@hotmail.com", phone: "07930980836", committee: "true", position: "President", handicapExact: "14.2", account:"member"});
 
-db.account.insert({username:"garynorton", name: "Gary Norton", password: "garynorton", email: "", phone: "", committee: "true", position: "Treasurer", handicapExact: "22" });
+db.account.insert({username:"garynorton", name: "Gary Norton", password: "garynorton", email: "", phone: "", committee: "true", position: "Treasurer", handicapExact: "22", account:"member"});
 
-db.account.insert({username:"tonylyons", name: "Tony Lyons", password: "tonylyons", email: "", phone: "", committee: "true", position: "Handicap Chairman", handicapExact: "12.3" });
+db.account.insert({username:"tonylyons", name: "Tony Lyons", password: "tonylyons", email: "", phone: "", committee: "true", position: "Handicap Chairman", handicapExact: "12.3", account:"member"});
 
-db.account.insert({username:"craighulton", name: "Craig Hulton", password: "craighulton", email: "", phone: "", committee: "true", position: "Capitan", handicapExact: "19.4" });
+db.account.insert({username:"craighulton", name: "Craig Hulton", password: "craighulton", email: "", phone: "", committee: "true", position: "Capitan", handicapExact: "19.4", account:"member"});
 
-db.account.insert({username:"paulcraneybarnie", name: "Paul Craney Barnie", password: "paulcraneybarnie", email: "paulbarniedecor@sol.com", phone: "07402958921", committee: "true", position: "Handicap Secratary", handicapExact: "8" });
+db.account.insert({username:"paulcraneybarnie", name: "Paul Craney Barnie", password: "paulcraneybarnie", email: "paulbarniedecor@sol.com", phone: "07402958921", committee: "true", position: "Handicap Secratary", handicapExact: "8", account:"member"});
 
-db.account.insert({username:"stephenpercy", name: "Stephen Percy", password: "stephenpercy", email: "steve.percy@nxp.com", phone: "07910751885", committee: "false", position: "", handicapExact: "18.3", admin: "true" });
+db.account.insert({username:"stephenpercy", name: "Stephen Percy", password: "stephenpercy", email: "steve.percy@nxp.com", phone: "07910751885", committee: "false", position: "", handicapExact: "18.3", admin: "true", account:"member"});
+
+db.account.insert({username:"admin", name: "Stephen Percy", password: "123", admin: "true", account:"admin"});
 
 */
 
@@ -89,7 +91,7 @@ io.sockets.on('connection', function(socket){
                  
              case "membershiplisting":
                  console.log("membershiplisting request sent");
-                  db.account.find({}, function(err, res){
+                  db.account.find({account: "member"}, function(err, res){
                     socket.emit('membershiplistingData',res);
                       console.log("membershiplisting data sent");
                   });
@@ -101,8 +103,10 @@ io.sockets.on('connection', function(socket){
 
         isUsernameTaken(data["username"], function(res){
            if(res){
-             socket.emit('memberNotAdded',{});   
+               console.log("taken");
+             socket.emit('usernametaken',{});   
            } else{
+             data["account"] = "member";
              db.account.insert(data);
              socket.emit('memberAdded',data);  
            } 
@@ -113,6 +117,20 @@ io.sockets.on('connection', function(socket){
         db.account.update({username: data.username},{$set:{password: data.password}});
         socket.emit('passwordChanged',data);
     });
+
+    socket.on('changeUserDetails',function(data){
+        
+        isUsernameTaken(data.username, function(res){
+           if(res){
+             socket.emit('usernametaken',{});   
+           } else{
+             db.account.update({username: data.oldusername},{$set:{username: data.username, name: data.name}});
+             socket.emit('userDetailsChanged',data);
+           } 
+        });
+        
+
+    });    
     
     socket.on('checkCurrentPassword',function(data){
         isValidPassword(data, function(res){

@@ -17,7 +17,7 @@
             <!-- Navigation -->
             <div class='navbar navbar-default navbar-static-top'>
                 <div class="container">
-                    <a href='#' class='navbar-brand'><text style="color:rgb(44,164,176)">Ne</text><text style="color:red">x</text><text style="color:rgb(44,164,176)">peria Golf Society</text></a>
+                    <a href='#' class='navbar-brand'><text style="color:rgb(44,164,176)">Ne</text><text style="color:red">x</text><text style="color:rgb(44,164,176)">peria DMAN Golf Society</text></a>
                     <ul class="nav nav-pills navbar-right">
                        
                         <li id="login-menu"><a href="#"  data-toggle="dropdown">Log in<span class="caret"></span></a>
@@ -288,6 +288,8 @@
                 
                 $("#accountsettingsLink").on("click" , function(event){
                     hideAll();
+                    $("#accountusername").val(user.data.username);
+                    $("#accountname").val(user.data.name);
                     $("#accountsettings").show();
                 });
 
@@ -367,8 +369,8 @@
                     bootbox.alert({message: "Member has been deleted.", backdrop: true});
              });   
             
-             socket.on('memberNotAdded', function(data){
-                    bootbox.alert({message: "Username already taken. Member has not been added.", backdrop: true});
+             socket.on('usernametaken', function(data){
+                    bootbox.alert({message: "Username already taken.", backdrop: true});
              });
             
             
@@ -404,13 +406,35 @@
             socket.on('passwordChanged', function(data){
                  bootbox.alert({message: "Password was changed!", backdrop: true});
             });
-
+            
+            socket.on('userDetailsChanged', function(data){
+                 
+                 console.log("Update " + data.username);
+                 let member = getMember(user.data.username);
+                 member["username"] = data.username;
+                 member["name"] = data.name;
+                 user.data.name = member["name"];
+                 user.data.username = member["username"];
+                
+                 updateMemberList();
+                
+                 $("#accountusername").val(user.data.username);
+                 $("#accountname").val(user.data.name);
+                 
+                 showUserTab();
+                 bootbox.alert({message: "User details were changed!", backdrop: true});
+            });
             socket.on('signInResponse', function(data){
                 if(data.success){
                    user.loggedin = true;
-                   user["data"] = data;
+                  // getMember(data.username).name;
+                    
+                    user["data"] = data;
+                    if(data.username!=="admin")
+                        user.data.name = (getMember(data.username))["name"];
+                       
                    showUserTab();
-                    console.log("Admin "+ user["data"].admin);
+                    console.log("Admin "+ user["data"].admin + " name: "+user["data"].name);
                    if(user["data"].admin === "true"){
                        $("#adminpanel").show();
                    }    
@@ -442,6 +466,13 @@
                 
                  socket.emit('checkCurrentPassword',{username: user.data.username, password: $("#accountcurrentpassword").val()});
                     
+                });
+                
+                $("#changedetailspanel").on("click","button",function(event){
+                    
+                    if(checkUserDetailsFormValidation()){
+                        socket.emit('changeUserDetails',{username: $("#accountusername").val(), oldusername: user.data.username, name: $("#accountname").val()});   
+                    }                    
                 });
                 
                  $("#editmemberslist").on("click","button",function(event){
@@ -517,7 +548,16 @@
                 }
                 
             }
-
+            
+            function getMember(username){
+                for(let i = 0, length = MEMBERS.length; i < length; i++){
+                    if(MEMBERS[i]["username"] === username){
+                        return MEMBERS[i];
+                        break;
+                    }
+                }
+            }
+            
             function deleteMember(member){
                 
                 for(let i = 0, length = MEMBERS.length; i < length; i++){
@@ -560,6 +600,7 @@
                 }
             
             
+            
             function checkEditFormValidation(btn){
             
             let name = "";
@@ -588,6 +629,20 @@
                            bootbox.alert({message:"Name data incorrect. Only letters, numbers and space allowed.", backdrop: true});
                            return false;
                         }
+            }
+            
+            function checkUserDetailsFormValidation(){
+                 if(alphanumeric($("#accountusername").val(), false) && $("#accountusername").val().length > 0 ){
+                     if(alphanumeric($("#accountname").val(), true) && $("#accountname").val().length > 0 ){
+                         return true;
+                     } else{
+                         bootbox.alert({message:"Name data incorrect. Only letters, numbers and space allowed.", backdrop: true});
+                         return false;
+                     }
+                 } else{
+                    bootbox.alert({message: "Username data incorrect. Only letters and numbers allowed.", backdrop: true});
+                    return false;   
+                 }
             }
             
             function checkMemberFormValidation(){
@@ -623,7 +678,7 @@
             }
             
             function updateMemberPanels(i){
-                $('#memberstable tr:last').after('<tr><td>'+MEMBERS[i]["name"]+'</td><td>'+MEMBERS[i]["handicapExact"]+'</td><td>'+Math.round(Number(MEMBERS[i]["handicapExact"]))+'</td><td>'+MEMBERS[i]["email"]+'</td><td>'+MEMBERS[i]["phone"]+'</td></tr>');
+                $('#memberstable').find('tbody').append('<tr><td>'+MEMBERS[i]["name"]+'</td><td>'+MEMBERS[i]["handicapExact"]+'</td><td>'+Math.round(Number(MEMBERS[i]["handicapExact"]))+'</td><td>'+MEMBERS[i]["email"]+'</td><td>'+MEMBERS[i]["phone"]+'</td></tr>');
                         
                 $('#editmemberslist').append('<a href="javascript:void(0)" class="list-group-item notop list-group-item-info" id="'+i+'">'+MEMBERS[i]["name"]+'</a><ul class="list-group well" style="display:none" id="member'+i+'"></ul><br>');
                         
