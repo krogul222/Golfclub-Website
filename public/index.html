@@ -9,71 +9,121 @@
         <script src="js/placeholder.js"></script>
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
         <link rel="stylesheet" type="text/css" href="css/myStyle.css">
-         <link rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.css">
-        
+        <link rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.css">
     </head>
     <body>
         <div id="wrap">
-            <!-- Navigation bar, code is in menu.html-->
-   <!--         <div id="nav-placeholder">
-            </div> 
-
             <!-- Navigation -->
             <div class='navbar navbar-default navbar-static-top'>
                 <div class="container">
-                    <a href='#' class='navbar-brand'><text style="color:rgb(44,164,176)">Ne</text><text style="color:red">x</text><text style="color:rgb(44,164,176)">peria DMAN Golf Society</text></a>
-                    <ul class="nav nav-pills navbar-right">
-                       
-                        <li id="login-menu"><a href="#"  data-toggle="dropdown">Log in<span class="caret"></span></a>
+                    <a href='#' class='navbar-brand'>
+                        <text style="color:rgb(44,164,176)">
+                            Ne
+                        </text>
+                        <text style="color:red">
+                            x
+                        </text>
+                        <text style="color:rgb(44,164,176)">
+                            peria DMAN Golf Society
+                        </text>
+                    </a>
+                    <ul class="nav nav-pills navbar-right">  
+                        <li id="login-menu">
+                            <a href="#"  data-toggle="dropdown">Log in<span class="caret"></span></a>
                             <ul id="login-dp" class="dropdown-menu">
                                 <li>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <form class="form" role="form" method="post" action="login" accept-charset="UTF-8" id="login-nav">
                                                 <div class="form-group">
-                                                         <label class="sr-only" for="loginUsername">Username</label>
-                                                         <input type="text" class="form-control" id="loginUsername" placeholder="Username" required>
-                                                 </div>
-                                                 <div class="form-group">
-                                                         <label class="sr-only" for="loginPassword">Password</label>
-                                                         <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
-                                                         <div class="help-block text-right"><a href="">Forget the password ?</a></div>
-                                                  </div>
-
-                                                  <div class="form-group">
-                                                         <button id="loginbtn" type="button" class="btn btn-primary btn-block">Sign in</button>
-                                                  </div>
+                                                    <label class="sr-only" for="loginUsername">
+                                                        Username
+                                                    </label>
+                                                    <input type="text" class="form-control" id="loginUsername" placeholder="Username" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="sr-only" for="loginPassword">
+                                                        Password
+                                                    </label>
+                                                        <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
+                                                        <div class="help-block text-right">
+                                                            <a href="">
+                                                                 Forget the password ?
+                                                            </a>
+                                                        </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button id="loginbtn" type="button" class="btn btn-primary btn-block">
+                                                        Sign in
+                                                    </button>
+                                                </div>
                                             </form>
                                         </div>
                                     </div>
                                 </li>
-                            </ul></li>
-                         <li id="loggedin" style="display:none">
-                             <a href="#" data-toggle="dropdown"> <span class="text" id="userMenuTitle">User</span><span class="caret"></span></a>
-                              <ul id="userMenu" class="dropdown-menu">
-                                    <li><a href="#accountsettings" id="accountsettingsLink"><span class="glyphicon glyphicon-cog pull-right"></span><span class="dropdown-link-text" style="margin-right:40px">Account Settings </span></a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#userstats" id="userstatsLink"><span class="glyphicon glyphicon-stats pull-right"></span><span class="dropdown-link-text">User stats </span></a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#" id="logoutLink"><span class="glyphicon glyphicon-log-out pull-right"></span><span class="dropdown-link-text">Log Out </span></a></li>
-                             </ul>
-                            </li>                   
-                        <li><a href="#contact">Contact</a></li>
-
+                            </ul>
+                        </li>
+                        <li id="loggedin" style="display:none">
+                            <a href="#" data-toggle="dropdown">
+                                <span class="text" id="userMenuTitle">
+                                    User
+                                </span>
+                                <span class="caret">
+                                </span>
+                            </a>
+                            <ul id="userMenu" class="dropdown-menu">
+                                <li>
+                                    <a href="#accountsettings" id="accountsettingsLink">
+                                        <span class="glyphicon glyphicon-cog pull-right">
+                                        </span>
+                                        <span class="dropdown-link-text" style="margin-right:40px">
+                                            Account Settings
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="#userstats" id="userstatsLink">
+                                        <span class="glyphicon glyphicon-stats pull-right">
+                                        </span>
+                                        <span class="dropdown-link-text">
+                                            User stats 
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="#" id="logoutLink">
+                                        <span class="glyphicon glyphicon-log-out pull-right">
+                                        </span>
+                                        <span class="dropdown-link-text">
+                                            Log Out 
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#contact">
+                                Contact
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>            
 
              <!-- Header Carousel, looped photos at top of the screen -->
             <header id="myCarousel" class="carousel slide" data-interval="10000" data-ride="carousel">
-
-                 <!-- Indicators , carousel skeleton-->
+                
+                <!-- Indicators , carousel skeleton-->
                 <ol class="carousel-indicators">
                     <li data-target="#myCarousel" data-slide-to="0" class='active'></li>
                     <li data-target="#myCarousel" data-slide-to="1"></li>
                     <li data-target="#myCarousel" data-slide-to="2"></li>
                 </ol>
-
+                
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner">
                     <div class="item active">
@@ -97,202 +147,272 @@
                         </div>
                     </div>
 
-                <!-- Controls -->
-                <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-                    <span class="icon-prev"></span>
-                </a>
-                <a class="right carousel-control" href="#myCarousel" data-slide="next">
-                    <span class="icon-next"></span>
-                </a>
+                    <!-- Controls -->
+                    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                        <span class="icon-prev"></span>
+                    </a>
+                    <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                        <span class="icon-next"></span>
+                    </a>
                 </div>
             </header>
 
-              <!-- Let's get started frame-->
-
+            <!-- Let's get started frame-->
             <div class="container ">
-
                 <div class="row" style="margin-top: 50px">
                     <div  class="col-md-3 text-center" style="float:left">
                         <ul class="list-group well" id="glofmenu">
-                             <li class="list-group-item" id="membershiplisting"><a class="notop" href="javascript:void(0)">Membership</a></li>
-                             <li class="list-group-item" id="committee"><a class="notop" href="javascript:void(0)">The Committee</a></li>
-                             <li class="list-group-item"><a class="notop" href="javascript:void(0)">Society Constitution</a></li>
-                             <li class="list-group-item"><a class="notop" href="javascript:void(0)">Society Events</a></li>
-                             <li class="list-group-item"><a class="notop" href="javascript:void(0)">Competition Results</a></li>
-                             <li class="list-group-item"><a class="notop" href="javascript:void(0)">Player of the Year</a></li>
+                            <li class="list-group-item" id="membershiplisting">
+                                <a class="notop" href="javascript:void(0)">
+                                    Membership
+                                </a>
+                            </li>
+                            <li class="list-group-item" id="committee">
+                                <a class="notop" href="javascript:void(0)">
+                                    The Committee
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="notop" href="javascript:void(0)">
+                                    Society Constitution
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="notop" href="javascript:void(0)">
+                                    Society Events
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="notop" href="javascript:void(0)">
+                                    Competition Results
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="notop" href="javascript:void(0)">
+                                    Player of the Year
+                                </a>
+                            </li>
                         </ul>
                         
                         <ul class="list-group well" id="adminpanel" style="display:none">
-                            <li class="list-group-item" id="addmemberLink"><a class="notop" href="javascript:void(0)">Add Member</a></li>
-                            <li class="list-group-item" id="editmembersLink"><a class="notop" href="javascript:void(0)">Edit Members</a>
-                            <li class="list-group-item" id="createsocietyeventLink"><a class="notop" href="javascript:void(0)">Add Society Event</a>
+                            <li class="list-group-item" id="addmemberLink">
+                                <a class="notop" href="javascript:void(0)">
+                                    Add Member
+                                </a>
+                            </li>
+                            <li class="list-group-item" id="editmembersLink">
+                                <a class="notop" href="javascript:void(0)">
+                                    Edit Members
+                                </a>
+                            <li class="list-group-item" id="createsocietyeventLink">
+                                <a class="notop" href="javascript:void(0)">
+                                    Add Society Event
+                                </a>
                             </li>
                         </ul>
                     </div>
-                        <div class="col-md-6 col-md-offset-1" >
+                    <div class="col-md-6 col-md-offset-1" >
                         <div id="welcome" class="text-center well">
                             <h1>Welcome to Nexperia Golf Society Home Page!</h1>
                         </div>
                         <div id="committeecontent" style="display:none">
-                                <div class="well  text-center" >  <h1>The Committee</h1> 
-                                <h4>Below is a listing of the current Society Committee. If you have any queries about your current handicap or any other specific enquiries then please direct them to the relevant committee member.</h4></div>
-     
-                              <table id="committeetable" class="table table-hover">
+                            <div class="well  text-center" >  
+                                <h1>The Committee</h1> 
+                                <h4>Below is a listing of the current Society Committee. If you have any queries about your current handicap or any other specific enquiries then please direct them to the relevant committee member.</h4>
+                            </div>
+
+                            <table id="committeetable" class="table table-hover">
                                 <thead>
-                                  <tr>
-                                    <th>Members Name</th>
-                                    <th>Position</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                  </tr>
+                                    <tr>
+                                        <th>Members Name</th>
+                                        <th>Position</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <tr></tr>
                                 </tbody>
-                              </table>
+                            </table>
                         </div>
-                            
+
                         <div id="membershiplistingcontent" style="display:none">
                             <div class="well  text-center" >
                                 <h1>Membership Listing</h1>
                                 <h4>Below is a current list of Members handicaps and contact information. If you have any queries about your current handicap or if you need to change your contact information then please get in touch with one of the society organisers. To view a members handicap record click on the persons name. For a group email list, scroll down to the bottom of the page. </h4>
                             </div>
-                                <table id="memberstable" class="table table-hover">
+
+                            <table id="memberstable" class="table table-hover">
                                 <thead>
-                                  <tr>
-                                    <th>Members Name</th>
-                                    <th>Handicap (Exact)</th>
-                                    <th>Handicap (Playing)</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                  </tr>
+                                    <tr>
+                                        <th>Members Name</th>
+                                        <th>Handicap (Exact)</th>
+                                        <th>Handicap (Playing)</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <tr></tr>
                                 </tbody>
-                              </table>
-                            </div>
-                            
+                            </table>
+                        </div>
+
                         <div id="accountsettings" style="display:none">
                             <div class="well  text-center" >  
                                 <h1>Account Settings</h1>
                             </div>
-                            
+
                             <div class = "well" id = "changedetailspanel">
-                                <label style = "margin-top:20px" for="accountusername">Login:</label>
+                                <label style = "margin-top:20px" for="accountusername">
+                                    Login:
+                                </label>
                                 <input type="text" class="form-control" id="accountusername">
-                                
-                                <label style = "margin-top:20px" for="accountname">Name:</label>
+
+                                <label style = "margin-top:20px" for="accountname">
+                                    Name:
+                                </label>
                                 <input type="text" class="form-control" id="accountname">
-                                
-                                 <label style = "margin-top:20px" for="accountemail">Email:</label>
+
+                                <label style = "margin-top:20px" for="accountemail">
+                                    Email:
+                                </label>
                                 <input type="text" class="form-control" id="accountemail">
-                                
-                                 <label style = "margin-top:20px" for="accountphone">Phone:</label>
+
+                                <label style = "margin-top:20px" for="accountphone">
+                                    Phone:
+                                </label>
                                 <input type="text" class="form-control" id="accountphone">                                
-                                <button id="updateaccountdetails" style = "margin-top:20px" type="button" class="btn btn-primary btn-block">Apply changes</button>
+                                <button id="updateaccountdetails" style = "margin-top:20px" type="button" class="btn btn-primary btn-block">
+                                    Apply changes
+                                </button>
                             </div>
-                            
+
                             <div class = "well" id = "changepasswordpanel">
-                                <label style = "margin-top:20px" for="accountcurrentpassword">Current password:</label>
+                                <label style = "margin-top:20px" for="accountcurrentpassword">
+                                    Current password:
+                                </label>
                                 <input type="password" class="form-control" id="accountcurrentpassword">
-                                
-                                <label style = "margin-top:20px" for="accountnewpassword">New password:</label>
+
+                                <label style = "margin-top:20px" for="accountnewpassword">
+                                    New password:
+                                </label>
                                 <input type="password" class="form-control" id="accountnewpassword">
-                                
-                                <label style = "margin-top:20px" for="accountrepeatnewpassword">Repeat new password:</label>
+
+                                <label style = "margin-top:20px" for="accountrepeatnewpassword">
+                                    Repeat new password:
+                                </label>
                                 <input type="password" class="form-control" id="accountrepeatnewpassword">
-                                
-                                <button id="changeaccountpassword" style = "margin-top:20px" type="button" class="btn btn-primary btn-block">Change password</button>
-                            </div>
-                            
+
+                                <button id="changeaccountpassword" style = "margin-top:20px" type="button" class="btn btn-primary btn-block">
+                                    Change password
+                                </button>
+                            </div>            
                         </div>
+
                         <div id="userstats" style="display:none">
-                                <div class="well  text-center" >  
-                                    <h1>User Stats</h1> 
-                                </div>
+                            <div class="well  text-center" >  
+                                <h1>User Stats</h1> 
+                            </div>
                         </div>
-                            
+
                         <div id="addmember" style="display:none">
-                                <div class="well  text-center" >  
-                                    <h1>Add member</h1> 
+
+                            <div class="well  text-center" >  
+                                <h1>Add member</h1> 
+                            </div>
+
+                            <form class="form well" role="form" method="post" action="addmemberform" accept-charset="UTF-8" id="addmemberpanel">
+                                <div class="form-group">
+                                    <label for="addmemberusername">
+                                        Username:
+                                    </label>
+                                    <input type="text" class="form-control" id="addmemberusername" placeholder="Username" required>
                                 </div>
-                            
-                                    <form class="form well" role="form" method="post" action="addmemberform" accept-charset="UTF-8" id="addmemberpanel">
-                                            <div class="form-group">
-                                                    <label for="addmemberusername">Username:</label>
-                                                    <input type="text" class="form-control" id="addmemberusername" placeholder="Username" required>
-                                            </div>
-                                            <div class="form-group">
-                                                    <label for="addmembername">Member name:</label>
-                                                    <input type="text" class="form-control" id="addmembername" placeholder="Albert Einstein" required>
-                                            </div>
-                                            <div class="form-group">
-                                                    <label for="addmemberhandicap">Handicap:</label>
-                                                    <input type="text" class="form-control" id="addmemberhandicap" placeholder="20" required>
-                                            </div>
-                                        
-                                            <div class="form-group">
-                                                    <button id="addmemberbtn" type="button" class="btn btn-primary btn-block">Add member</button>
-                                            </div>
-                                    </form>
+
+                                <div class="form-group">
+                                    <label for="addmembername">
+                                        Member name:
+                                    </label>
+                                    <input type="text" class="form-control" id="addmembername" placeholder="Albert Einstein" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="addmemberhandicap">
+                                        Handicap:
+                                    </label>
+                                    <input type="text" class="form-control" id="addmemberhandicap" placeholder="20" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <button id="addmemberbtn" type="button" class="btn btn-primary btn-block">
+                                        Add member
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                            
+
                         <div id="editmembers" style="display:none">
-                                <div class="well  text-center" >  
-                                    <h1>Edit members</h1> 
-                                
-                                </div>
-                            
-                                <div class="list-group" id = "editmemberslist">
-                                </div> 
+                            <div class="well  text-center" >  
+                                <h1>Edit members</h1>     
+                            </div>
+
+                            <div class="list-group" id = "editmemberslist">
+                            </div> 
                         </div>
 
                         <div id="createsocietyevent" style="display:none">
-                                <div class="well  text-center" >  
-                                    <h1>Publish a new event</h1> 
-                                </div>
-                            
-                                <div class = "well" id = "basicaddeventpanel">
-                                    <label style = "margin-top:20px" for="addeventname">Event name:</label>
-                                    <input type="text" class="form-control" id="addeventname">
-                                    <label style = "margin-top:20px" for="addeventcourse">Course:</label>
-                                    <input type="text" class="form-control" id="addeventcourse">
-                                    <label style = "margin-top:20px" for="addeventpostcode">Post Code of Course:</label>
-                                    <input type="text" class="form-control" id="addeventpostcode">
-                                    
-                                    <div class="form-group">
-                                    <label style = "margin-top:20px" for="addeventdate">Date of Event:</label>
+                            <div class="well  text-center" >  
+                                <h1>Publish a new event</h1> 
+                            </div>
+
+                            <div class = "well" id = "basicaddeventpanel">
+                                <label style = "margin-top:20px" for="addeventname">
+                                    Event name:
+                                </label>
+                                <input type="text" class="form-control" id="addeventname">
+
+                                <label style = "margin-top:20px" for="addeventcourse">
+                                    Course:
+                                </label>
+                                <input type="text" class="form-control" id="addeventcourse">
+
+                                <label style = "margin-top:20px" for="addeventpostcode">
+                                    Post Code of Course:
+                                </label>
+                                <input type="text" class="form-control" id="addeventpostcode">
+
+                                <div class="form-group">
+                                    <label style = "margin-top:20px" for="addeventdate">
+                                        Date of Event:
+                                    </label>
                                     <div class='input-group date' data-date="" data-date-format="dd MM yyyy" id='addeventdate'>
                                         <input type='text' class="form-control" readonly>
                                         <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
                                     </div>
                                 </div>
-                                </div>
-                        </div>                            
-                            
+                            </div>
+                        </div>                                     
                     </div>
                 </div>
-                
             </div>
-
 
             <!-- About content-->
-
             <div class="container" id="about">
                 <div class="row">
-
                 </div>
             </div>
+        
         </div>
         
         <footer>
-             <!-- Footer - Contact content -->
+            <!-- Footer - Contact content -->
             <div id="footer-placeholder">
             </div>
         </footer>
+        
         <script>
             $(document).ready(function() {
                 $('#myCarousel').carousel({
