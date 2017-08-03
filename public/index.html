@@ -119,8 +119,10 @@
                         </ul>
                         
                         <ul class="list-group well" id="adminpanel" style="display:none">
-                            <li class="list-group-item" id="addmemberLink"><a class="notop" href="javascript:void(0)">Add member</a></li>
-                            <li class="list-group-item" id="editmembersLink"><a class="notop" href="javascript:void(0)">Edit members</a></li>
+                            <li class="list-group-item" id="addmemberLink"><a class="notop" href="javascript:void(0)">Add Member</a></li>
+                            <li class="list-group-item" id="editmembersLink"><a class="notop" href="javascript:void(0)">Edit Members</a>
+                            <li class="list-group-item" id="createsocietyeventLink"><a class="notop" href="javascript:void(0)">Add Society Event</a>
+                            </li>
                         </ul>
                     </div>
                         <div class="col-md-6 col-md-offset-1" >
@@ -235,10 +237,25 @@
                             
                                 <div class="list-group" id = "editmemberslist">
                                 </div> 
-                            </div>
-                            
                         </div>
+
+                        <div id="createsocietyevent" style="display:none">
+                                <div class="well  text-center" >  
+                                    <h1>Publish a new event</h1> 
+                                </div>
+                            
+                                <div class = "well" id = "basicaddeventpanel">
+                                    <label style = "margin-top:20px" for="addeventname">Event name:</label>
+                                    <input type="text" class="form-control" id="addeventname">
+                                    <label style = "margin-top:20px" for="addeventcourse">Course:</label>
+                                    <input type="text" class="form-control" id="addeventcourse">
+                                    <label style = "margin-top:20px" for="addeventpostcode">Post Code of Course:</label>
+                                    <input type="text" class="form-control" id="addeventpostcode">
+                                </div>
+                        </div>                            
+                            
                     </div>
+                </div>
                 
             </div>
 
@@ -308,6 +325,11 @@
                     $("#editmembers").show();
                 });
                 
+               $("#createsocietyeventLink").on("click" , function(event){
+                    hideAll();
+                    $("#createsocietyevent").show();
+                });
+                
                 function hideAll(){
                     $("#welcome").hide();
                     $("#committeecontent").hide();
@@ -316,6 +338,7 @@
                     $("#userstats").hide();
                     $("#addmember").hide();
                     $("#editmembers").hide();
+                    $("#createsocietyevent").hide();
                     
                     clearSecureData();
 
@@ -525,6 +548,7 @@
                     $("#userstats").hide();
                     $("#addmember").hide();
                     $("#editmembers").hide();
+                     $("#createsocietyevent").hide();
                 });
             });
             
