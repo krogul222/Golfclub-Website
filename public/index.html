@@ -444,14 +444,62 @@
             </div>
         </footer>
         
-        <script>
-            $(document).ready(function(){
+        <script>  // scripts for html menus and carrousel 
+            $(document).ready(function(){    
                 
-                $('#myCarousel').carousel({
+                 //General access links:
+                
+                $("#glofmenu").on("click", "#committee", function(event){;  // show committee 
+                     hideAll();
+                     $("#committeecontent").show();
+                });
+                
+                $("#glofmenu").on("click", "#membershiplisting", function(event){   // show members list
+                    hideAll();
+                    $("#membershiplistingcontent").show();
+                    for(let i = 0, length = MEMBERS.length; i < length; i++){
+                        console.log(MEMBERS[i]);
+                    }   
+                });  
+                
+                //Logged user links (from top menu):
+                
+                $("#accountsettingsLink").on("click", function(event){ // show logged user account settings  
+                    hideAll();
+                    $("#accountusername").val(user.data.username);
+                    $("#accountname").val(user.data.name);
+                    $("#accountphone").val(user.data.phone);
+                    $("#accountemail").val(user.data.email);
+                    $("#accountsettings").show();
+                });
+
+                $("#userstatsLink").on("click", function(event){    // show logged user statistics
+                    hideAll();
+                    $("#userstats").show();
+                });
+                
+                //Admin menu links:
+                
+                $("#addmemberLink").on("click", function(event){    // show add member panel 
+                    hideAll();
+                    $("#addmember").show();
+                });
+
+                $("#editmembersLink").on("click", function(event){  // show edits member panel
+                    hideAll();
+                    $("#editmembers").show();
+                });
+                
+                $("#createsocietyeventLink").on("click" , function(event){  // show add event panel
+                    hideAll();
+                    $("#createsocietyevent").show();
+                });
+                
+                $('#myCarousel').carousel({ // change carrousel slide each 10s
                     interval: 10000
                 });
                     
-                $('#addeventdate').datetimepicker({
+                $('#addeventdate').datetimepicker({ // fancy date picking for add society event panel
                     weekStart: 1,
                     todayBtn:  1,
                     autoclose: 1,
@@ -461,54 +509,13 @@
                     forceParse: 0
                 });
                 
+                // usefull functions:
                 
-                $('a .notop').click(function(e){
+                $('a .notop').click(function(e){    // do not go to the top of page after clicking .notop link
                     e.preventDefault();            
-                });
+                });                
                 
-                $("#glofmenu").on("click", "#committee", function(event){;
-                     hideAll();
-                     $("#committeecontent").show();
-                });
-                
-                $("#glofmenu").on("click", "#membershiplisting", function(event){
-                    hideAll();
-                    $("#membershiplistingcontent").show();
-                    for(let i = 0, length = MEMBERS.length; i < length; i++){
-                        console.log(MEMBERS[i]);
-                    }   
-                });  
-                
-                $("#accountsettingsLink").on("click", function(event){
-                    hideAll();
-                    $("#accountusername").val(user.data.username);
-                    $("#accountname").val(user.data.name);
-                    $("#accountphone").val(user.data.phone);
-                    $("#accountemail").val(user.data.email);
-                    $("#accountsettings").show();
-                });
-
-                $("#userstatsLink").on("click", function(event){
-                    hideAll();
-                    $("#userstats").show();
-                });
-                
-                $("#addmemberLink").on("click", function(event){
-                    hideAll();
-                    $("#addmember").show();
-                });
-
-                $("#editmembersLink").on("click", function(event){
-                    hideAll();
-                    $("#editmembers").show();
-                });
-                
-                $("#createsocietyeventLink").on("click" , function(event){
-                    hideAll();
-                    $("#createsocietyevent").show();
-                });
-                
-                function hideAll(){
+                function hideAll(){     // hide all panels and clear secure data
                     $("#welcome").hide();
                     $("#committeecontent").hide();
                     $("#membershiplistingcontent").hide();
@@ -520,7 +527,7 @@
                     clearSecureData();
                 }
                 
-                function clearSecureData(){
+                function clearSecureData(){ // clear secure data like password in edit boxes
                     $("#accountrepeatnewpassword").val("");
                     $("#accountnewpassword").val("");
                     $("#accountcurrentpassword").val("");
@@ -531,7 +538,7 @@
         <script src="https://cdn.socket.io/socket.io-1.4.5.js">
         </script> 
         
-        <script> 
+        <script>    // scripts to handle server-client communication and update data
             let User = function(){
                 let self = {};
                 self.loggedin = false;
