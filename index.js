@@ -120,16 +120,18 @@ io.sockets.on('connection', function(socket){
 
     socket.on('changeUserDetails',function(data){
         
+        if(data.oldusername === data.username){
+            db.account.update({username: data.oldusername},{$set:{username: data.username, name: data.name, email: data.email, phone: data.phone}});
+            socket.emit('userDetailsChanged',data);
+            } else{
         isUsernameTaken(data.username, function(res){
            if(res){
              socket.emit('usernametaken',{});   
            } else{
              db.account.update({username: data.oldusername},{$set:{username: data.username, name: data.name}});
              socket.emit('userDetailsChanged',data);
-           } 
-        });
-        
-
+           }});
+           }
     });    
     
     socket.on('checkCurrentPassword',function(data){

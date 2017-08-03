@@ -185,6 +185,11 @@
                                 <label style = "margin-top:20px" for="accountname">Name:</label>
                                 <input type="text" class="form-control" id="accountname">
                                 
+                                 <label style = "margin-top:20px" for="accountemail">Email:</label>
+                                <input type="text" class="form-control" id="accountemail">
+                                
+                                 <label style = "margin-top:20px" for="accountphone">Phone:</label>
+                                <input type="text" class="form-control" id="accountphone">                                
                                 <button id="updateaccountdetails" style = "margin-top:20px" type="button" class="btn btn-primary btn-block">Apply changes</button>
                             </div>
                             
@@ -332,6 +337,8 @@
                     hideAll();
                     $("#accountusername").val(user.data.username);
                     $("#accountname").val(user.data.name);
+                    $("#accountphone").val(user.data.phone);
+                    $("#accountemail").val(user.data.email);
                     $("#accountsettings").show();
                 });
 
@@ -461,14 +468,20 @@
                  let member = getMember(user.data.username);
                  member["username"] = data.username;
                  member["name"] = data.name;
+                 member["email"] = data.email;
+                 member["phone"] = data.phone;
                  user.data.name = member["name"];
                  user.data.username = member["username"];
+                 user.data.email = member["email"];
+                 user.data.phone = member["phone"];
                 
                  updateMemberList();
                 
                  $("#accountusername").val(user.data.username);
                  $("#accountname").val(user.data.name);
-                 
+                 $("#accountemail").val(user.data.email);
+                 $("#accountphone").val(user.data.phone);
+                    
                  showUserTab();
                  bootbox.alert({message: "User details were changed!", backdrop: true});
             });
@@ -478,8 +491,15 @@
                   // getMember(data.username).name;
                     
                     user["data"] = data;
-                    if(data.username!=="admin")
-                        user.data.name = (getMember(data.username))["name"];
+                    if(data.username!=="admin"){
+                        let member = (getMember(data.username));
+                        user.data.name = member["name"];
+                        user.data.phone = member["phone"];
+                        user.data.email = member["email"];
+                        $("#changedetailspanel").show();
+                    } else{
+                        $("#changedetailspanel").hide();
+                    }
                        
                    showUserTab();
                     console.log("Admin "+ user["data"].admin + " name: "+user["data"].name);
@@ -519,7 +539,7 @@
                 $("#changedetailspanel").on("click","button",function(event){
                     
                     if(checkUserDetailsFormValidation()){
-                        socket.emit('changeUserDetails',{username: $("#accountusername").val(), oldusername: user.data.username, name: $("#accountname").val()});   
+                        socket.emit('changeUserDetails',{username: $("#accountusername").val(), oldusername: user.data.username, name: $("#accountname").val(), phone: $("#accountphone").val(), email: $("#accountemail").val()});   
                     }                    
                 });
                 
@@ -648,7 +668,10 @@
                     }  
                 }
             
-            
+            function validateEmail(email) {
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(email);
+            }
             
             function checkEditFormValidation(btn){
             
@@ -683,7 +706,17 @@
             function checkUserDetailsFormValidation(){
                  if(alphanumeric($("#accountusername").val(), false) && $("#accountusername").val().length > 0 ){
                      if(alphanumeric($("#accountname").val(), true) && $("#accountname").val().length > 0 ){
-                         return true;
+                         if($.isNumeric($("#accountphone").val()) || $("#accountphone").val() == ""){
+                              if(validateEmail(($("#accountemail").val())) || $("#accountemail").val() ==""){
+                                  return true;
+                              }  else{
+                                   bootbox.alert({message: "Email data incorrect. Only email format allowed or leave it blank.", backdrop: true});
+                               return false;
+                              }
+                               } else{
+                                   bootbox.alert({message: "Phone data incorrect. Only numbers allowed or leave it blank.", backdrop: true});
+                               return false;
+                               }
                      } else{
                          bootbox.alert({message:"Name data incorrect. Only letters, numbers and space allowed.", backdrop: true});
                          return false;
