@@ -2,11 +2,15 @@
 <html>
     <head>
         <script src="js/jquery-3.2.1.min.js"></script>
+        <script src="js/moment.js"></script>
         <script src="js/bootstrap.js"></script>
+        <script src="js/bootstrap-datetimepicker.js"></script>
         <script src="js/bootbox.min.js"></script>
         <script src="js/placeholder.js"></script>
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
         <link rel="stylesheet" type="text/css" href="css/myStyle.css">
+         <link rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.css">
+        
     </head>
     <body>
         <div id="wrap">
@@ -251,6 +255,16 @@
                                     <input type="text" class="form-control" id="addeventcourse">
                                     <label style = "margin-top:20px" for="addeventpostcode">Post Code of Course:</label>
                                     <input type="text" class="form-control" id="addeventpostcode">
+                                    
+                                    <div class="form-group">
+                                    <label style = "margin-top:20px" for="addeventdate">Date of Event:</label>
+                                    <div class='input-group date' data-date="" data-date-format="dd MM yyyy" id='addeventdate'>
+                                        <input type='text' class="form-control" readonly>
+                                        <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                    </div>
+                                </div>
                                 </div>
                         </div>                            
                             
@@ -278,8 +292,19 @@
             $(document).ready(function() {
                 $('#myCarousel').carousel({
                 interval: 10000
-                })
-            
+                });
+                
+                
+                	$('#addeventdate').datetimepicker({
+                        weekStart: 1,
+                        todayBtn:  1,
+                        autoclose: 1,
+                        todayHighlight: 1,
+                        startView: 2,
+                        minView: 2,
+                        forceParse: 0
+                    });
+                
                 
                 $('a .notop').click(function(e){
                     e.preventDefault();            
