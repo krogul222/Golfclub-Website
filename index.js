@@ -65,7 +65,6 @@ var listener = server.listen(process.env.PORT || 2000, function(){
     console.log("Listening on port", listener.address().port); 
 }); 
 
-
 // handle connection between server and clients
 
 const SOCKET_LIST = {};

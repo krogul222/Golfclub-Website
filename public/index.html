@@ -13,9 +13,10 @@
     </head>
     <body>
         <div id="wrap">
-            <!-- Navigation -->
+            <!-- Top menu bar begins -->
             <div class='navbar navbar-default navbar-static-top'>
                 <div class="container">
+                    <!-- Logo begins -->
                     <a href='#' class='navbar-brand'>
                         <text style="color:rgb(44,164,176)">
                             Ne
@@ -27,7 +28,9 @@
                             peria DMAN Golf Society
                         </text>
                     </a>
-                    <ul class="nav nav-pills navbar-right">  
+                    <!-- Logo ends -->
+                    <ul class="nav nav-pills navbar-right"> 
+                        <!-- Log in menu begins -->
                         <li id="login-menu">
                             <a href="#"  data-toggle="dropdown">Log in<span class="caret"></span></a>
                             <ul id="login-dp" class="dropdown-menu">
@@ -63,6 +66,9 @@
                                 </li>
                             </ul>
                         </li>
+                        <!-- Log in menu ends -->
+                        
+                        <!-- Logged user menu begins -->
                         <li id="loggedin" style="display:none">
                             <a href="#" data-toggle="dropdown">
                                 <span class="text" id="userMenuTitle">
@@ -105,6 +111,7 @@
                                 </li>
                             </ul>
                         </li>
+                        <!-- Logged user menu ends -->
                         <li>
                             <a href="#contact">
                                 Contact
@@ -112,9 +119,11 @@
                         </li>
                     </ul>
                 </div>
-            </div>            
+            </div>   
+            <!-- Top menu bar ends -->
 
-             <!-- Header Carousel, looped photos at top of the screen -->
+        <!-- Carousel begins -->
+            <!-- Header Carousel, looped photos at top of the screen -->
             <header id="myCarousel" class="carousel slide" data-interval="10000" data-ride="carousel">
                 
                 <!-- Indicators , carousel skeleton-->
@@ -156,12 +165,13 @@
                     </a>
                 </div>
             </header>
-
-            <!-- Let's get started frame-->
+        <!-- Carousel ends -->
+            
             <div class="container ">
                 <div class="row" style="margin-top: 50px">
                     <div  class="col-md-3 text-center" style="float:left">
                         <ul class="list-group well" id="glofmenu">
+                            <!-- Menu with general access begins -->
                             <li class="list-group-item" id="membershiplisting">
                                 <a class="notop" href="javascript:void(0)">
                                     Membership
@@ -192,9 +202,11 @@
                                     Player of the Year
                                 </a>
                             </li>
+                        <!-- Menu with general access ends -->
                         </ul>
                         
                         <ul class="list-group well" id="adminpanel" style="display:none">
+                        <!-- Menu with ADMIN access begins -->
                             <li class="list-group-item" id="addmemberLink">
                                 <a class="notop" href="javascript:void(0)">
                                     Add Member
@@ -209,8 +221,11 @@
                                     Add Society Event
                                 </a>
                             </li>
+                        <!-- Menu with ADMIN access ends -->
                         </ul>
                     </div>
+                    
+                    <!-- Committee list panel definition begins -->
                     <div class="col-md-6 col-md-offset-1" >
                         <div id="welcome" class="text-center well">
                             <h1>Welcome to Nexperia Golf Society Home Page!</h1>
@@ -235,7 +250,9 @@
                                 </tbody>
                             </table>
                         </div>
-
+                        <!-- Committee list panel definition ends -->
+                        
+                        <!-- Members list panel definition begins -->
                         <div id="membershiplistingcontent" style="display:none">
                             <div class="well  text-center" >
                                 <h1>Membership Listing</h1>
@@ -257,7 +274,10 @@
                                 </tbody>
                             </table>
                         </div>
-
+                        <!-- Members list panel definition ends -->
+                        
+                    <!-- Logged user panel definitions begin -->
+                        <!-- Account Settings panel definition begins -->
                         <div id="accountsettings" style="display:none">
                             <div class="well  text-center" >  
                                 <h1>Account Settings</h1>
@@ -309,15 +329,20 @@
                                 </button>
                             </div>            
                         </div>
-
+                        <!-- Account Settings panel definition ends -->
+                        
+                        <!-- User Stats panel definition begins -->
                         <div id="userstats" style="display:none">
                             <div class="well  text-center" >  
                                 <h1>User Stats</h1> 
                             </div>
                         </div>
-
+                        <!-- User Stats panel definition ends -->
+                    <!-- Logged user panel definitions end -->
+                        
+                    <!-- ADMIN  panels definitions begin -->
+                        <!-- Add member panel definition begins -->
                         <div id="addmember" style="display:none">
-
                             <div class="well  text-center" >  
                                 <h1>Add member</h1> 
                             </div>
@@ -351,7 +376,9 @@
                                 </div>
                             </form>
                         </div>
-
+                        <!-- Add member panel definition ends -->
+                        
+                        <!-- Edit members panel definition begins -->
                         <div id="editmembers" style="display:none">
                             <div class="well  text-center" >  
                                 <h1>Edit members</h1>     
@@ -360,7 +387,9 @@
                             <div class="list-group" id = "editmemberslist">
                             </div> 
                         </div>
-
+                        <!-- Edit members panel definition ends -->
+                        
+                        <!-- Add society event panel definition begins -->
                         <div id="createsocietyevent" style="display:none">
                             <div class="well  text-center" >  
                                 <h1>Publish a new event</h1> 
@@ -394,7 +423,9 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>                                     
+                        </div>
+                        <!-- Add society event panel definition ends -->
+                    <!-- ADMIN  panels definitions ends -->
                     </div>
                 </div>
             </div>
