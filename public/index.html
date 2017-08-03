@@ -414,46 +414,41 @@
         </footer>
         
         <script>
-            $(document).ready(function() {
+            $(document).ready(function(){
+                
                 $('#myCarousel').carousel({
-                interval: 10000
+                    interval: 10000
                 });
-                
-                
-                	$('#addeventdate').datetimepicker({
-                        weekStart: 1,
-                        todayBtn:  1,
-                        autoclose: 1,
-                        todayHighlight: 1,
-                        startView: 2,
-                        minView: 2,
-                        forceParse: 0
-                    });
+                    
+                $('#addeventdate').datetimepicker({
+                    weekStart: 1,
+                    todayBtn:  1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    startView: 2,
+                    minView: 2,
+                    forceParse: 0
+                });
                 
                 
                 $('a .notop').click(function(e){
                     e.preventDefault();            
                 });
                 
-                $("#glofmenu").on("click", "#committee", function(event){
-                    console.log('clicked');
+                $("#glofmenu").on("click", "#committee", function(event){;
                      hideAll();
                      $("#committeecontent").show();
-                     
-                    });
+                });
                 
                 $("#glofmenu").on("click", "#membershiplisting", function(event){
-                    console.log('clicked');
-                     hideAll();
-                     $("#membershiplistingcontent").show();
-                    
-                    console.log('-----------------------------');
-                    for(let i=0; i<MEMBERS.length; i++){
+                    hideAll();
+                    $("#membershiplistingcontent").show();
+                    for(let i = 0, length = MEMBERS.length; i < length; i++){
                         console.log(MEMBERS[i]);
                     }   
-                    });  
+                });  
                 
-                $("#accountsettingsLink").on("click" , function(event){
+                $("#accountsettingsLink").on("click", function(event){
                     hideAll();
                     $("#accountusername").val(user.data.username);
                     $("#accountname").val(user.data.name);
@@ -462,22 +457,22 @@
                     $("#accountsettings").show();
                 });
 
-                $("#userstatsLink").on("click" , function(event){
+                $("#userstatsLink").on("click", function(event){
                     hideAll();
                     $("#userstats").show();
                 });
                 
-                $("#addmemberLink").on("click" , function(event){
+                $("#addmemberLink").on("click", function(event){
                     hideAll();
                     $("#addmember").show();
                 });
 
-               $("#editmembersLink").on("click" , function(event){
+                $("#editmembersLink").on("click", function(event){
                     hideAll();
                     $("#editmembers").show();
                 });
                 
-               $("#createsocietyeventLink").on("click" , function(event){
+                $("#createsocietyeventLink").on("click" , function(event){
                     hideAll();
                     $("#createsocietyevent").show();
                 });
@@ -491,9 +486,7 @@
                     $("#addmember").hide();
                     $("#editmembers").hide();
                     $("#createsocietyevent").hide();
-                    
                     clearSecureData();
-
                 }
                 
                 function clearSecureData(){
@@ -501,18 +494,16 @@
                     $("#accountnewpassword").val("");
                     $("#accountcurrentpassword").val("");
                 }
-               
             });  
         </script>
         
-        <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script> 
+        <script src="https://cdn.socket.io/socket.io-1.4.5.js">
+        </script> 
         
         <script> 
-            
             let User = function(){
                 let self = {};
                 self.loggedin = false;
-                
                 return self;
             }
             
@@ -521,97 +512,91 @@
             let committee = [];
             var socket = io(); 
             var committeDataLoaded = false;
+            
             socket.emit('dataRequest', "membershiplisting");  
 
-            
-             socket.on('memberAdded', function(data){
-                    MEMBERS.push(data);
-                    updateMemberList();
-                    bootbox.alert({message: "Member has been added.", backdrop: true});
-             });
+            socket.on('memberAdded', function(data){
+                MEMBERS.push(data);
+                updateMemberList();
+                bootbox.alert({message: "Member has been added.", backdrop: true});
+            });
 
-             socket.on('memberEdited', function(data){
-
-                    updateMember(data);
-                    updateMemberList();
-                    bootbox.alert({message: "Member has been edited.", backdrop: true});
-             });          
+            socket.on('memberEdited', function(data){
+                updateMember(data);
+                updateMemberList();
+                bootbox.alert({message: "Member has been edited.", backdrop: true});
+            });          
             
-             socket.on('memberDeleted', function(data){
-
-                    deleteMember(data);
-                    updateMemberList();
-                    bootbox.alert({message: "Member has been deleted.", backdrop: true});
-             });   
+            socket.on('memberDeleted', function(data){
+                deleteMember(data);
+                updateMemberList();
+                bootbox.alert({message: "Member has been deleted.", backdrop: true});
+            });   
             
-             socket.on('usernametaken', function(data){
-                    bootbox.alert({message: "Username already taken.", backdrop: true});
-             });
-            
+            socket.on('usernametaken', function(data){
+                bootbox.alert({message: "Username already taken.", backdrop: true});
+            });
             
             socket.on('membershiplistingData', function(data){ 
                 $(document).ready(function() {
-                    for(let i =0, length = data.length; i < length; i++){
-                       MEMBERS.push(data[i]);        
-                       updateMemberPanels(i);
+                    for(let i = 0, length = data.length; i < length; i++){
+                        MEMBERS.push(data[i]);        
+                        updateMemberPanels(i);
                     }
-                    
                     committee = getCommittee();
-                    
-                    for(let i =0, length = committee.length; i < length; i++){
+                    for(let i = 0, length = committee.length; i < length; i++){
                         $('#committeetable tr:last').after('<tr><td>'+committee[i]["name"]+'</td><td>'+committee[i]["position"]+'</td><td>'+committee[i]["email"]+'</td><td>'+committee[i]["phone"]+'</td></tr>');       
                     }
-                });
-                                  
+                });                      
             }); 
             
             socket.on('passwordCorrect', function(data){
-                 
-                 if($("#accountnewpassword").val() === $("#accountrepeatnewpassword").val()){
-                     socket.emit('changePassword', {username: user.data.username, password: $('#accountnewpassword').val()} );
-                 } else{
-                     bootbox.alert({message: "New password doesn't match repeat password. Try again.", backdrop: true});
-                 }
+                if(($("#accountnewpassword").val()) === ($("#accountrepeatnewpassword").val())){
+                    socket.emit('changePassword', {username: user.data.username, password: $('#accountnewpassword').val()});
+                } else{
+                    bootbox.alert({message: "New password doesn't match repeat password. Try again.", backdrop: true});
+                }
             });
             
             socket.on('passwordIncorrect', function(data){
-                 bootbox.alert({message: "Current password incorrect!", backdrop: true});
+                bootbox.alert({message: "Current password incorrect!", backdrop: true});
             });
             
             socket.on('passwordChanged', function(data){
-                 bootbox.alert({message: "Password was changed!", backdrop: true});
+                bootbox.alert({message: "Password was changed!", backdrop: true});
             });
             
-            socket.on('userDetailsChanged', function(data){
-                 
-                 console.log("Update " + data.username);
-                 let member = getMember(user.data.username);
-                 member["username"] = data.username;
-                 member["name"] = data.name;
-                 member["email"] = data.email;
-                 member["phone"] = data.phone;
-                 user.data.name = member["name"];
-                 user.data.username = member["username"];
-                 user.data.email = member["email"];
-                 user.data.phone = member["phone"];
+            socket.on('userDetailsChanged', function(data){     
+                let member = getMember(user.data.username);
                 
-                 updateMemberList();
+                member["username"] = data.username;
+                member["name"] = data.name;
+                member["email"] = data.email;
+                member["phone"] = data.phone;
                 
-                 $("#accountusername").val(user.data.username);
-                 $("#accountname").val(user.data.name);
-                 $("#accountemail").val(user.data.email);
-                 $("#accountphone").val(user.data.phone);
+                user.data.name = member["name"];
+                user.data.username = member["username"];
+                user.data.email = member["email"];
+                user.data.phone = member["phone"];
+                
+                updateMemberList();
+                
+                $("#accountusername").val(user.data.username);
+                $("#accountname").val(user.data.name);
+                $("#accountemail").val(user.data.email);
+                $("#accountphone").val(user.data.phone);
                     
-                 showUserTab();
-                 bootbox.alert({message: "User details were changed!", backdrop: true});
+                showUserTab();
+                
+                bootbox.alert({message: "User details were changed!", backdrop: true});
             });
+            
             socket.on('signInResponse', function(data){
                 if(data.success){
-                   user.loggedin = true;
-                  // getMember(data.username).name;
-                    
+                    user.loggedin = true;
                     user["data"] = data;
-                    if(data.username!=="admin"){
+                    
+                    if(data.username !== "admin"){
                         let member = (getMember(data.username));
                         user.data.name = member["name"];
                         user.data.phone = member["phone"];
@@ -622,28 +607,26 @@
                     }
                        
                    showUserTab();
-                    console.log("Admin "+ user["data"].admin + " name: "+user["data"].name);
+                    
                    if(user["data"].admin === "true"){
                        $("#adminpanel").show();
                    }    
-                   }
+                }
             });
             
             $(document).ready(function() {
-                $("#loginbtn").on("click" , function(event){
+                $("#loginbtn").on("click", function(event){
                     socket.emit('signIn', {username: $('#loginUsername').val(), password: $('#loginPassword').val()} );
                 });
                 
-                $("#addmemberbtn").on("click",function(event){
+                $("#addmemberbtn").on("click", function(event){
                     if(checkMemberFormValidation()){
-                        console.log("Form validate.");
                         socket.emit('addMember', {username:$("#addmemberusername").val(), password: $("#addmemberusername").val(), name: $("#addmembername").val(), 
                         handicapExact:$("#addmemberhandicap").val(), email:"", admin:"false", handicapPlaying:$("#addmemberhandicap").val(), phone:"", committee: "false"});
                     }
-                    
                 });
                 
-                $("#editmemberslist").on("click","a",function(event){
+                $("#editmemberslist").on("click", "a", function(event){
                     let id = $(this).attr('id');
                     let propertiesId = "#member"+id;
                     
@@ -651,91 +634,76 @@
                 });
                 
                 $("#changepasswordpanel").on("click","button",function(event){
-                
-                 socket.emit('checkCurrentPassword',{username: user.data.username, password: $("#accountcurrentpassword").val()});
                     
+                    socket.emit('checkCurrentPassword', {username: user.data.username, password: $("#accountcurrentpassword").val()});
                 });
                 
                 $("#changedetailspanel").on("click","button",function(event){
-                    
                     if(checkUserDetailsFormValidation()){
                         socket.emit('changeUserDetails',{username: $("#accountusername").val(), oldusername: user.data.username, name: $("#accountname").val(), phone: $("#accountphone").val(), email: $("#accountemail").val()});   
                     }                    
                 });
                 
-                 $("#editmemberslist").on("click","button",function(event){
+                $("#editmemberslist").on("click", "button", function(event){
+                    let username = "";
+                    let name = "";
+                    let handicap = "";
                      
-                     console.log("Apply changes clicked");
-                     //let id = $(this).attr('id');
-                     let username = "";
-                     let name = "";
-                     let handicap = "";
-                     
-                     $(this).parent().find('input').each(function(){
-                     
+                    $(this).parent().find('input').each(function(){
                         switch($(this).attr('id')){
-                                case "editmemberusername" : 
-                                    username = $(this).val();
-                                break;
-                                case "editmembername" : 
-                                    name = $(this).val();
-                                break;
-                                case "editmemberhandicap" :
-                                    handicap = $(this).val();
-                                break;
-                                                }    
+                            case "editmemberusername": 
+                                username = $(this).val();
+                            break;
+                            case "editmembername": 
+                                name = $(this).val();
+                            break;
+                            case "editmemberhandicap":
+                                handicap = $(this).val();
+                            break;
+                        }    
+                    });
                      
-                     });
-                     
-                     if($(this).attr('id') == "editmember"){
-                         if(checkEditFormValidation($(this))){
+                    if(($(this).attr('id')) == "editmember"){
+                        if(checkEditFormValidation($(this))){
                             socket.emit('editMember',{username: username, name: name, handicapExact: handicap});
-                         }
-                     } else{
-                         bootbox.confirm("Are you sure to delete "+username+" ?" , function(result){
-                         if(result){
-                            socket.emit('deleteMember',{username: username, name: name, handicapExact: handicap});  
-                         }
-                     }); 
-
-                     }
-                     
-                     
-                 });
-            
+                        }
+                    } else{
+                        bootbox.confirm("Are you sure to delete "+username+" ?" , function(result){
+                            if(result){
+                                socket.emit('deleteMember',{username: username, name: name, handicapExact: handicap});  
+                            }
+                        }); 
+                    }
+                });
             
                 $("#logoutLink").on("click" , function(event){
-                    $("#login-menu").show();
                     user.loggedin = false;
+                    
+                    $("#login-menu").show();
                     $("#loggedin").hide();
                     $("#adminpanel").hide();
                     $("#accountsettings").hide();
                     $("#userstats").hide();
                     $("#addmember").hide();
                     $("#editmembers").hide();
-                     $("#createsocietyevent").hide();
+                    $("#createsocietyevent").hide();
                 });
             });
             
-                function showUserTab(){
-                    $("#login-menu").hide();
-                    $("#loggedin").show();
-                    $("#userMenuTitle").text(user["data"].username);
-
-                }
+            function showUserTab(){
+                $("#login-menu").hide();
+                $("#loggedin").show();
+                $("#userMenuTitle").text(user["data"].username);
+            }
             
-            function updateMember(member){
-                
+            function updateMember(member){   
                 for(let i = 0, length = MEMBERS.length; i < length; i++){
                     if(MEMBERS[i]["username"] === member.username){
-                        
                         MEMBERS[i]["name"] = member.name;
                         MEMBERS[i]["handicapExact"] = member.handicapExact;
-                        
                         break;
                     }
                 }
-                
             }
             
             function getMember(username){
@@ -747,30 +715,26 @@
                 }
             }
             
-            function deleteMember(member){
-                
+            function deleteMember(member){    
                 for(let i = 0, length = MEMBERS.length; i < length; i++){
-                    if(MEMBERS[i]["username"] === member.username){
-                        
+                    if(MEMBERS[i]["username"] === member.username){    
                         MEMBERS.splice(i, 1);;
                         break;
                     }
-                }
-                
+                }  
             }            
             
             function updateMemberList(){
-                  $('#memberstable').find('tbody').empty();
-                  $('#editmemberslist').empty();      
+                $('#memberstable').find('tbody').empty();
+                $('#editmemberslist').empty();      
                 
-                  for(let i =0, length = MEMBERS.length; i < length; i++){     
-                       updateMemberPanels(i);
-                    }
+                for(let i =0, length = MEMBERS.length; i < length; i++){     
+                    updateMemberPanels(i);
+                }
             }
             
             // Function to check letters and numbers  
-            function alphanumeric(inputtxt, plusSpace)  
-                {  
+            function alphanumeric(inputtxt, plusSpace){  
                 let letterNumber;
                     
                 if(plusSpace === true){
@@ -780,92 +744,89 @@
                     letterNumber = /^[\w\-\s]+$/;
                     letterNumber = /^[0-9a-zA-Z]+$/;
                 }
+                
                 if(inputtxt.match(letterNumber)){  
                     return true;  
-                }  else {   
-                //    alert("message");   
+                } else {    
                     return false;   
-                    }  
-                }
+                }  
+            }
             
             function validateEmail(email) {
-                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 return re.test(email);
             }
             
             function checkEditFormValidation(btn){
-            
-            let name = "";
-            let handicap = "";    
+                let name = "";
+                let handicap = "";    
                 
-            btn.parent().find('input').each(function(){
-                
-                switch($(this).attr('id')){
-                        case "editmembername" : 
+                btn.parent().find('input').each(function(){
+                    switch($(this).attr('id')){
+                        case "editmembername": 
                             name = $(this).val();
                             break;
                         case "editmemberhandicap" :
                             handicap = $(this).val();
                             break;
-                        }    
-                     
-                });                
-                if(alphanumeric(name, true) && name.length > 0 ){
-                            if($.isNumeric(handicap)){
-                               return true;
-                               } else{
-                                bootbox.alert({message: "Handicap data incorrect. Only numbers allowed.", backdrop: true});
-                               return false;
-                               }
-                        } else{
-                           bootbox.alert({message:"Name data incorrect. Only letters, numbers and space allowed.", backdrop: true});
-                           return false;
-                        }
+                        }        
+                }); 
+                
+                if(alphanumeric(name, true) && name.length > 0){
+                    if($.isNumeric(handicap)){
+                        return true;
+                    } else{
+                        bootbox.alert({message: "Handicap data incorrect. Only numbers allowed.", backdrop: true});
+                        return false;
+                    }
+                } else{
+                    bootbox.alert({message:"Name data incorrect. Only letters, numbers and space allowed.", backdrop: true});
+                    return false;
+                }
             }
             
             function checkUserDetailsFormValidation(){
-                 if(alphanumeric($("#accountusername").val(), false) && $("#accountusername").val().length > 0 ){
-                     if(alphanumeric($("#accountname").val(), true) && $("#accountname").val().length > 0 ){
-                         if($.isNumeric($("#accountphone").val()) || $("#accountphone").val() == ""){
-                              if(validateEmail(($("#accountemail").val())) || $("#accountemail").val() ==""){
-                                  return true;
-                              }  else{
-                                   bootbox.alert({message: "Email data incorrect. Only email format allowed or leave it blank.", backdrop: true});
-                               return false;
-                              }
-                               } else{
-                                   bootbox.alert({message: "Phone data incorrect. Only numbers allowed or leave it blank.", backdrop: true});
-                               return false;
-                               }
+                if(alphanumeric($("#accountusername").val(), false) && $("#accountusername").val().length > 0 ){
+                    if(alphanumeric($("#accountname").val(), true) && $("#accountname").val().length > 0 ){
+                        if($.isNumeric($("#accountphone").val()) || $("#accountphone").val() == ""){
+                            if(validateEmail(($("#accountemail").val())) || $("#accountemail").val() == ""){
+                                return true;
+                            } else{
+                                bootbox.alert({message: "Email data incorrect. Only email format allowed or leave it blank.", backdrop: true});
+                                return false;
+                            }
+                        } else{
+                            bootbox.alert({message: "Phone data incorrect. Only numbers allowed or leave it blank.", backdrop: true});
+                            return false;
+                        }
                      } else{
-                         bootbox.alert({message:"Name data incorrect. Only letters, numbers and space allowed.", backdrop: true});
-                         return false;
+                        bootbox.alert({message:"Name data incorrect. Only letters, numbers and space allowed.", backdrop: true});
+                        return false;
                      }
-                 } else{
+                } else{
                     bootbox.alert({message: "Username data incorrect. Only letters and numbers allowed.", backdrop: true});
                     return false;   
-                 }
+                }
             }
             
             function checkMemberFormValidation(){
-                 if(alphanumeric($("#addmemberusername").val(), false) && $("#addmemberusername").val().length > 0 ){
-                        if(alphanumeric($("#addmembername").val(), true) && $("#addmembername").val().length > 0 ){
-                            if($.isNumeric($("#addmemberhandicap").val())){
-                               return true;
-                               } else{
-                                   bootbox.alert({message: "Handicap data incorrect. Only numbers allowed.", backdrop: true});
-                               return false;
-                               }
+                if(alphanumeric($("#addmemberusername").val(), false) && $("#addmemberusername").val().length > 0 ){
+                    if(alphanumeric($("#addmembername").val(), true) && $("#addmembername").val().length > 0 ){
+                        if($.isNumeric($("#addmemberhandicap").val())){
+                            return true;
                         } else{
-                           bootbox.alert({message:"Name data incorrect. Only letters, numbers and space allowed.", backdrop: true});
-                           return false;
+                            bootbox.alert({message: "Handicap data incorrect. Only numbers allowed.", backdrop: true});
+                            return false;
                         }
-                       } else {
-                           bootbox.alert({message: "Username data incorrect. Only letters and numbers allowed.", backdrop: true});
+                    } else{
+                        bootbox.alert({message:"Name data incorrect. Only letters, numbers and space allowed.", backdrop: true});
                         return false;
-                    }
+                        }
+                } else {
+                    bootbox.alert({message: "Username data incorrect. Only letters and numbers allowed.", backdrop: true});
+                    return false;
+                }
             }
-
             
             function getCommittee(){
                 let arr =[];
@@ -875,7 +836,6 @@
                         arr.push(MEMBERS[i]);
                     }
                 }
-                
                 return arr;
             }
             
@@ -896,8 +856,6 @@
                         
                 $("#member"+i).append('<button id="editmember" type="button" style="margin-top:20px" class="btn btn-primary btn-block">Apply changes</button>');
             }
-
         </script> 
-        
     </body>
 </html>
