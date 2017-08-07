@@ -138,3 +138,11 @@ body {
     display: inline-block;
     margin-right: 20px;
 }
+
+/*---------------------------------*/
+
+.carousel-inner > .item > img, 
+.carousel-inner > .item > a > img{
+width: 100%; /* use this, or not */
+margin: auto;
+}
