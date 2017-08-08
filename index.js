@@ -4,9 +4,9 @@ var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfso
 
 //var db = mongojs('localhost:27017/golf', ['account']);      // connect to database
 
-db.account.remove();
-/*
-db.account.insert({username:"johnhart", name: "John Hart", password: "johnhart", email: "johnymike@hotmail.com", phone: "07930980836", committee: "true", position: "President", handicapExact: "14.2", account:"member"});
+//db.account.remove();
+
+db.account.insert({username:"johnhart", name: "John Hart", password: "johnhart", email: "johnymike@hotmail.com", phone: "07930980836", committee: "true", position: "President", handicapExact: "14.2", account:"member", admin: "true"});
 
 db.account.insert({username:"garynorton", name: "Gary Norton", password: "garynorton", email: "", phone: "", committee: "true", position: "Treasurer", handicapExact: "22", account:"member"});
 
@@ -21,7 +21,7 @@ db.account.insert({username:"stephenpercy", name: "Stephen Percy", password: "st
 db.account.insert({username:"admin", name: "Stephen Percy", password: "123", admin: "true", account:"admin"});
 
 
-*/
+
 //functions to validate data using database
 
 let isValidPassword = function(data, cb){       // check is password and username match any database record 
