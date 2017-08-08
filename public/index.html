@@ -428,6 +428,11 @@
                                     Post Code of Course:
                                 </label>
                                 <input type="text" class="form-control" id="addeventpostcode">
+                                
+                                <label style = "margin-top:20px" for="addeventclub">
+                                    Club or Course Website:
+                                </label>
+                                <input type="text" class="form-control" id="addeventclub">
 
                                 <div class="form-group">
                                     <label style = "margin-top:20px" for="addeventdate">
@@ -440,6 +445,41 @@
                                         </span>
                                     </div>
                                 </div>
+
+                                <label style = "margin-top:20px" for="addeventprice">
+                                    Price per Head:
+                                </label>
+                                <input type="text" class="form-control" id="addeventprice">    
+                                
+                                <label style = "margin-top:20px" for="addeventwhatincluded">
+                                    What's included:
+                                </label>
+                                <input type="text" class="form-control" id="addeventwhatincluded">
+                                
+                                <label style = "margin-top:20px" for="addeventmaxparticipants">
+                                    Max Number of Participants:
+                                </label>
+                                <input type="text" class="form-control" id="addeventmaxparticipants">
+
+                                <label style = "margin-top:20px" for="addevenorganiser">
+                                    Main Event Organiser:
+                                </label>
+                                <input type="text" class="form-control" id="addevenorganiser">                                
+                                <div class="form-group">
+                                    <label style = "margin-top:20px" for="addeventteatime">
+                                        First Tee time:
+                                    </label>
+                                    <div class='input-group date form-time' data-date="" data-date-format="hh:ii" id='addeventteatime'>
+                                        <input type='text' class="form-control" readonly>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-time"></span>
+                                        </span>
+                                    </div>
+                                </div>      
+                                
+                                <button id="addeventbtn" type="button" style = "margin-top:20px" class="btn btn-primary btn-block">
+                                    Publish new event
+                                </button>
                             </div>
                         </div>
                         <!-- Add society event panel definition ends -->
@@ -526,6 +566,16 @@
                     todayHighlight: 1,
                     startView: 2,
                     minView: 2,
+                    forceParse: 0
+                });
+                
+                $('#addeventteatime').datetimepicker({ // fancy tea-time picking for add society event panel
+                    autoclose: 1,
+                    pickerPosition: "top-right",
+                    todayHighlight: 1,
+                    startView: 1,
+                    minView: 0,
+                    maxView: 1,
                     forceParse: 0
                 });
                 
