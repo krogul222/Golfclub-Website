@@ -4,7 +4,7 @@ var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfso
 
 //var db = mongojs('localhost:27017/golf', ['account']);      // connect to database
 
-//db.account.remove();
+db.account.remove();
 /*
 db.account.insert({username:"johnhart", name: "John Hart", password: "johnhart", email: "johnymike@hotmail.com", phone: "07930980836", committee: "true", position: "President", handicapExact: "14.2", account:"member"});
 
