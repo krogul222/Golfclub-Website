@@ -3,8 +3,8 @@ var express = require('express');
 var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event']);
 
 //var db = mongojs('localhost:27017/golf', ['account','event']);      // connect to database
-
-//db.account.remove();
+/*
+db.account.remove();
 
 db.account.insert({username:"johnhart", name: "John Hart", password: "johnhart", email: "johnymike@hotmail.com", phone: "07930980836", committee: "true", position: "President", handicapExact: "14.2", account:"member", admin: "true"});
 
@@ -21,8 +21,8 @@ db.account.insert({username:"stephenpercy", name: "Stephen Percy", password: "st
 db.account.insert({username:"admin", name: "Stephen Percy", password: "123", admin: "true", account:"admin"});
 
 
-//db.event.remove();
-/*
+db.event.remove();
+
 db.event.insert({name: "August Society Day", course: "Dukinfield Golf Club", postcode: "SK165GF", website: "http://www.dukinfieldgolfclub.co.uk/", price: "15", included: "golf", maxplayers: "20", firstteatime: "09:30", day: "7", month: "8", year: "2017", organiser: "Stephen Percy", notes: "" });
 
 db.event.insert({name: "1st game of the year", course: "North Manchester", postcode: "", website: "", price: "18.50", included: "bacon butty and coffee", maxplayers: "0", firstteatime: "09:30", day: "04", month: "03", year: "2016", organiser: "Gary Norton", notes: "" });
@@ -33,8 +33,8 @@ db.event.insert({name: "Marple", course: "Marple", postcode: "", website: "", pr
 
 db.event.insert({name: "Cavendish - the return", course: "Cavendish", postcode: "", website: "", price: "18", included: "golf", maxplayers: "16", firstteatime: "08:10", day: "13", month: "09", year: "2016", organiser: "John Hart", notes: "Back to Cavendish for our half price game after April's game there was hit with snow! Only 16 places so names down quick." });
 
-db.event.insert({name: "STAMFORD", course: "Stamford G.C", postcode: "", website: "", price: "15", included: "golf", maxplayers: "16", firstteatime: "09:45", day: "05", month: "10", year: "2016", organiser: "John Hart", notes: "" });*/
-
+db.event.insert({name: "STAMFORD", course: "Stamford G.C", postcode: "", website: "", price: "15", included: "golf", maxplayers: "16", firstteatime: "09:45", day: "05", month: "10", year: "2016", organiser: "John Hart", notes: "" });
+*/
 //db.event.insert({})
 
 //functions to validate data using database
