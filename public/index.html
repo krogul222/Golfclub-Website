@@ -240,6 +240,11 @@
                                     Add Society Event
                                 </a>
                             </li>
+                            <li class="list-group-item" id="editsocietyeventsLink">
+                                <a class="notop" href="javascript:void(0)">
+                                    Edit Society Events
+                                </a>
+                            </li>
                         <!-- Menu with ADMIN access ends -->
                         </ul>
                     </div>
@@ -310,11 +315,15 @@
                                 </tbody>
                             </table>
                             
-                            <div class = "text-center">
-                                <button type="button" class="btn btn-primary btn-arrow-left" style = "margin-bottom: 20px">Prev</button>
-                                <button type="button" class="btn btn-primary" style = "margin-left: 20px; margin-right: 20px; margin-bottom: 20px">2017</button>
-                                <button type="button" class="btn btn-primary btn-arrow-right" style = "margin-bottom: 20px">Next</button>
+                            <div class = "text-center well">
+                                <div class="list-group" id="eventlist">
+                                </div> 
+                                <button type="button" class="btn btn-primary btn-arrow-left" style = "margin-bottom: 20px" id = "eventprevyearbtn">Prev</button>
+                                <button type="button" class="btn btn-primary" style = "margin-left: 20px; margin-right: 20px; margin-bottom: 20px" id = "eventlistbtn">2017</button>
+                                <button type="button" class="btn btn-primary btn-arrow-right" style = "margin-bottom: 20px" id = "eventnextyearbtn">Next</button>
                             </div>
+                            
+                            
                         </div>
                         <!-- Society events panel definition ends -->
                         
@@ -431,6 +440,100 @@
                         </div>
                         <!-- Edit members panel definition ends -->
                         
+                        <!-- Edit Society Events definition begins -->
+                        <div id="editsocietyevents" style="display:none">
+                            <div class="well  text-center" >  
+                                <h1>Edit Society Events</h1>     
+                            </div>
+                            <div class = "well" id = "editeventpanel">
+                                
+                                <button id="editeventbtn" type="button" style = "margin-bottom:20px" class="btn btn-danger btn-block">
+                                    Delete Event
+                                </button>
+                                
+                                <label style = "margin-top:20px" for="editeventname">
+                                    Event name:
+                                </label>
+                                <input type="text" class="form-control" id="editeventname">
+
+                                <label style = "margin-top:20px" for="editeventcourse">
+                                    Course:
+                                </label>
+                                <input type="text" class="form-control" id="editeventcourse">
+
+                                <label style = "margin-top:20px" for="editeventpostcode">
+                                    Post Code of Course:
+                                </label>
+                                <input type="text" class="form-control" id="editeventpostcode">
+                                
+                                <label style = "margin-top:20px" for="editeventclub">
+                                    Club or Course Website:
+                                </label>
+                                <input type="text" class="form-control" id="editeventclub">
+
+                                <div class="form-group">
+                                    <label style = "margin-top:20px" for="editeventdate">
+                                        Date of Event:
+                                    </label>
+                                    <div class='input-group date' data-date="" data-date-format="dd MM yyyy" id='editeventdate'>
+                                        <input type='text' class="form-control" readonly id="editneweventdate">
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <label style = "margin-top:20px" for="editeventprice">
+                                    Price per Head:
+                                </label>
+                                <input type="text" class="form-control" id="editeventprice">    
+                                
+                                <label style = "margin-top:20px" for="editeventwhatincluded">
+                                    What's included:
+                                </label>
+                                <input type="text" class="form-control" id="editeventwhatincluded">
+                                
+                                <label style = "margin-top:20px" for="editeventmaxparticipants">
+                                    Max Number of Participants:
+                                </label>
+                                <input type="text" class="form-control" id="editeventmaxparticipants">
+
+                                <label style = "margin-top:20px" for="editevenorganiser">
+                                    Main Event Organiser:
+                                </label>
+                                <input type="text" class="form-control" id="editevenorganiser">                                
+                                <div class="form-group">
+                                    <label style = "margin-top:20px" for="editeventteatime">
+                                        First Tea time:
+                                    </label>
+                                    <div class='input-group date form-time' data-date="" data-date-format="hh:ii" id='editeventteatime'>
+                                        <input type='text' class="form-control" readonly>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-time"></span>
+                                        </span>
+                                    </div>
+                                </div>      
+                                
+                                
+                                <div class="form-group">
+                                    <label for="editeventnotes">Notes:</label>
+                                    <textarea class="form-control" rows="5" id="editeventnotes"></textarea>
+                                </div> 
+                                
+                                <button id="editeventbtn" type="button" style = "margin-top:20px" class="btn btn-primary btn-block">
+                                    Apply changes
+                                </button>
+                            </div>
+                            <div class = "text-center well">
+                                <div class="list-group" id="editeventlist">
+                                </div> 
+                                <button type="button" class="btn btn-primary btn-arrow-left" style = "margin-bottom: 20px" id = "editeventprevyearbtn">Prev</button>
+                                <button type="button" class="btn btn-primary" style = "margin-left: 20px; margin-right: 20px; margin-bottom: 20px" id = "editeventlistbtn">2017</button>
+                                <button type="button" class="btn btn-primary btn-arrow-right" style = "margin-bottom: 20px" id = "editeventnextyearbtn">Next</button>
+                            </div>
+                        </div>
+                        <!-- Edit Society Event panel definition ends -->
+                        
                         <!-- Add society event panel definition begins -->
                         <div id="createsocietyevent" style="display:none">
                             <div class="well  text-center" >  
@@ -500,6 +603,12 @@
                                         </span>
                                     </div>
                                 </div>      
+                                
+                                
+                                <div class="form-group">
+                                    <label for="addeventnotes">Notes:</label>
+                                    <textarea class="form-control" rows="5" id="addeventnotes"></textarea>
+                                </div> 
                                 
                                 <button id="addeventbtn" type="button" style = "margin-top:20px" class="btn btn-primary btn-block">
                                     Publish new event
@@ -577,6 +686,11 @@
                     $("#editmembers").show();
                 });
                 
+                $("#editsocietyeventsLink").on("click", function(event){  // show edits member panel
+                    hideAll();
+                    $("#editsocietyevents").show();
+                });
+                
                 $("#createsocietyeventLink").on("click" , function(event){  // show add event panel
                     hideAll();
                     $("#createsocietyevent").show();
@@ -624,6 +738,7 @@
                     $("#editmembers").hide();
                     $("#createsocietyevent").hide();
                     $("#societyeventscontent").hide();
+                    $("#editsocietyevents").hide();
                     clearSecureData();
                 }
                 
@@ -648,6 +763,8 @@
             var user = User();
             const MEMBERS = [];
             const SOCIETY_EVENTS = [];
+            let societyEventsYear = 0;
+            
             let committee = [];
             var socket = io(); 
             var committeDataLoaded = false;
@@ -699,8 +816,11 @@
                     
                     let index = getLastEventIndex();
                     
-                    $('#societyeventstable').find('tbody').empty();
-                    $('#societyeventstable').find('tbody').append('<tr><td>Event Name:</td><td>'+SOCIETY_EVENTS[index]["name"]+'</td></tr>'+'<tr><td>Course:</td><td>'+SOCIETY_EVENTS[index]["course"]+'</td></tr>'+'<tr><td>Post Code of Course:</td><td>'+SOCIETY_EVENTS[index]["postcode"]+'</td></tr>'+'<tr><td>Club or Course Website:</td><td>'+SOCIETY_EVENTS[index]["website"]+'</td></tr>'+'<tr><td>Date of Event:</td><td>'+SOCIETY_EVENTS[index]["day"]+'/'+SOCIETY_EVENTS[index]["month"]+'/'+SOCIETY_EVENTS[index]["year"]+'</td></tr>'+'<tr><td>First Tea Time:</td><td>'+SOCIETY_EVENTS[index]["firstteatime"]+'</td></tr>'+'<tr><td>Price per Head:</td><td>'+SOCIETY_EVENTS[index]["price"]+'</td></tr>'+"<tr><td>What's included:</td><td>"+SOCIETY_EVENTS[index]["included"]+'</td></tr>'+'<tr><td>Max Number of Participants:</td><td>'+SOCIETY_EVENTS[index]["maxplayers"]+'</td></tr>'+'<tr><td>Main Event Organiser:</td><td>'+SOCIETY_EVENTS[index]["organiser"]+'</td></tr>');       
+                    updateSocietyEventTable(index);
+                    
+                    societyEventsYear = SOCIETY_EVENTS[index]["year"];
+                    
+                    updateSocietyEventList(SOCIETY_EVENTS[index]["year"]);
                     
                 });                      
             }); 
@@ -790,6 +910,28 @@
                     let propertiesId = "#member"+id;
                     
                     $(propertiesId).slideToggle();
+                });
+                
+                $("#eventlist").on("click", "a", function(event){
+                    let id = $(this).attr('id');
+                    
+                    updateSocietyEventTable(id);
+                });
+                
+                $("#eventnextyearbtn").on("click", function(event){
+                    console.log("Year "+societyEventsYear+"");
+                    if(societyEventsYear < SOCIETY_EVENTS[getLastEventIndex()]["year"]){
+                        societyEventsYear++;
+                        updateSocietyEventList(societyEventsYear);
+                    }
+                });
+
+                $("#eventprevyearbtn").on("click", function(event){
+                    console.log("Year p"+getOldestEventIndex());
+                    if(societyEventsYear > SOCIETY_EVENTS[getOldestEventIndex()]["year"]){
+                        societyEventsYear--;
+                        updateSocietyEventList(societyEventsYear);
+                    }
                 });
                 
                 $("#changepasswordpanel").on("click","button",function(event){
@@ -1016,6 +1158,27 @@
                 $("#member"+i).append('<button id="editmember" type="button" style="margin-top:20px" class="btn btn-primary btn-block">Apply changes</button>');
             }
             
+            
+            function updateSocietyEventTable(index){
+                
+                $('#societyeventstable').find('tbody').empty();
+                $('#societyeventstable').find('tbody').append('<tr><td>Event Name:</td><td align="center">'+SOCIETY_EVENTS[index]["name"]+'</td></tr>'+'<tr><td>Course:</td><td align="center">'+SOCIETY_EVENTS[index]["course"]+'</td></tr>'+'<tr><td>Post Code of Course:</td><td align="center">'+SOCIETY_EVENTS[index]["postcode"]+'</td></tr>'+'<tr><td>Club or Course Website:</td><td align="center">'+SOCIETY_EVENTS[index]["website"]+'</td></tr>'+'<tr><td>Date of Event:</td><td align="center">'+SOCIETY_EVENTS[index]["day"]+'/'+SOCIETY_EVENTS[index]["month"]+'/'+SOCIETY_EVENTS[index]["year"]+'</td></tr>'+'<tr><td>First Tea Time:</td><td align="center">'+SOCIETY_EVENTS[index]["firstteatime"]+'</td></tr>'+'<tr><td>Price per Head:</td><td align="center">'+SOCIETY_EVENTS[index]["price"]+'</td></tr>'+"<tr><td>What's included:</td><td align='center'>"+SOCIETY_EVENTS[index]["included"]+'</td></tr>'+'<tr><td>Max Number of Participants:</td><td align="center">'+SOCIETY_EVENTS[index]["maxplayers"]+'</td></tr>'+'<tr><td>Main Event Organiser:</td><td align="center">'+SOCIETY_EVENTS[index]["organiser"]+'</td></tr>'+'<tr><td>Notes:</td><td align="center">'+SOCIETY_EVENTS[index]["notes"]+'</td></tr>');
+            }
+            
+            function updateSocietyEventList(year){
+                
+                let arr = [];
+                $('#eventlist').empty();
+                console.log("update event");
+                for(let i=0, length = SOCIETY_EVENTS.length; i < length; i++){
+                    if(SOCIETY_EVENTS[i]['year'] == year){
+                       $('#eventlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+i+'" >'+SOCIETY_EVENTS[i]["name"]+'</a>');
+                    }
+                }
+                
+                $('#eventlistbtn').text(year);
+            }
+            
             function getLastEventIndex(){
                 let arr = [];
                 
@@ -1027,15 +1190,25 @@
                 
             }
             
+            function getOldestEventIndex(){
+                let arr = [];
+                
+                for(let i=0, length = SOCIETY_EVENTS.length; i < length; i++){
+                    arr.push(SOCIETY_EVENTS[i]['year']+SOCIETY_EVENTS[i]['month']+SOCIETY_EVENTS[i]['day']);
+                }
+                
+                return indexOfMin(arr);
+            }
+            
             function indexOfMax(arr) {
                 if (arr.length === 0) {
                     return -1;
                 }
 
-                var max = arr[0];
-                var maxIndex = 0;
+                let max = arr[0];
+                let maxIndex = 0;
 
-                for (var i = 1; i < arr.length; i++) {
+                for (let i = 1; i < arr.length; i++) {
                     if (arr[i] > max) {
                         maxIndex = i;
                         max = arr[i];
@@ -1043,6 +1216,23 @@
                 }
 
                 return maxIndex;
+            }
+            
+            function indexOfMin(arr){
+                if (arr.length === 0) {
+                    return -1;
+                }
+
+                let index = 0;
+                let value = arr[0];
+                for (var i = 1; i < arr.length; i++) {
+                  if (arr[i] < value) {
+                    value = arr[i];
+                    index = i;
+                  }
+                }
+                
+                return index;
             }
         </script> 
     </body>
