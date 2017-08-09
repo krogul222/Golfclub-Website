@@ -514,7 +514,6 @@
                                     </div>
                                 </div>      
                                 
-                                
                                 <div class="form-group">
                                     <label for="editeventnotes">Notes:</label>
                                     <textarea class="form-control" rows="5" id="editeventnotes"></textarea>
@@ -722,6 +721,26 @@
                     forceParse: 0
                 });
                 
+                $('#editeventdate').datetimepicker({ // fancy date picking for add society event panel
+                    weekStart: 1,
+                    todayBtn:  1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    startView: 2,
+                    minView: 2,
+                    forceParse: 0
+                });
+                
+                $('#editeventteatime').datetimepicker({ // fancy tea-time picking for add society event panel
+                    autoclose: 1,
+                    pickerPosition: "top-right",
+                    todayHighlight: 1,
+                    startView: 1,
+                    minView: 0,
+                    maxView: 1,
+                    forceParse: 0
+                });                
+                
                 // usefull functions:
                 
                 $('a .notop').click(function(e){    // do not go to the top of page after clicking .notop link
@@ -764,6 +783,7 @@
             const MEMBERS = [];
             const SOCIETY_EVENTS = [];
             let societyEventsYear = 0;
+            let societyEditEventsYear = 0;
             
             let committee = [];
             var socket = io(); 
@@ -817,10 +837,13 @@
                     let index = getLastEventIndex();
                     
                     updateSocietyEventTable(index);
+                    updateEditSocietyEventForm(index);
                     
                     societyEventsYear = SOCIETY_EVENTS[index]["year"];
+                    societyEditEventsYear = SOCIETY_EVENTS[index]["year"];
                     
                     updateSocietyEventList(SOCIETY_EVENTS[index]["year"]);
+                    updateEditSocietyEventList(SOCIETY_EVENTS[index]["year"]);
                     
                 });                      
             }); 
@@ -931,6 +954,22 @@
                     if(societyEventsYear > SOCIETY_EVENTS[getOldestEventIndex()]["year"]){
                         societyEventsYear--;
                         updateSocietyEventList(societyEventsYear);
+                    }
+                });
+                
+                $("#editeventnextyearbtn").on("click", function(event){
+                    console.log("Year "+societyEditEventsYear+"");
+                    if(societyEditEventsYear < SOCIETY_EVENTS[getLastEventIndex()]["year"]){
+                        societyEditEventsYear++;
+                        updateEditSocietyEventList(societyEditEventsYear);
+                    }
+                });
+
+                $("#editeventprevyearbtn").on("click", function(event){
+                    console.log("Year p"+getOldestEventIndex());
+                    if(societyEditEventsYear > SOCIETY_EVENTS[getOldestEventIndex()]["year"]){
+                        societyEditEventsYear--;
+                        updateEditSocietyEventList(societyEditEventsYear);
                     }
                 });
                 
@@ -1165,6 +1204,27 @@
                 $('#societyeventstable').find('tbody').append('<tr><td>Event Name:</td><td align="center">'+SOCIETY_EVENTS[index]["name"]+'</td></tr>'+'<tr><td>Course:</td><td align="center">'+SOCIETY_EVENTS[index]["course"]+'</td></tr>'+'<tr><td>Post Code of Course:</td><td align="center">'+SOCIETY_EVENTS[index]["postcode"]+'</td></tr>'+'<tr><td>Club or Course Website:</td><td align="center">'+SOCIETY_EVENTS[index]["website"]+'</td></tr>'+'<tr><td>Date of Event:</td><td align="center">'+SOCIETY_EVENTS[index]["day"]+'/'+SOCIETY_EVENTS[index]["month"]+'/'+SOCIETY_EVENTS[index]["year"]+'</td></tr>'+'<tr><td>First Tea Time:</td><td align="center">'+SOCIETY_EVENTS[index]["firstteatime"]+'</td></tr>'+'<tr><td>Price per Head:</td><td align="center">'+SOCIETY_EVENTS[index]["price"]+'</td></tr>'+"<tr><td>What's included:</td><td align='center'>"+SOCIETY_EVENTS[index]["included"]+'</td></tr>'+'<tr><td>Max Number of Participants:</td><td align="center">'+SOCIETY_EVENTS[index]["maxplayers"]+'</td></tr>'+'<tr><td>Main Event Organiser:</td><td align="center">'+SOCIETY_EVENTS[index]["organiser"]+'</td></tr>'+'<tr><td>Notes:</td><td align="center">'+SOCIETY_EVENTS[index]["notes"]+'</td></tr>');
             }
             
+            function updateEditSocietyEventForm(index){
+                $('#editeventname').val(SOCIETY_EVENTS[index]["name"]);
+                $('#editeventcourse').val(SOCIETY_EVENTS[index]["course"]);
+                $('#editeventpostcode').val(SOCIETY_EVENTS[index]["postcode"]);
+                $('#editeventclub').val(SOCIETY_EVENTS[index]["website"]);
+                //$('#editeventdate').val(SOCIETY_EVENTS[index]["day"]+'/'+SOCIETY_EVENTS[index]["month"]+'/'+SOCIETY_EVENTS[index]["year"]);
+                $('#editeventprice').val(SOCIETY_EVENTS[index]["price"]);
+                $('#editeventwhatincluded').val(SOCIETY_EVENTS[index]["included"]);
+                $('#editeventmaxparticipants').val(SOCIETY_EVENTS[index]["maxplayers"]);
+                
+                var options = {
+                    defaultDate: 'aa',
+                };
+                $('#editeventdate').datetimepicker("update", new Date(11,11,11,11,11,11,11));
+                $('#editeventteatime').datetimepicker("update", new Date(11,11,11,11,11,11,11));
+                
+                //$('#editeventteatime').val(SOCIETY_EVENTS[index]["firstteatime"]);
+                $('#editevenorganiser').val(SOCIETY_EVENTS[index]["organiser"]);
+                $('#editeventnotes').val(SOCIETY_EVENTS[index]["notes"]);
+            }
+            
             function updateSocietyEventList(year){
                 
                 let arr = [];
@@ -1177,6 +1237,19 @@
                 }
                 
                 $('#eventlistbtn').text(year);
+            }
+            
+            function updateEditSocietyEventList(year){
+                let arr = [];
+                $('#editeventlist').empty();
+                console.log("update event");
+                for(let i=0, length = SOCIETY_EVENTS.length; i < length; i++){
+                    if(SOCIETY_EVENTS[i]['year'] == year){
+                       $('#editeventlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+i+'" >'+SOCIETY_EVENTS[i]["name"]+'</a>');
+                    }
+                }
+                
+                $('#editeventlistbtn').text(year);
             }
             
             function getLastEventIndex(){
