@@ -10,6 +10,7 @@
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
         <link rel="stylesheet" type="text/css" href="css/myStyle.css">
         <link rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap-arrow-buttons.css">
     </head>
     <body>
         <div id="wrap">
@@ -301,20 +302,26 @@
                                 <h4></h4>
                             </div>
 
-                            <table id="societyeventstable" class="table table-hover">
+                            <table id = "societyeventstable" class=  "table table-hover">
                                 <thead>
                                 </thead>
                                 <tbody>
                                     <tr></tr>
                                 </tbody>
                             </table>
+                            
+                            <div class = "text-center">
+                                <button type="button" class="btn btn-primary btn-arrow-left" style = "margin-bottom: 20px">Prev</button>
+                                <button type="button" class="btn btn-primary" style = "margin-left: 20px; margin-right: 20px; margin-bottom: 20px">2017</button>
+                                <button type="button" class="btn btn-primary btn-arrow-right" style = "margin-bottom: 20px">Next</button>
+                            </div>
                         </div>
                         <!-- Society events panel definition ends -->
                         
                     <!-- Logged user panel definitions begin -->
                         <!-- Account Settings panel definition begins -->
-                        <div id="accountsettings" style="display:none">
-                            <div class="well  text-center" >  
+                        <div id = "accountsettings" style = "display:none">
+                            <div class = "well  text-center" >  
                                 <h1>Account Settings</h1>
                             </div>
 
@@ -690,8 +697,10 @@
                         //updateSocietyeventPanels(i);
                     }
                     
+                    let index = getLastEventIndex();
+                    
                     $('#societyeventstable').find('tbody').empty();
-                    $('#societyeventstable').find('tbody').append('<tr><td>Event Name:</td><td>'+SOCIETY_EVENTS[0]["name"]+'</td></tr>'+'<tr><td>Course:</td><td>'+SOCIETY_EVENTS[0]["course"]+'</td></tr>'+'<tr><td>Post Code of Course:</td><td>'+SOCIETY_EVENTS[0]["postcode"]+'</td></tr>'+'<tr><td>Club or Course Website:</td><td>'+SOCIETY_EVENTS[0]["website"]+'</td></tr>'+'<tr><td>Date of Event:</td><td>'+SOCIETY_EVENTS[0]["day"]+'/'+SOCIETY_EVENTS[0]["month"]+'/'+SOCIETY_EVENTS[0]["year"]+'</td></tr>'+'<tr><td>First Tea Time:</td><td>'+SOCIETY_EVENTS[0]["firstteatime"]+'</td></tr>'+'<tr><td>Price per Head:</td><td>'+SOCIETY_EVENTS[0]["price"]+'</td></tr>'+"<tr><td>What's included:</td><td>"+SOCIETY_EVENTS[0]["included"]+'</td></tr>'+'<tr><td>Max Number of Participants:</td><td>'+SOCIETY_EVENTS[0]["maxplayers"]+'</td></tr>'+'<tr><td>Main Event Organiser:</td><td>'+SOCIETY_EVENTS[0]["organiser"]+'</td></tr>');       
+                    $('#societyeventstable').find('tbody').append('<tr><td>Event Name:</td><td>'+SOCIETY_EVENTS[index]["name"]+'</td></tr>'+'<tr><td>Course:</td><td>'+SOCIETY_EVENTS[index]["course"]+'</td></tr>'+'<tr><td>Post Code of Course:</td><td>'+SOCIETY_EVENTS[index]["postcode"]+'</td></tr>'+'<tr><td>Club or Course Website:</td><td>'+SOCIETY_EVENTS[index]["website"]+'</td></tr>'+'<tr><td>Date of Event:</td><td>'+SOCIETY_EVENTS[index]["day"]+'/'+SOCIETY_EVENTS[index]["month"]+'/'+SOCIETY_EVENTS[index]["year"]+'</td></tr>'+'<tr><td>First Tea Time:</td><td>'+SOCIETY_EVENTS[index]["firstteatime"]+'</td></tr>'+'<tr><td>Price per Head:</td><td>'+SOCIETY_EVENTS[index]["price"]+'</td></tr>'+"<tr><td>What's included:</td><td>"+SOCIETY_EVENTS[index]["included"]+'</td></tr>'+'<tr><td>Max Number of Participants:</td><td>'+SOCIETY_EVENTS[index]["maxplayers"]+'</td></tr>'+'<tr><td>Main Event Organiser:</td><td>'+SOCIETY_EVENTS[index]["organiser"]+'</td></tr>');       
                     
                 });                      
             }); 
@@ -1005,6 +1014,35 @@
                 $("#member"+i).append('<label for="editmemberhandicap" style="margin-top:20px">Handicap:</label><input type="text" class="form-control list-group-item" id="editmemberhandicap" placeholder="'+MEMBERS[i]["handicapExact"]+'"  value="'+MEMBERS[i]["handicapExact"]+'">');
                         
                 $("#member"+i).append('<button id="editmember" type="button" style="margin-top:20px" class="btn btn-primary btn-block">Apply changes</button>');
+            }
+            
+            function getLastEventIndex(){
+                let arr = [];
+                
+                for(let i=0, length = SOCIETY_EVENTS.length; i < length; i++){
+                    arr.push(SOCIETY_EVENTS[i]['year']+SOCIETY_EVENTS[i]['month']+SOCIETY_EVENTS[i]['day']);
+                }
+                
+                return indexOfMax(arr);
+                
+            }
+            
+            function indexOfMax(arr) {
+                if (arr.length === 0) {
+                    return -1;
+                }
+
+                var max = arr[0];
+                var maxIndex = 0;
+
+                for (var i = 1; i < arr.length; i++) {
+                    if (arr[i] > max) {
+                        maxIndex = i;
+                        max = arr[i];
+                    }
+                }
+
+                return maxIndex;
             }
         </script> 
     </body>

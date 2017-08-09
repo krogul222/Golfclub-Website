@@ -25,6 +25,16 @@ db.event.remove();
 
 db.event.insert({name: "August Society Day", course: "Dukinfield Golf Club", postcode: "SK165GF", website: "http://www.dukinfieldgolfclub.co.uk/", price: "15", included: "golf", maxplayers: "20", firstteatime: "09:30", day: "7", month: "8", year: "2017", organiser: "Stephen Percy" });
 
+db.event.insert({name: "1st game of the year", course: "North Manchester", postcode: "", website: "", price: "18.50", included: "bacon butty and coffee", maxplayers: "0", firstteatime: "09:30", day: "04", month: "03", year: "2016", organiser: "Gary Norton" });
+
+db.event.insert({name: "Player of the year game 2", course: "Cavendish GC", postcode: "", website: "", price: "19", included: "golf", maxplayers: "20", firstteatime: "11:00", day: "28", month: "04", year: "2016", organiser: "Paul Craney Barnie" });
+
+db.event.insert({name: "Marple", course: "Marple", postcode: "", website: "", price: "16.50", included: "golf, fish and chips", maxplayers: "24", firstteatime: "09:00", day: "23", month: "05", year: "2016", organiser: "Graham Stafford" });
+
+db.event.insert({name: "Cavendish - the return", course: "Cavendish", postcode: "", website: "", price: "18", included: "golf", maxplayers: "16", firstteatime: "08:10", day: "13", month: "09", year: "2016", organiser: "John Hart" });
+
+db.event.insert({name: "STAMFORD", course: "Stamford G.C", postcode: "", website: "", price: "15", included: "golf", maxplayers: "16", firstteatime: "09:45", day: "05", month: "10", year: "2016", organiser: "John Hart" });
+
 //db.event.insert({})
 
 //functions to validate data using database
