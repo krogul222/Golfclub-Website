@@ -543,28 +543,28 @@
                                 <label style = "margin-top:20px" for="addeventname">
                                     Event name:
                                 </label>
-                                <input type="text" class="form-control" id="addeventname">
+                                <input type="text" class="form-control" id="addeventname" value="">
 
                                 <label style = "margin-top:20px" for="addeventcourse">
                                     Course:
                                 </label>
-                                <input type="text" class="form-control" id="addeventcourse">
+                                <input type="text" class="form-control" id="addeventcourse"  value="">
 
                                 <label style = "margin-top:20px" for="addeventpostcode">
                                     Post Code of Course:
                                 </label>
-                                <input type="text" class="form-control" id="addeventpostcode">
+                                <input type="text" class="form-control" id="addeventpostcode"  value="">
                                 
                                 <label style = "margin-top:20px" for="addeventclub">
                                     Club or Course Website:
                                 </label>
-                                <input type="text" class="form-control" id="addeventclub">
+                                <input type="text" class="form-control" id="addeventclub"  value="">
 
                                 <div class="form-group">
                                     <label style = "margin-top:20px" for="addeventdate">
                                         Date of Event:
                                     </label>
-                                    <div class='input-group date' data-date="" data-date-format="dd MM yyyy" id='addeventdate'>
+                                    <div class='input-group date' data-date-format="dd MM yyyy" id='addeventdate'>
                                         <input type='text' class="form-control" readonly id="neweventdate">
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
@@ -580,23 +580,23 @@
                                 <label style = "margin-top:20px" for="addeventwhatincluded">
                                     What's included:
                                 </label>
-                                <input type="text" class="form-control" id="addeventwhatincluded">
+                                <input type="text" class="form-control" id="addeventwhatincluded"  value="">
                                 
                                 <label style = "margin-top:20px" for="addeventmaxparticipants">
                                     Max Number of Participants:
                                 </label>
-                                <input type="text" class="form-control" id="addeventmaxparticipants">
+                                <input type="text" class="form-control" id="addeventmaxparticipants"  value="">
 
                                 <label style = "margin-top:20px" for="addevenorganiser">
                                     Main Event Organiser:
                                 </label>
-                                <input type="text" class="form-control" id="addevenorganiser">                                
+                                <input type="text" class="form-control" id="addevenorganiser"  value="">                                
                                 <div class="form-group">
                                     <label style = "margin-top:20px" for="addeventteatime">
                                         First Tea time:
                                     </label>
                                     <div class='input-group date form-time' data-date="" data-date-format="hh:ii" id='addeventteatime'>
-                                        <input type='text' class="form-control" readonly>
+                                        <input type='text' class="form-control" id="neweventteatime" readonly>
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-time"></span>
                                         </span>
@@ -606,7 +606,7 @@
                                 
                                 <div class="form-group">
                                     <label for="addeventnotes">Notes:</label>
-                                    <textarea class="form-control" rows="5" id="addeventnotes"></textarea>
+                                    <textarea class="form-control" rows="5" id="addeventnotes"  value=""></textarea>
                                 </div> 
                                 
                                 <button id="addeventbtn" type="button" style = "margin-top:20px" class="btn btn-primary btn-block">
@@ -792,6 +792,13 @@
             socket.emit('dataRequest', "membershiplisting");  
             socket.emit('dataRequest', "societyeventslisting"); 
 
+            socket.on('eventAdded', function(data){
+                SOCIETY_EVENTS.push(data);
+                updateEditSocietyEventList(societyEditEventsYear);
+                updateSocietyEventList(societyEventsYear);
+                bootbox.alert({message: "New Event has been added.", backdrop: true});
+            });            
+            
             socket.on('memberAdded', function(data){
                 MEMBERS.push(data);
                 updateMemberList();
@@ -925,7 +932,12 @@
                 });
                 
                 $("#addeventbtn").on("click", function(event){
-                    console.log($("#neweventdate").val());
+                    let date = $("#addeventdate").datetimepicker('getDate');
+                    console.log('YEAR ' + date.getFullYear());
+                    
+                    if(checkAddSocietyEventFormValidation()){
+                            socket.emit('addSocietyEvent',{name: $("#addeventname").val(), course: $("#addeventcourse").val(), postcode: $("#addeventpostcode").val(), website: $("#addeventclub").val(), price: $("#addeventprice").val(), included: $("#addeventwhatincluded").val(), maxplayers: $("#addeventmaxparticipants").val(), organiser: $("#addevenorganiser").val(), firstteatime: $("#neweventteatime").val(), notes: $("#addeventnotes").val(), month: date.getMonth(), year: date.getFullYear(), day: date.getDay()}); 
+                        }
                 });
                 
                 $("#editmemberslist").on("click", "a", function(event){
@@ -939,6 +951,12 @@
                     let id = $(this).attr('id');
                     
                     updateSocietyEventTable(id);
+                });
+                
+                $("#editeventlist").on("click", "a", function(event){
+                    let id = $(this).attr('id');
+                    
+                    updateEditSocietyEventForm(id);
                 });
                 
                 $("#eventnextyearbtn").on("click", function(event){
@@ -1168,6 +1186,59 @@
                 }
             }
             
+            function checkAddSocietyEventFormValidation(){
+                if(alphanumeric($("#addeventname").val(), true) && $("#addeventname").val().length > 0 ){
+                    if(alphanumeric($("#addeventcourse").val(), true) && $("#addeventcourse").val().length > 0 ){
+                        if(alphanumeric($("#addeventpostcode").val(), false) || $("#addeventpostcode").val().length == 0 ){
+                            if($.isNumeric($("#addeventprice").val())){
+                                if(alphanumeric($("#addeventwhatincluded").val(), true) || $("#addeventwhatincluded").val().length == 0 ){
+                                    if($.isNumeric($("#addeventmaxparticipants").val()) || $("#addeventmaxparticipants").val().length == 0){
+                                        if(alphanumeric($("#addevenorganiser").val(), true) && $("#addevenorganiser").val().length > 0 ){
+                                            if($("#neweventteatime").val().length > 0){
+                                                if($("#neweventdate").val().length > 0){
+                                                    return true;
+                                                }
+                                                else {
+                                                    bootbox.alert({message:"You need to choose event date.", backdrop: true});
+                                                    return false; 
+                                                }
+                                            } else{
+                                                bootbox.alert({message:"You need to choose first tea time.", backdrop: true});
+                                                return false; 
+                                            }
+                                            return true;
+                                        } else{
+                                            bootbox.alert({message:"Event organiser data incorrect. Only letters, numbers and space allowed.", backdrop: true});
+                                            return false; 
+                                        }
+                                    } else{
+                                        bootbox.alert({message: "Max participants data incorrect. Only numbers allowed.", backdrop: true});
+                                        return false;
+                                    }
+                                } else{
+                                    bootbox.alert({message:"'What's included' data incorrect. Only letters and numbers allowed.", backdrop: true});
+                                    return false;    
+                                }
+                            } else{
+                                bootbox.alert({message: "Price data incorrect. Only numbers allowed.", backdrop: true});
+                                return false;
+                            }
+                            
+                        } else{
+                            bootbox.alert({message:"Post code data incorrect. Only letters and numbers allowed.", backdrop: true});
+                            return false;    
+                        }
+            
+                    } else{
+                        bootbox.alert({message:"Course data incorrect. Only letters, numbers and space allowed.", backdrop: true});
+                        return false;
+                        }
+                } else {
+                    bootbox.alert({message: "Event name data incorrect. Only letters, numbers and space allowed.", backdrop: true});
+                    return false;
+                }
+            }            
+            
             function getCommittee(){
                 let arr =[];
                 
@@ -1214,13 +1285,12 @@
                 $('#editeventwhatincluded').val(SOCIETY_EVENTS[index]["included"]);
                 $('#editeventmaxparticipants').val(SOCIETY_EVENTS[index]["maxplayers"]);
                 
-                var options = {
-                    defaultDate: 'aa',
-                };
-                $('#editeventdate').datetimepicker("update", new Date(11,11,11,11,11,11,11));
-                $('#editeventteatime').datetimepicker("update", new Date(11,11,11,11,11,11,11));
+                $('#editeventdate').datetimepicker("update", new Date(SOCIETY_EVENTS[index]["year"],SOCIETY_EVENTS[index]["month"],SOCIETY_EVENTS[index]["day"],0,0,0,0));
                 
-                //$('#editeventteatime').val(SOCIETY_EVENTS[index]["firstteatime"]);
+                let str = SOCIETY_EVENTS[index]["firstteatime"];
+                let res = str.split(":");
+                $('#editeventteatime').datetimepicker("update", new Date(0,0,0,res[0],res[1],0,0));
+                
                 $('#editevenorganiser').val(SOCIETY_EVENTS[index]["organiser"]);
                 $('#editeventnotes').val(SOCIETY_EVENTS[index]["notes"]);
             }

@@ -1,8 +1,8 @@
 var mongojs = require('mongojs');
 var express = require('express');
-var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event']);
+//var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event']);
 
-//var db = mongojs('localhost:27017/golf', ['account','event']);      // connect to database
+var db = mongojs('localhost:27017/golf', ['account','event']);      // connect to database
 /*
 db.account.remove();
 
@@ -125,6 +125,13 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
                 socket.emit('memberAdded',data);    // sent response to client
             }
         });
+    });
+   
+    //requests from addsociety panel     
+    
+    socket.on('addSocietyEvent', function(data){     
+                db.event.insert(data);            // add event to database
+                socket.emit('eventAdded',data);    // sent response to client
     });
 
     //requests from editmember panel    
