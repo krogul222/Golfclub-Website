@@ -205,7 +205,7 @@
                                     Society Constitution
                                 </a>
                             </li>
-                            <li class="list-group-item">
+                            <li class="list-group-item" id="societyeventslisting">
                                 <a class="notop" href="javascript:void(0)">
                                     Society Events
                                 </a>
@@ -293,6 +293,23 @@
                             </table>
                         </div>
                         <!-- Members list panel definition ends -->
+                        
+                        <!-- Society events panel definition begins -->
+                        <div id="societyeventscontent" style="display:none">
+                            <div class="well  text-center" >
+                                <h1>Society events</h1>
+                                <h4></h4>
+                            </div>
+
+                            <table id="societyeventstable" class="table table-hover">
+                                <thead>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Society events panel definition ends -->
                         
                     <!-- Logged user panel definitions begin -->
                         <!-- Account Settings panel definition begins -->
@@ -439,7 +456,7 @@
                                         Date of Event:
                                     </label>
                                     <div class='input-group date' data-date="" data-date-format="dd MM yyyy" id='addeventdate'>
-                                        <input type='text' class="form-control" readonly>
+                                        <input type='text' class="form-control" readonly id="neweventdate">
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>
@@ -467,7 +484,7 @@
                                 <input type="text" class="form-control" id="addevenorganiser">                                
                                 <div class="form-group">
                                     <label style = "margin-top:20px" for="addeventteatime">
-                                        First Tee time:
+                                        First Tea time:
                                     </label>
                                     <div class='input-group date form-time' data-date="" data-date-format="hh:ii" id='addeventteatime'>
                                         <input type='text' class="form-control" readonly>
@@ -520,6 +537,11 @@
                     }   
                 });  
                 
+                $("#glofmenu").on("click", "#societyeventslisting", function(event){;  // show society events 
+                     hideAll();
+                     $("#societyeventscontent").show();
+                });
+                
                 //Logged user links (from top menu):
                 
                 $("#accountsettingsLink").on("click", function(event){ // show logged user account settings  
@@ -551,7 +573,7 @@
                 $("#createsocietyeventLink").on("click" , function(event){  // show add event panel
                     hideAll();
                     $("#createsocietyevent").show();
-                });
+                });    
                 
                 // carrousel and date/time picking
                 
@@ -594,6 +616,7 @@
                     $("#addmember").hide();
                     $("#editmembers").hide();
                     $("#createsocietyevent").hide();
+                    $("#societyeventscontent").hide();
                     clearSecureData();
                 }
                 
@@ -617,11 +640,13 @@
             
             var user = User();
             const MEMBERS = [];
+            const SOCIETY_EVENTS = [];
             let committee = [];
             var socket = io(); 
             var committeDataLoaded = false;
             
             socket.emit('dataRequest', "membershiplisting");  
+            socket.emit('dataRequest', "societyeventslisting"); 
 
             socket.on('memberAdded', function(data){
                 MEMBERS.push(data);
@@ -655,6 +680,19 @@
                     for(let i = 0, length = committee.length; i < length; i++){
                         $('#committeetable tr:last').after('<tr><td>'+committee[i]["name"]+'</td><td>'+committee[i]["position"]+'</td><td>'+committee[i]["email"]+'</td><td>'+committee[i]["phone"]+'</td></tr>');       
                     }
+                });                      
+            }); 
+            
+            socket.on('societyeventslistingData', function(data){ 
+                $(document).ready(function() {
+                    for(let i = 0, length = data.length; i < length; i++){
+                        SOCIETY_EVENTS.push(data[i]);        
+                        //updateSocietyeventPanels(i);
+                    }
+                    
+                    $('#societyeventstable').find('tbody').empty();
+                    $('#societyeventstable').find('tbody').append('<tr><td>Event Name:</td><td>'+SOCIETY_EVENTS[0]["name"]+'</td></tr>'+'<tr><td>Course:</td><td>'+SOCIETY_EVENTS[0]["course"]+'</td></tr>'+'<tr><td>Post Code of Course:</td><td>'+SOCIETY_EVENTS[0]["postcode"]+'</td></tr>'+'<tr><td>Club or Course Website:</td><td>'+SOCIETY_EVENTS[0]["website"]+'</td></tr>'+'<tr><td>Date of Event:</td><td>'+SOCIETY_EVENTS[0]["day"]+'/'+SOCIETY_EVENTS[0]["month"]+'/'+SOCIETY_EVENTS[0]["year"]+'</td></tr>'+'<tr><td>First Tea Time:</td><td>'+SOCIETY_EVENTS[0]["firstteatime"]+'</td></tr>'+'<tr><td>Price per Head:</td><td>'+SOCIETY_EVENTS[0]["price"]+'</td></tr>'+"<tr><td>What's included:</td><td>"+SOCIETY_EVENTS[0]["included"]+'</td></tr>'+'<tr><td>Max Number of Participants:</td><td>'+SOCIETY_EVENTS[0]["maxplayers"]+'</td></tr>'+'<tr><td>Main Event Organiser:</td><td>'+SOCIETY_EVENTS[0]["organiser"]+'</td></tr>');       
+                    
                 });                      
             }); 
             
@@ -732,6 +770,10 @@
                         socket.emit('addMember', {username:$("#addmemberusername").val(), password: $("#addmemberusername").val(), name: $("#addmembername").val(), 
                         handicapExact:$("#addmemberhandicap").val(), email:"", admin:"false", handicapPlaying:$("#addmemberhandicap").val(), phone:"", committee: "false"});
                     }
+                });
+                
+                $("#addeventbtn").on("click", function(event){
+                    console.log($("#neweventdate").val());
                 });
                 
                 $("#editmemberslist").on("click", "a", function(event){
