@@ -796,6 +796,7 @@
 
             socket.on('eventAdded', function(data){
                 
+                console.log("MONTHAdded "+data["month"]);
                                         
                 data["month"] = parseInt(data["month"], 10); 
                 if(Number(data["month"]) < 10){
@@ -806,8 +807,9 @@
                 if(Number(data["day"]) < 10){
                     data["day"] = "0" + data["day"];
                 }                
-                
+                console.log("MONTHAdded2 "+data["month"]);
                 SOCIETY_EVENTS.push(data);
+                sortEvents();
                 updateEditSocietyEventList(societyEditEventsYear);
                 updateSocietyEventList(societyEventsYear);
                 bootbox.alert({message: "New Event has been added.", backdrop: true});
@@ -815,22 +817,29 @@
             
             socket.on('eventEdited', function(data){
                 updateEvent(data);
+                sortEvents();
                 updateEditSocietyEventList(societyEditEventsYear);
                 updateSocietyEventList(societyEventsYear);
-                if(data.id == SOCIETY_EVENTS[activeEvent].id){
-                    updateSocietyEventTable(activeEvent)
+                if(activeEvent > -1){
+                    if(data.id == SOCIETY_EVENTS[activeEvent].id){
+                        updateSocietyEventTable(activeEvent);
+                    }
                 }
                 bootbox.alert({message: "Event has been edited.", backdrop: true});
             });   
             
             socket.on('eventDeleted', function(data){
                 console.log("Event deleted");
-                if(SOCIETY_EVENTS[activeEvent].id == data.id){
-                    updateSocietyEventTable(-1);
-                    activeEvent = -1;
+                
+                if(activeEvent > -1){
+                    if(SOCIETY_EVENTS[activeEvent].id == data.id){
+                        updateSocietyEventTable(-1);
+                        activeEvent = -1;
+                    }
                 }
                 
                 deleteEvent(data);
+                sortEvents();
                 updateEditSocietyEventForm(-1);
                 activeEditEvent = -1;
                 
@@ -880,9 +889,10 @@
                 $(document).ready(function() {
                     for(let i = 0, length = data.length; i < length; i++){
                         data[i]["month"] = parseInt(data[i]["month"], 10); 
-                        data[i]["month"] = data[i]["month"]-1;
+                       // data[i]["month"] = data[i]["month"];
                         SOCIETY_EVENTS.push(data[i]);        
                     }
+                    sortEvents();
                     
                     let index = getLastEventIndex();
                     activeEditEvent = index;
@@ -982,16 +992,16 @@
                     
                     if(checkAddSocietyEventFormValidation()){
                             let day = parseInt(date.getDate(), 10);
-                            let month = Number(parseInt(date.getMonth(), 10));
-                        /*
+                            let month = Number(Number(date.getMonth())+1);
+                        
                             if(Number(day) < 10){
                                 day = "0" + day;
                             }
                         
                             if(Number(month) < 10){
                                 month = "0" + month;
-                            }*/
-
+                            }
+                            console.log("MONTHAdd "+month);
                             socket.emit('addSocietyEvent',{name: $("#addeventname").val(), course: $("#addeventcourse").val(), postcode: $("#addeventpostcode").val(), website: $("#addeventclub").val(), price: $("#addeventprice").val(), included: $("#addeventwhatincluded").val(), maxplayers: $("#addeventmaxparticipants").val(), organiser: $("#addevenorganiser").val(), firstteatime: $("#neweventteatime").val(), notes: $("#addeventnotes").val(), month: month, year: date.getFullYear(), day: day}); 
                         }
                 });
@@ -1067,8 +1077,8 @@
                             let date = $("#editeventdate").datetimepicker('getDate');
                             
                             let day = parseInt(date.getDate(), 10);
-                            let month = Number(parseInt(date.getMonth(), 10));
-                        /*
+                            let month = Number(Number(date.getMonth())+1);
+                        
                             if(Number(day) < 10){
                                 day = "0" + day;
                             }
@@ -1076,7 +1086,7 @@
                             if(Number(month) < 10){
                                 month = "0" + month;
                             }
-                            */
+                            
                             socket.emit('editSocietyEvent',{name: $("#editeventname").val(), course: $("#editeventcourse").val(), postcode: $("#editeventpostcode").val(), website: $("#editeventclub").val(), price: $("#editeventprice").val(), included: $("#editeventwhatincluded").val(), maxplayers: $("#editeventmaxparticipants").val(), organiser: $("#editevenorganiser").val(), firstteatime: $("#editneweventteatime").val(), notes: $("#editeventnotes").val(), month: month, year: date.getFullYear(), day: day, id: SOCIETY_EVENTS[activeEditEvent]["id"]}); 
                         }
                     } else{
@@ -1445,8 +1455,9 @@
                 
                 if(idx > -1){
                     $('#societyeventstable').find('tbody').empty();
-                    let month = SOCIETY_EVENTS[idx]["month"]+1;
-                    $('#societyeventstable').find('tbody').append('<tr><td>Event Name:</td><td align="center">'+SOCIETY_EVENTS[idx]["name"]+'</td></tr>'+'<tr><td>Course:</td><td align="center">'+SOCIETY_EVENTS[idx]["course"]+'</td></tr>'+'<tr><td>Post Code of Course:</td><td align="center">'+SOCIETY_EVENTS[idx]["postcode"]+'</td></tr>'+'<tr><td>Club or Course Website:</td><td align="center">'+SOCIETY_EVENTS[idx]["website"]+'</td></tr>'+'<tr><td>Date of Event:</td><td align="center">'+SOCIETY_EVENTS[idx]["day"]+'/'+month+'/'+SOCIETY_EVENTS[idx]["year"]+'</td></tr>'+'<tr><td>First Tea Time:</td><td align="center">'+SOCIETY_EVENTS[idx]["firstteatime"]+'</td></tr>'+'<tr><td>Price per Head:</td><td align="center">'+SOCIETY_EVENTS[idx]["price"]+'</td></tr>'+"<tr><td>What's included:</td><td align='center'>"+SOCIETY_EVENTS[idx]["included"]+'</td></tr>'+'<tr><td>Max Number of Participants:</td><td align="center">'+SOCIETY_EVENTS[idx]["maxplayers"]+'</td></tr>'+'<tr><td>Main Event Organiser:</td><td align="center">'+SOCIETY_EVENTS[idx]["organiser"]+'</td></tr>'+'<tr><td>Notes:</td><td align="center">'+SOCIETY_EVENTS[idx]["notes"]+'</td></tr>');
+                    let month = Number(SOCIETY_EVENTS[idx]["month"]);
+                    let day = Number(SOCIETY_EVENTS[idx]["day"])
+                    $('#societyeventstable').find('tbody').append('<tr><td>Event Name:</td><td align="center">'+SOCIETY_EVENTS[idx]["name"]+'</td></tr>'+'<tr><td>Course:</td><td align="center">'+SOCIETY_EVENTS[idx]["course"]+'</td></tr>'+'<tr><td>Post Code of Course:</td><td align="center">'+SOCIETY_EVENTS[idx]["postcode"]+'</td></tr>'+'<tr><td>Club or Course Website:</td><td align="center">'+SOCIETY_EVENTS[idx]["website"]+'</td></tr>'+'<tr><td>Date of Event:</td><td align="center">'+day+'/'+month+'/'+SOCIETY_EVENTS[idx]["year"]+'</td></tr>'+'<tr><td>First Tea Time:</td><td align="center">'+SOCIETY_EVENTS[idx]["firstteatime"]+'</td></tr>'+'<tr><td>Price per Head:</td><td align="center">'+SOCIETY_EVENTS[idx]["price"]+'</td></tr>'+"<tr><td>What's included:</td><td align='center'>"+SOCIETY_EVENTS[idx]["included"]+'</td></tr>'+'<tr><td>Max Number of Participants:</td><td align="center">'+SOCIETY_EVENTS[idx]["maxplayers"]+'</td></tr>'+'<tr><td>Main Event Organiser:</td><td align="center">'+SOCIETY_EVENTS[idx]["organiser"]+'</td></tr>'+'<tr><td>Notes:</td><td align="center">'+SOCIETY_EVENTS[idx]["notes"]+'</td></tr>');
                 } else{
                     console.log("No index")
                     $('#societyeventstable').find('tbody').empty();
@@ -1465,7 +1476,7 @@
                     $('#editeventwhatincluded').val(SOCIETY_EVENTS[idx]["included"]);
                     $('#editeventmaxparticipants').val(SOCIETY_EVENTS[idx]["maxplayers"]);
 
-                    $('#editeventdate').datetimepicker("update", new Date(SOCIETY_EVENTS[idx]["year"],SOCIETY_EVENTS[idx]["month"],SOCIETY_EVENTS[idx]["day"],0,0,0,0));
+                    $('#editeventdate').datetimepicker("update", new Date(SOCIETY_EVENTS[idx]["year"],Number(SOCIETY_EVENTS[idx]["month"])-1,SOCIETY_EVENTS[idx]["day"],0,0,0,0));
 
                     let str = SOCIETY_EVENTS[idx]["firstteatime"];
                     let res = str.split(":");
@@ -1496,9 +1507,22 @@
                 let arr = [];
                 $('#eventlist').empty();
                 console.log("update event");
+                let currnentDate = new Date();
+                let future = false;
                 for(let i=0, length = SOCIETY_EVENTS.length; i < length; i++){
                     if(SOCIETY_EVENTS[i]['year'] == year){
-                       $('#eventlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+i+'" >'+SOCIETY_EVENTS[i]["name"]+'</a>');
+                       if(currnentDate.getFullYear() <= SOCIETY_EVENTS[i]["year"]){
+                           if(currnentDate.getMonth() <= SOCIETY_EVENTS[i]["month"]){
+                               if(currnentDate.getDate() <= SOCIETY_EVENTS[i]["day"]){
+                                   $('#eventlist').append('<a class = "notop list-group-item text-center list-group-item-success" href="javascript:void(0)" id="'+i+'" >'+SOCIETY_EVENTS[i]["name"]+'</a>');
+                                   future = true;
+                               }
+                           }
+                       }
+                       if(future == false){
+                            $('#eventlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+i+'" >'+SOCIETY_EVENTS[i]["name"]+'</a>');
+                       }
+                       future = false;
                     }
                 }
                 
@@ -1509,9 +1533,23 @@
                 let arr = [];
                 $('#editeventlist').empty();
                 console.log("update event");
+                let future = false;
+                let currnentDate = new Date();
+                
                 for(let i=0, length = SOCIETY_EVENTS.length; i < length; i++){
                     if(SOCIETY_EVENTS[i]['year'] == year){
-                       $('#editeventlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+i+'" >'+SOCIETY_EVENTS[i]["name"]+'</a>');
+                        if(currnentDate.getFullYear() <= SOCIETY_EVENTS[i]["year"]){
+                           if(currnentDate.getMonth() <= SOCIETY_EVENTS[i]["month"]){
+                               if(currnentDate.getDate() <= SOCIETY_EVENTS[i]["day"]){
+                                  $('#editeventlist').append('<a class = "notop list-group-item text-center list-group-item-success" href="javascript:void(0)" id="'+i+'" >'+SOCIETY_EVENTS[i]["name"]+'</a>');
+                                   future = true;
+                               }
+                           }
+                       }
+                       if(future == false){
+                            $('#editeventlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+i+'" >'+SOCIETY_EVENTS[i]["name"]+'</a>');
+                       }
+                       future = false;
                     }
                 }
                 
@@ -1522,7 +1560,11 @@
                 let arr = [];
                 
                 for(let i=0, length = SOCIETY_EVENTS.length; i < length; i++){
-                    arr.push(SOCIETY_EVENTS[i]['year']+SOCIETY_EVENTS[i]['month']+SOCIETY_EVENTS[i]['day']);
+                    arr.push(Number(SOCIETY_EVENTS[i]['year']*10000)+Number(SOCIETY_EVENTS[i]['month']*100)+Number(SOCIETY_EVENTS[i]['day']));
+                    console.log(SOCIETY_EVENTS[i]['year']);
+                    console.log(SOCIETY_EVENTS[i]['month']);
+                    console.log(SOCIETY_EVENTS[i]['year']);
+                    console.log(Number(SOCIETY_EVENTS[i]['year']*10000)+Number(SOCIETY_EVENTS[i]['month']*100)+Number(SOCIETY_EVENTS[i]['day']));
                 }
                 
                 return indexOfMax(arr);
@@ -1533,7 +1575,7 @@
                 let arr = [];
                 
                 for(let i=0, length = SOCIETY_EVENTS.length; i < length; i++){
-                    arr.push(SOCIETY_EVENTS[i]['year']+SOCIETY_EVENTS[i]['month']+SOCIETY_EVENTS[i]['day']);
+                    arr.push(Number(SOCIETY_EVENTS[i]['year']*10000)+Number(SOCIETY_EVENTS[i]['month']*100)+Number(SOCIETY_EVENTS[i]['day']));
                 }
                 
                 return indexOfMin(arr);
@@ -1572,6 +1614,20 @@
                 }
                 
                 return index;
+            }
+            
+            function sortEvents(){
+                SOCIETY_EVENTS.sort(compareEvents);
+                activeEditEvent = -1;
+                activeEvent  = -1;
+            }
+            
+            function compareEvents(a,b) {
+              if ((Number(a["year"]*1000)+Number(a["month"]*100)+Number(a["day"])) < (Number(b["year"]*1000)+Number(b["month"]*100)+Number(b["day"])) )
+                return 1;
+              if ((Number(a["year"]*1000)+Number(a["month"]*100)+Number(a["day"])) > (Number(b["year"]*1000)+Number(b["month"]*100)+Number(b["day"])) )
+                return -1;
+              return 0;
             }
         </script> 
     </body>
