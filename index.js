@@ -1,8 +1,8 @@
 var mongojs = require('mongojs');
 var express = require('express');
-var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event']);
+//var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event']);
 
-//var db = mongojs('localhost:27017/golf', ['account','event']);      // connect to database
+var db = mongojs('localhost:27017/golf', ['account','event']);      // connect to database
 /*
 db.account.remove();
 
@@ -21,7 +21,7 @@ db.account.insert({username:"stephenpercy", name: "Stephen Percy", password: "st
 db.account.insert({username:"admin", name: "Stephen Percy", password: "123", admin: "true", account:"admin"});
 
 */
-//db.event.remove();
+db.event.remove();
 /*
 db.event.insert({name: "August Society Day", course: "Dukinfield Golf Club", postcode: "SK165GF", website: "http://www.dukinfieldgolfclub.co.uk/", price: "15", included: "golf", maxplayers: "20", firstteatime: "09:30", day: "07", month: "08", year: "2017", organiser: "Stephen Percy", notes: "" , id: "1"});
 
