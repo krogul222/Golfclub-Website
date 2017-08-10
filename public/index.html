@@ -447,7 +447,7 @@
                             </div>
                             <div class = "well" id = "editeventpanel">
                                 
-                                <button id="editeventbtn" type="button" style = "margin-bottom:20px" class="btn btn-danger btn-block">
+                                <button id="deleteeventbtn" type="button" style = "margin-bottom:20px" class="btn btn-danger btn-block">
                                     Delete Event
                                 </button>
                                 
@@ -507,7 +507,7 @@
                                         First Tea time:
                                     </label>
                                     <div class='input-group date form-time' data-date="" data-date-format="hh:ii" id='editeventteatime'>
-                                        <input type='text' class="form-control" readonly>
+                                        <input type='text' class="form-control" readonly id="editneweventteatime">
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-time"></span>
                                         </span>
@@ -784,6 +784,8 @@
             const SOCIETY_EVENTS = [];
             let societyEventsYear = 0;
             let societyEditEventsYear = 0;
+            let activeEditEvent = 0;
+            let activeEvent = 0;
             
             let committee = [];
             var socket = io(); 
@@ -793,11 +795,51 @@
             socket.emit('dataRequest', "societyeventslisting"); 
 
             socket.on('eventAdded', function(data){
+                
+                                        
+                data["month"] = parseInt(data["month"], 10); 
+                if(Number(data["month"]) < 10){
+                    data["month"] = "0" + data["month"];
+                }
+
+                data["day"] = parseInt(data["day"], 10); 
+                if(Number(data["day"]) < 10){
+                    data["day"] = "0" + data["day"];
+                }                
+                
                 SOCIETY_EVENTS.push(data);
                 updateEditSocietyEventList(societyEditEventsYear);
                 updateSocietyEventList(societyEventsYear);
                 bootbox.alert({message: "New Event has been added.", backdrop: true});
             });            
+            
+            socket.on('eventEdited', function(data){
+                updateEvent(data);
+                updateEditSocietyEventList(societyEditEventsYear);
+                updateSocietyEventList(societyEventsYear);
+                if(data.id == SOCIETY_EVENTS[activeEvent].id){
+                    updateSocietyEventTable(activeEvent)
+                }
+                bootbox.alert({message: "Event has been edited.", backdrop: true});
+            });   
+            
+            socket.on('eventDeleted', function(data){
+                console.log("Event deleted");
+                if(SOCIETY_EVENTS[activeEvent].id == data.id){
+                    updateSocietyEventTable(-1);
+                    activeEvent = -1;
+                }
+                
+                deleteEvent(data);
+                updateEditSocietyEventForm(-1);
+                activeEditEvent = -1;
+                
+                updateEditSocietyEventList(societyEditEventsYear);
+                updateSocietyEventList(societyEventsYear);
+                
+                console.log("Event deleted");
+                bootbox.alert({message: "Event has been deleted.", backdrop: true});
+            });               
             
             socket.on('memberAdded', function(data){
                 MEMBERS.push(data);
@@ -837,12 +879,15 @@
             socket.on('societyeventslistingData', function(data){ 
                 $(document).ready(function() {
                     for(let i = 0, length = data.length; i < length; i++){
+                        data[i]["month"] = parseInt(data[i]["month"], 10); 
+                        data[i]["month"] = data[i]["month"]-1;
                         SOCIETY_EVENTS.push(data[i]);        
-                        //updateSocietyeventPanels(i);
                     }
                     
                     let index = getLastEventIndex();
-                    
+                    activeEditEvent = index;
+                    activeEvent = index;
+                    console.log('index '+index);
                     updateSocietyEventTable(index);
                     updateEditSocietyEventForm(index);
                     
@@ -933,10 +978,21 @@
                 
                 $("#addeventbtn").on("click", function(event){
                     let date = $("#addeventdate").datetimepicker('getDate');
-                    console.log('YEAR ' + date.getFullYear());
+                    console.log('YEAR ' + date.getFullYear() + 'DAY '+date.getDate());
                     
                     if(checkAddSocietyEventFormValidation()){
-                            socket.emit('addSocietyEvent',{name: $("#addeventname").val(), course: $("#addeventcourse").val(), postcode: $("#addeventpostcode").val(), website: $("#addeventclub").val(), price: $("#addeventprice").val(), included: $("#addeventwhatincluded").val(), maxplayers: $("#addeventmaxparticipants").val(), organiser: $("#addevenorganiser").val(), firstteatime: $("#neweventteatime").val(), notes: $("#addeventnotes").val(), month: date.getMonth(), year: date.getFullYear(), day: date.getDay()}); 
+                            let day = parseInt(date.getDate(), 10);
+                            let month = Number(parseInt(date.getMonth(), 10));
+                        /*
+                            if(Number(day) < 10){
+                                day = "0" + day;
+                            }
+                        
+                            if(Number(month) < 10){
+                                month = "0" + month;
+                            }*/
+
+                            socket.emit('addSocietyEvent',{name: $("#addeventname").val(), course: $("#addeventcourse").val(), postcode: $("#addeventpostcode").val(), website: $("#addeventclub").val(), price: $("#addeventprice").val(), included: $("#addeventwhatincluded").val(), maxplayers: $("#addeventmaxparticipants").val(), organiser: $("#addevenorganiser").val(), firstteatime: $("#neweventteatime").val(), notes: $("#addeventnotes").val(), month: month, year: date.getFullYear(), day: day}); 
                         }
                 });
                 
@@ -951,12 +1007,14 @@
                     let id = $(this).attr('id');
                     
                     updateSocietyEventTable(id);
+                    activeEvent = id;
                 });
                 
                 $("#editeventlist").on("click", "a", function(event){
                     let id = $(this).attr('id');
                     
                     updateEditSocietyEventForm(id);
+                    activeEditEvent = id;
                 });
                 
                 $("#eventnextyearbtn").on("click", function(event){
@@ -1001,6 +1059,37 @@
                         socket.emit('changeUserDetails',{username: $("#accountusername").val(), oldusername: user.data.username, name: $("#accountname").val(), phone: $("#accountphone").val(), email: $("#accountemail").val()});   
                     }                    
                 });
+                
+                 $("#editeventpanel").on("click", "button" ,function(event){
+                     
+                    if(($(this).attr('id')) == "editeventbtn" && activeEditEvent >= 0){
+                        if(checkEditSocietyEventFormValidation()){
+                            let date = $("#editeventdate").datetimepicker('getDate');
+                            
+                            let day = parseInt(date.getDate(), 10);
+                            let month = Number(parseInt(date.getMonth(), 10));
+                        /*
+                            if(Number(day) < 10){
+                                day = "0" + day;
+                            }
+                        
+                            if(Number(month) < 10){
+                                month = "0" + month;
+                            }
+                            */
+                            socket.emit('editSocietyEvent',{name: $("#editeventname").val(), course: $("#editeventcourse").val(), postcode: $("#editeventpostcode").val(), website: $("#editeventclub").val(), price: $("#editeventprice").val(), included: $("#editeventwhatincluded").val(), maxplayers: $("#editeventmaxparticipants").val(), organiser: $("#editevenorganiser").val(), firstteatime: $("#editneweventteatime").val(), notes: $("#editeventnotes").val(), month: month, year: date.getFullYear(), day: day, id: SOCIETY_EVENTS[activeEditEvent]["id"]}); 
+                        }
+                    } else{
+                        if(activeEditEvent >= 0){
+                            bootbox.confirm("Are you sure to delete event '"+$("#editeventname").val()+"' ?" , function(result){
+                                if(result){
+                                    socket.emit('deleteEvent',{id: SOCIETY_EVENTS[activeEditEvent]["id"]});  
+                                }
+                            }); 
+                        }
+                    }
+                     
+                 });
                 
                 $("#editmemberslist").on("click", "button", function(event){
                     let username = "";
@@ -1054,6 +1143,36 @@
                 $("#userMenuTitle").text(user["data"].username);
             }
             
+            function updateEvent(event){   
+                for(let i = 0, length = SOCIETY_EVENTS.length; i < length; i++){
+                    if(SOCIETY_EVENTS[i]["id"] === event["id"]){
+                        SOCIETY_EVENTS[i]["name"] = event.name;
+                        SOCIETY_EVENTS[i]["course"] = event.course;
+                        SOCIETY_EVENTS[i]["postcode"] = event.postcode;
+                        SOCIETY_EVENTS[i]["website"] = event.website;
+                        SOCIETY_EVENTS[i]["maxplayers"] = event.maxplayers;
+                        SOCIETY_EVENTS[i]["included"] = event.included;
+                        SOCIETY_EVENTS[i]["price"] = event.price;
+                        SOCIETY_EVENTS[i]["year"] = event.year;
+                        SOCIETY_EVENTS[i]["month"] = event.month;
+                        SOCIETY_EVENTS[i]["day"] = event.day;
+                        SOCIETY_EVENTS[i]["firstteatime"] = event.firstteatime;
+                        SOCIETY_EVENTS[i]["organiser"] = event.organiser;
+                        SOCIETY_EVENTS[i]["notes"] = event.notes;
+                        break;
+                    }
+                }
+            }        
+
+            function deleteEvent(event){    
+                for(let i = 0, length = SOCIETY_EVENTS.length; i < length; i++){
+                    if(SOCIETY_EVENTS[i]["id"] === event.id){    
+                        SOCIETY_EVENTS.splice(i, 1);
+                        break;
+                    }
+                }  
+            }      
+            
             function updateMember(member){   
                 for(let i = 0, length = MEMBERS.length; i < length; i++){
                     if(MEMBERS[i]["username"] === member.username){
@@ -1076,7 +1195,7 @@
             function deleteMember(member){    
                 for(let i = 0, length = MEMBERS.length; i < length; i++){
                     if(MEMBERS[i]["username"] === member.username){    
-                        MEMBERS.splice(i, 1);;
+                        MEMBERS.splice(i, 1);
                         break;
                     }
                 }  
@@ -1237,7 +1356,60 @@
                     bootbox.alert({message: "Event name data incorrect. Only letters, numbers and space allowed.", backdrop: true});
                     return false;
                 }
-            }            
+            }
+            
+            function checkEditSocietyEventFormValidation(){
+                if(alphanumeric($("#editeventname").val(), true) && $("#editeventname").val().length > 0 ){
+                    if(alphanumeric($("#editeventcourse").val(), true) && $("#editeventcourse").val().length > 0 ){
+                        if(alphanumeric($("#editeventpostcode").val(), false) || $("#editeventpostcode").val().length == 0 ){
+                            if($.isNumeric($("#editeventprice").val())){
+                                if(alphanumeric($("#editeventwhatincluded").val(), true) || $("#editeventwhatincluded").val().length == 0 ){
+                                    if($.isNumeric($("#editeventmaxparticipants").val()) || $("#editeventmaxparticipants").val().length == 0){
+                                        if(alphanumeric($("#editevenorganiser").val(), true) && $("#editevenorganiser").val().length > 0 ){
+                                            if($("#editneweventteatime").val().length > 0){
+                                                if($("#editneweventdate").val().length > 0){
+                                                    return true;
+                                                }
+                                                else {
+                                                    bootbox.alert({message:"You need to choose event date.", backdrop: true});
+                                                    return false; 
+                                                }
+                                            } else{
+                                                bootbox.alert({message:"You need to choose first tea time.", backdrop: true});
+                                                return false; 
+                                            }
+                                            return true;
+                                        } else{
+                                            bootbox.alert({message:"Event organiser data incorrect. Only letters, numbers and space allowed.", backdrop: true});
+                                            return false; 
+                                        }
+                                    } else{
+                                        bootbox.alert({message: "Max participants data incorrect. Only numbers allowed.", backdrop: true});
+                                        return false;
+                                    }
+                                } else{
+                                    bootbox.alert({message:"'What's included' data incorrect. Only letters and numbers allowed.", backdrop: true});
+                                    return false;    
+                                }
+                            } else{
+                                bootbox.alert({message: "Price data incorrect. Only numbers allowed.", backdrop: true});
+                                return false;
+                            }
+                            
+                        } else{
+                            bootbox.alert({message:"Post code data incorrect. Only letters and numbers allowed.", backdrop: true});
+                            return false;    
+                        }
+            
+                    } else{
+                        bootbox.alert({message:"Course data incorrect. Only letters, numbers and space allowed.", backdrop: true});
+                        return false;
+                        }
+                } else {
+                    bootbox.alert({message: "Event name data incorrect. Only letters, numbers and space allowed.", backdrop: true});
+                    return false;
+                }
+            }
             
             function getCommittee(){
                 let arr =[];
@@ -1269,30 +1441,54 @@
             }
             
             
-            function updateSocietyEventTable(index){
+            function updateSocietyEventTable(idx){
                 
-                $('#societyeventstable').find('tbody').empty();
-                $('#societyeventstable').find('tbody').append('<tr><td>Event Name:</td><td align="center">'+SOCIETY_EVENTS[index]["name"]+'</td></tr>'+'<tr><td>Course:</td><td align="center">'+SOCIETY_EVENTS[index]["course"]+'</td></tr>'+'<tr><td>Post Code of Course:</td><td align="center">'+SOCIETY_EVENTS[index]["postcode"]+'</td></tr>'+'<tr><td>Club or Course Website:</td><td align="center">'+SOCIETY_EVENTS[index]["website"]+'</td></tr>'+'<tr><td>Date of Event:</td><td align="center">'+SOCIETY_EVENTS[index]["day"]+'/'+SOCIETY_EVENTS[index]["month"]+'/'+SOCIETY_EVENTS[index]["year"]+'</td></tr>'+'<tr><td>First Tea Time:</td><td align="center">'+SOCIETY_EVENTS[index]["firstteatime"]+'</td></tr>'+'<tr><td>Price per Head:</td><td align="center">'+SOCIETY_EVENTS[index]["price"]+'</td></tr>'+"<tr><td>What's included:</td><td align='center'>"+SOCIETY_EVENTS[index]["included"]+'</td></tr>'+'<tr><td>Max Number of Participants:</td><td align="center">'+SOCIETY_EVENTS[index]["maxplayers"]+'</td></tr>'+'<tr><td>Main Event Organiser:</td><td align="center">'+SOCIETY_EVENTS[index]["organiser"]+'</td></tr>'+'<tr><td>Notes:</td><td align="center">'+SOCIETY_EVENTS[index]["notes"]+'</td></tr>');
+                if(idx > -1){
+                    $('#societyeventstable').find('tbody').empty();
+                    let month = SOCIETY_EVENTS[idx]["month"]+1;
+                    $('#societyeventstable').find('tbody').append('<tr><td>Event Name:</td><td align="center">'+SOCIETY_EVENTS[idx]["name"]+'</td></tr>'+'<tr><td>Course:</td><td align="center">'+SOCIETY_EVENTS[idx]["course"]+'</td></tr>'+'<tr><td>Post Code of Course:</td><td align="center">'+SOCIETY_EVENTS[idx]["postcode"]+'</td></tr>'+'<tr><td>Club or Course Website:</td><td align="center">'+SOCIETY_EVENTS[idx]["website"]+'</td></tr>'+'<tr><td>Date of Event:</td><td align="center">'+SOCIETY_EVENTS[idx]["day"]+'/'+month+'/'+SOCIETY_EVENTS[idx]["year"]+'</td></tr>'+'<tr><td>First Tea Time:</td><td align="center">'+SOCIETY_EVENTS[idx]["firstteatime"]+'</td></tr>'+'<tr><td>Price per Head:</td><td align="center">'+SOCIETY_EVENTS[idx]["price"]+'</td></tr>'+"<tr><td>What's included:</td><td align='center'>"+SOCIETY_EVENTS[idx]["included"]+'</td></tr>'+'<tr><td>Max Number of Participants:</td><td align="center">'+SOCIETY_EVENTS[idx]["maxplayers"]+'</td></tr>'+'<tr><td>Main Event Organiser:</td><td align="center">'+SOCIETY_EVENTS[idx]["organiser"]+'</td></tr>'+'<tr><td>Notes:</td><td align="center">'+SOCIETY_EVENTS[idx]["notes"]+'</td></tr>');
+                } else{
+                    console.log("No index")
+                    $('#societyeventstable').find('tbody').empty();
+                }
+
             }
             
-            function updateEditSocietyEventForm(index){
-                $('#editeventname').val(SOCIETY_EVENTS[index]["name"]);
-                $('#editeventcourse').val(SOCIETY_EVENTS[index]["course"]);
-                $('#editeventpostcode').val(SOCIETY_EVENTS[index]["postcode"]);
-                $('#editeventclub').val(SOCIETY_EVENTS[index]["website"]);
-                //$('#editeventdate').val(SOCIETY_EVENTS[index]["day"]+'/'+SOCIETY_EVENTS[index]["month"]+'/'+SOCIETY_EVENTS[index]["year"]);
-                $('#editeventprice').val(SOCIETY_EVENTS[index]["price"]);
-                $('#editeventwhatincluded').val(SOCIETY_EVENTS[index]["included"]);
-                $('#editeventmaxparticipants').val(SOCIETY_EVENTS[index]["maxplayers"]);
-                
-                $('#editeventdate').datetimepicker("update", new Date(SOCIETY_EVENTS[index]["year"],SOCIETY_EVENTS[index]["month"],SOCIETY_EVENTS[index]["day"],0,0,0,0));
-                
-                let str = SOCIETY_EVENTS[index]["firstteatime"];
-                let res = str.split(":");
-                $('#editeventteatime').datetimepicker("update", new Date(0,0,0,res[0],res[1],0,0));
-                
-                $('#editevenorganiser').val(SOCIETY_EVENTS[index]["organiser"]);
-                $('#editeventnotes').val(SOCIETY_EVENTS[index]["notes"]);
+            function updateEditSocietyEventForm(idx){
+                if(idx > -1){
+                    $('#editeventname').val(SOCIETY_EVENTS[idx]["name"]);
+                    $('#editeventcourse').val(SOCIETY_EVENTS[idx]["course"]);
+                    $('#editeventpostcode').val(SOCIETY_EVENTS[idx]["postcode"]);
+                    $('#editeventclub').val(SOCIETY_EVENTS[idx]["website"]);
+                    //$('#editeventdate').val(SOCIETY_EVENTS[index]["day"]+'/'+SOCIETY_EVENTS[index]["month"]+'/'+SOCIETY_EVENTS[index]["year"]);
+                    $('#editeventprice').val(SOCIETY_EVENTS[idx]["price"]);
+                    $('#editeventwhatincluded').val(SOCIETY_EVENTS[idx]["included"]);
+                    $('#editeventmaxparticipants').val(SOCIETY_EVENTS[idx]["maxplayers"]);
+
+                    $('#editeventdate').datetimepicker("update", new Date(SOCIETY_EVENTS[idx]["year"],SOCIETY_EVENTS[idx]["month"],SOCIETY_EVENTS[idx]["day"],0,0,0,0));
+
+                    let str = SOCIETY_EVENTS[idx]["firstteatime"];
+                    let res = str.split(":");
+                    $('#editeventteatime').datetimepicker("update", new Date(0,0,0,res[0],res[1],0,0));
+
+                    $('#editevenorganiser').val(SOCIETY_EVENTS[idx]["organiser"]);
+                    $('#editeventnotes').val(SOCIETY_EVENTS[idx]["notes"]);
+                } else{
+                    $('#editeventname').val("");
+                    $('#editeventcourse').val("");
+                    $('#editeventpostcode').val("");
+                    $('#editeventclub').val("");
+                    $('#editeventprice').val("");
+                    $('#editeventwhatincluded').val("");
+                    $('#editeventmaxparticipants').val("");
+
+                    $('#editneweventdate').val("");
+                    $('#editneweventteatime').val("");
+
+                    $('#editevenorganiser').val("");
+                    $('#editeventnotes').val("");
+                }
+
             }
             
             function updateSocietyEventList(year){
