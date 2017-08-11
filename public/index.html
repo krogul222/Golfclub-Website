@@ -211,7 +211,7 @@
                                     Society Events
                                 </a>
                             </li>
-                            <li class="list-group-item">
+                            <li class="list-group-item" id = "competitionresults">
                                 <a class="notop" href="javascript:void(0)">
                                     Competition Results
                                 </a>
@@ -331,6 +331,41 @@
                             
                         </div>
                         <!-- Society events panel definition ends -->
+                        
+                        <!-- Competition results panel definition begins -->
+                        <div id="competitionresultscontent" style="display:none">
+                            <div class="well  text-center" >
+                                <h1>Competition results</h1>
+                                <h4></h4>
+                            </div>
+
+                            <table id = "competitionresultsinfotable" class=  "table table-hover">
+                                <thead>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+    
+                            <table id = "competitionresultsscoretable" class=  "table table-hover">
+                                <thead>
+                                    <th>Member Name</th>
+                                    <th>Handicap</th>
+                                    <th>Net Score</th>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                            
+                            <div class = "text-center well">
+                                <div class="list-group" id="competitionlist">
+                                </div> 
+                            </div>
+                            
+                            
+                        </div>
+                        <!-- Competition results panel definition ends -->
                         
                     <!-- Logged user panel definitions begin -->
                         <!-- Account Settings panel definition begins -->
@@ -627,7 +662,7 @@
                             </div>
 
                             <div class = "well">
-                                <button id="addcompetitionsubmit" type="button" style = "margin-top:20px" class="btn btn-primary btn-block">
+                                <button id="addcompetitionsubmitbtn" type="button" style = "margin-top:20px" class="btn btn-primary btn-block">
                                     Submit Competition Result
                                 </button>
                             </div>
@@ -670,7 +705,7 @@
                             <table id="addcompetitionresulttable" class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Members Name</th>
+                                        <th>Member Name</th>
                                         <th>Handicap</th>
                                         <th>Net Score</th>
                                     </tr>
@@ -738,6 +773,11 @@
                 $("#glofmenu").on("click", "#committee", function(event){;  // show committee 
                      hideAll();
                      $("#committeecontent").show();
+                });
+                
+                $("#glofmenu").on("click", "#competitionresults", function(event){;  // show committee 
+                     hideAll();
+                     $("#competitionresultscontent").show();
                 });
                 
                 $("#glofmenu").on("click", "#membershiplisting", function(event){   // show members list
@@ -869,6 +909,7 @@
                     $("#editmembers").hide();
                     $("#createsocietyevent").hide();
                     $("#societyeventscontent").hide();
+                    $("#competitionresultscontent").hide();
                     $("#editsocietyevents").hide();
                     $("#addcompetition").hide();
                     clearSecureData();
@@ -896,10 +937,12 @@
             const MEMBERS = [];
             const SOCIETY_EVENTS = [];
             const COMPETITION_RESULT = [];
+            const ALL_COMPETITION_RESULTS = [];
             let societyEventsYear = 0;
             let societyEditEventsYear = 0;
             let activeEditEvent = 0;
             let activeEvent = 0;
+            let activeCompetition = 0;
             let competitionMemberSelected = false;
             
             let committee = [];
@@ -908,7 +951,33 @@
             
             socket.emit('dataRequest', "membershiplisting");  
             socket.emit('dataRequest', "societyeventslisting"); 
+            socket.emit('dataRequest', "competitionresultslisting"); 
 
+            socket.on('competitionResultAdded', function(data){
+                
+                for(let i =0, length = data["results"].length; i < length; i++){
+                    ALL_COMPETITION_RESULTS.push(data["results"][i]);
+                }
+                
+                COMPETITION_RESULT.length = 0;
+                updateCompetitionMemberList();
+                $('#addcompetitionresulttable').find('tbody').empty(); 
+                
+                $("#addcompetitionmemberhandicap").val("");
+                $("#addcompetitionmembernetscore").val("");
+                
+                $("#addcompetitioneventname").val("");
+                $("#addcompetitionname").val("");
+                $("#addcompetitionvenue").val("");
+                $("#newcompetitiondate").val("");
+                
+               
+                
+                updateCompetitionList();
+                
+                bootbox.alert({message: "New Competition Result has been added.", backdrop: true});
+            });
+            
             socket.on('eventAdded', function(data){
                 
                 console.log("MONTHAdded "+data["month"]);
@@ -999,6 +1068,23 @@
                     }
                 });                      
             }); 
+
+            socket.on('competitionresultslistingData', function(data){ 
+                $(document).ready(function() {
+                    for(let i = 0, length = data.length; i < length; i++){
+                        data[i]["month"] = parseInt(data[i]["month"], 10); 
+                       // data[i]["month"] = data[i]["month"];
+                        ALL_COMPETITION_RESULTS.push(data[i]);        
+                    }
+                    
+                    let index = getLastCompetitionIndex();
+                    activeCompetition = index;
+                    
+                    updateCompetitionTables(index);
+                    updateCompetitionList();
+                    
+                });
+            });
             
             socket.on('societyeventslistingData', function(data){ 
                 $(document).ready(function() {
@@ -1112,6 +1198,26 @@
                     
                 });
                 
+                $("#addcompetitionsubmitbtn").on("click", function(event){
+                    let date = $("#addcompetitiondate").datetimepicker('getDate');
+                    
+                   if(checkCompetitionFormValidation()){
+                       
+                        let day = parseInt(date.getDate(), 10);
+                        let month = Number(Number(date.getMonth())+1);
+                        
+                        if(Number(day) < 10){
+                            day = "0" + day;
+                        }
+                        
+                        if(Number(month) < 10){
+                            month = "0" + month;
+                        }
+                       
+                       socket.emit('addCompetitionResult', {results: COMPETITION_RESULT, eventname: $("#addcompetitioneventname").val(), competitionname: $("#addcompetitionname").val(), venue: $("#addcompetitionvenue").val(), month: month, year: date.getFullYear(), day: day });
+                   } 
+                });
+                
                 $("#addmemberbtn").on("click", function(event){
                     if(checkMemberFormValidation()){
                         socket.emit('addMember', {username:$("#addmemberusername").val(), password: $("#addmemberusername").val(), name: $("#addmembername").val(), 
@@ -1159,6 +1265,13 @@
                     
                     updateEditSocietyEventForm(id);
                     activeEditEvent = id;
+                });
+                
+                $("#competitionlist").on("click", "a", function(event){
+                    let id = $(this).attr('id');
+                    
+                    updateCompetitionTables(id);
+                    activeCompetition = id;
                 });
                 
                 $("#addcompetitionmemberlist").on("click", "a", function(event){
@@ -1472,6 +1585,30 @@
                 }
             }
             
+            function checkCompetitionFormValidation(){
+                if(alphanumeric($("#addcompetitioneventname").val(), false) && $("#addcompetitioneventname").val().length > 0 ){
+                    if(alphanumeric($("#addcompetitionname").val(), true) && $("#addcompetitionname").val().length > 0 ){
+                        if(alphanumeric($("#addcompetitionvenue").val(), true) && $("#addcompetitionvenue").val().length > 0 ){
+                            if($("#newcompetitiondate").val().length > 0){
+                                return true;
+                            } else{
+                                bootbox.alert({message:"You need to choose competition date.", backdrop: true});
+                                return false;
+                            }
+                        } else{
+                            bootbox.alert({message: "Competition venue data incorrect. Only letters, numbers and space allowed.", backdrop: true});
+                            return false;
+                        }
+                    } else{
+                        bootbox.alert({message:"Competition name data incorrect. Only letters, numbers and space allowed.", backdrop: true});
+                        return false;
+                        }
+                } else {
+                    bootbox.alert({message: "Event name data incorrect. Only letters and numbers allowed.", backdrop: true});
+                    return false;
+                }
+            }
+            
             function checkMemberCompetitionResultFormValidation(){
                 if(competitionMemberSelected){
                     if($.isNumeric($("#addcompetitionmemberhandicap").val())){
@@ -1647,16 +1784,36 @@
             }
             
             
-            function updateSocietyEventTable(idx){
+            function updateCompetitionTables(idx){
+                $('#competitionresultsinfotable').find('tbody').empty();
+                $('#competitionresultsscoretable').find('tbody').empty();
                 
                 if(idx > -1){
-                    $('#societyeventstable').find('tbody').empty();
+                    let month = Number(ALL_COMPETITION_RESULTS[idx]["month"]);
+                    let day = Number(ALL_COMPETITION_RESULTS[idx]["day"]);
+                    
+                    $('#competitionresultsinfotable').find('tbody').append('<tr><td>Event:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["eventname"]+'</td></tr>'+'<tr><td>Competition:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["competitionname"]+'</td></tr>'+'<tr><td>Venue:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["venue"]+'</td></tr>'+'<tr><td>Date of Competition:</td><td align="center">'+day+'/'+month+'/'+ALL_COMPETITION_RESULTS[idx]["year"]+'</td></tr>');
+                                                                    
+                    for(let i = 0, length = ALL_COMPETITION_RESULTS.length; i < length; i++){
+                        if(ALL_COMPETITION_RESULTS[i]["id"] == ALL_COMPETITION_RESULTS[idx]["id"]){
+                            $('#competitionresultsscoretable').find('tbody').append('<tr><td>'+ALL_COMPETITION_RESULTS[i]["member"]["name"] +'</td><td>'+ ALL_COMPETITION_RESULTS[i]["handicap"] +'</td><td>'+ ALL_COMPETITION_RESULTS[i]["netscore"] + '</td></tr>');
+                        }
+                    }
+                    
+                    
+                } else{
+                }
+            }
+            
+            function updateSocietyEventTable(idx){
+                
+                $('#societyeventstable').find('tbody').empty();
+                
+                if(idx > -1){
                     let month = Number(SOCIETY_EVENTS[idx]["month"]);
-                    let day = Number(SOCIETY_EVENTS[idx]["day"])
+                    let day = Number(SOCIETY_EVENTS[idx]["day"]);
                     $('#societyeventstable').find('tbody').append('<tr><td>Event Name:</td><td align="center">'+SOCIETY_EVENTS[idx]["name"]+'</td></tr>'+'<tr><td>Course:</td><td align="center">'+SOCIETY_EVENTS[idx]["course"]+'</td></tr>'+'<tr><td>Post Code of Course:</td><td align="center">'+SOCIETY_EVENTS[idx]["postcode"]+'</td></tr>'+'<tr><td>Club or Course Website:</td><td align="center">'+SOCIETY_EVENTS[idx]["website"]+'</td></tr>'+'<tr><td>Date of Event:</td><td align="center">'+day+'/'+month+'/'+SOCIETY_EVENTS[idx]["year"]+'</td></tr>'+'<tr><td>First Tea Time:</td><td align="center">'+SOCIETY_EVENTS[idx]["firstteatime"]+'</td></tr>'+'<tr><td>Price per Head:</td><td align="center">'+SOCIETY_EVENTS[idx]["price"]+'</td></tr>'+"<tr><td>What's included:</td><td align='center'>"+SOCIETY_EVENTS[idx]["included"]+'</td></tr>'+'<tr><td>Max Number of Participants:</td><td align="center">'+SOCIETY_EVENTS[idx]["maxplayers"]+'</td></tr>'+'<tr><td>Main Event Organiser:</td><td align="center">'+SOCIETY_EVENTS[idx]["organiser"]+'</td></tr>'+'<tr><td>Notes:</td><td align="center">'+SOCIETY_EVENTS[idx]["notes"]+'</td></tr>');
                 } else{
-                    console.log("No index")
-                    $('#societyeventstable').find('tbody').empty();
                 }
 
             }
@@ -1696,6 +1853,32 @@
                     $('#editeventnotes').val("");
                 }
 
+            }
+            
+            function updateCompetitionList(){
+                $('#competitionlist').empty();
+                
+                let arr = getCompetitionIndexList();
+                
+                for(let i=0, length = arr.length; i < length; i++){
+                    
+                    $('#competitionlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+arr[i]+'" >'+ALL_COMPETITION_RESULTS[arr[i]]["competitionname"]+'</a>');   
+                }
+            }
+            
+            function getCompetitionIndexList(){
+                
+                let arr =[];
+                let id = -1;
+                
+                for(let i=0, length = ALL_COMPETITION_RESULTS.length; i < length; i++){
+                    if(ALL_COMPETITION_RESULTS[i]["id"] !== id){
+                        id = ALL_COMPETITION_RESULTS[i]["id"];
+                        arr.push(i);
+                    }
+                }
+                
+                return arr;
             }
             
             function updateSocietyEventList(year){
@@ -1761,6 +1944,22 @@
                 
                 return 0;
             }
+            getLastCompetitionIndex
+ 
+            function getLastCompetitionIndex(){
+                let arr = [];
+                
+                for(let i=0, length = ALL_COMPETITION_RESULTS.length; i < length; i++){
+                    arr.push(Number(ALL_COMPETITION_RESULTS[i]['year']*10000)+Number(ALL_COMPETITION_RESULTS[i]['month']*100)+Number(ALL_COMPETITION_RESULTS[i]['day']));
+                    console.log(ALL_COMPETITION_RESULTS[i]['year']);
+                    console.log(ALL_COMPETITION_RESULTS[i]['month']);
+                    console.log(ALL_COMPETITION_RESULTS[i]['year']);
+                    console.log(Number(ALL_COMPETITION_RESULTS[i]['year']*10000)+Number(ALL_COMPETITION_RESULTS[i]['month']*100)+Number(ALL_COMPETITION_RESULTS[i]['day']));
+                }
+                
+                return indexOfMax(arr);
+            }
+                        
             
             function getLastEventIndex(){
                 let arr = [];

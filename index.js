@@ -2,7 +2,7 @@ var mongojs = require('mongojs');
 var express = require('express');
 //var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event']);
 
-var db = mongojs('localhost:27017/golf', ['account','event']);      // connect to database
+var db = mongojs('localhost:27017/golf', ['account','event','competition']);      // connect to database
 /*
 db.account.remove();
 
@@ -109,6 +109,11 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
                     socket.emit('societyeventslistingData',res);   // sent all members data to client
                 });
                 break;
+            case "competitionresultslisting":
+                db.competition.find({}, function(err, res){
+                    socket.emit('competitionresultslistingData',res);   // sent all members data to client
+                });
+                break;     
                 
         }
     });
@@ -126,6 +131,26 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
                 socket.emit('memberAdded',data);    // sent response to client
             }
         });
+    });
+    
+    
+    socket.on('addCompetitionResult', function(data){     
+        
+                let id = Math.floor(Math.random()*1000000000000);        
+                data["id"] = id;
+        
+                for(let i = 0, length = data["results"].length; i < length; i++){
+                    data["results"][i]["eventname"] = data["eventname"];
+                    data["results"][i]["competitionname"] = data["competitionname"];
+                    data["results"][i]["venue"] = data["venue"];
+                    data["results"][i]["year"] = data["year"];
+                    data["results"][i]["month"] = data["month"];
+                    data["results"][i]["day"] = data["day"];
+                    data["results"][i]["id"] = data["id"];
+                    db.competition.insert(data["results"][i]); 
+                }
+                //db.event.insert(data);            // add event to database
+                socket.emit('competitionResultAdded',data);    // sent response to client
     });
    
     //requests from addsociety panel     
