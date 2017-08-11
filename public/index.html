@@ -245,6 +245,11 @@
                                     Edit Society Events
                                 </a>
                             </li>
+                            <li class="list-group-item" id="addcompetitionresultsLink">
+                                <a class="notop" href="javascript:void(0)">
+                                    Add Competition Results
+                                </a>
+                            </li>
                         <!-- Menu with ADMIN access ends -->
                         </ul>
                     </div>
@@ -615,6 +620,97 @@
                             </div>
                         </div>
                         <!-- Add society event panel definition ends -->
+                        <!-- Add competition result panel definition begins -->
+                        <div id="addcompetition" style="display:none">
+                            <div class="well  text-center" >  
+                                <h1>Add Competition Result</h1> 
+                            </div>
+
+                            <div class = "well">
+                                <button id="addcompetitionsubmit" type="button" style = "margin-top:20px" class="btn btn-primary btn-block">
+                                    Submit Competition Result
+                                </button>
+                            </div>
+                            
+                            <form class="form well" role="form" accept-charset="UTF-8" id="addcompetitionresultpanel">
+                                <div class="form-group">
+                                    <label for="addcompetitioneventname">
+                                        Event name:
+                                    </label>
+                                    <input type="text" class="form-control" id="addcompetitioneventname" placeholder="" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="addcompetitionname">
+                                        Competition
+                                    </label>
+                                    <input type="text" class="form-control" id="addcompetitionname" placeholder="" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="addcompetitionvenue">
+                                        Venue:
+                                    </label>
+                                    <input type="text" class="form-control" id="addcompetitionvenue" placeholder="" required>
+                                </div>
+
+                                <div class="form-group">
+                                <label style = "margin-top:20px" for="addcompetitiondate">
+                                        Date of Competition:
+                                    </label>
+                                    <div class='input-group date' data-date-format="dd MM yyyy" id='addcompetitiondate'>
+                                        <input type='text' class="form-control" readonly id="newcompetitiondate">
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>                                
+                            </form>
+                            
+                            <table id="addcompetitionresulttable" class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Members Name</th>
+                                        <th>Handicap</th>
+                                        <th>Net Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            
+                            <div class = "well" id = "addcompetitionmemberresult">
+                                
+                                <label for="addcompetitionmembernamebtn">
+                                        Member name:
+                                </label>
+                                <button id="addcompetitionmembernamebtn" type="button" style = "" class="btn btn-success btn-block">
+                                    Choose Member
+                                </button>
+                                <div class="list-group" id="addcompetitionmemberlist" style = "display:none">
+                                </div>
+                                
+                                <div class="form-group" style = "margin-top:20px">
+                                    <label for="addcompetitionmemberhandicap">
+                                        Member handicap:
+                                    </label>
+                                    <input type="text" class="form-control" id="addcompetitionmemberhandicap" placeholder="" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="addcompetitionmembernetscore">
+                                        Member net score:
+                                    </label>
+                                    <input type="text" class="form-control" id="addcompetitionmembernetscore" placeholder="" required>
+                                    
+                                <button id="addcompetitionmemberresultbtn" type="button" style = "margin-top:20px" class="btn btn-primary btn-block">
+                                    Add Member result
+                                </button>
+                                </div>
+                            </div>
+                        
+                        </div>
+                        <!-- Add competition result definition ends -->
                     <!-- ADMIN  panels definitions ends -->
                     </div>
                 </div>
@@ -695,12 +791,27 @@
                     $("#createsocietyevent").show();
                 });    
                 
+                $("#addcompetitionresultsLink").on("click" , function(event){  // show add event panel
+                    hideAll();
+                    $("#addcompetition").show();
+                });    
+                
                 // carrousel and date/time picking
                 
                 $('#myCarousel').carousel({ // change carrousel slide each 10s
                     interval: 10000
                 });
-                    
+
+                $('#addcompetitiondate').datetimepicker({ // fancy date picking for add competition panel
+                    weekStart: 1,
+                    todayBtn:  1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    startView: 2,
+                    minView: 2,
+                    forceParse: 0
+                });                
+                
                 $('#addeventdate').datetimepicker({ // fancy date picking for add society event panel
                     weekStart: 1,
                     todayBtn:  1,
@@ -739,7 +850,8 @@
                     minView: 0,
                     maxView: 1,
                     forceParse: 0
-                });                
+                });         
+                
                 
                 // usefull functions:
                 
@@ -758,6 +870,7 @@
                     $("#createsocietyevent").hide();
                     $("#societyeventscontent").hide();
                     $("#editsocietyevents").hide();
+                    $("#addcompetition").hide();
                     clearSecureData();
                 }
                 
@@ -782,10 +895,12 @@
             var user = User();
             const MEMBERS = [];
             const SOCIETY_EVENTS = [];
+            const COMPETITION_RESULT = [];
             let societyEventsYear = 0;
             let societyEditEventsYear = 0;
             let activeEditEvent = 0;
             let activeEvent = 0;
+            let competitionMemberSelected = false;
             
             let committee = [];
             var socket = io(); 
@@ -979,6 +1094,24 @@
                     socket.emit('signIn', {username: $('#loginUsername').val(), password: $('#loginPassword').val()} );
                 });
                 
+                
+                $("#addcompetitionmemberresultbtn").on("click", function(event){
+                    if(checkMemberCompetitionResultFormValidation()){
+                        $('#addcompetitionresulttable').find('tbody').append('<tr><td>'+$("#addcompetitionmembernamebtn").text() +'</td><td>'+ $("#addcompetitionmemberhandicap").val() +'</td><td>'+ $("#addcompetitionmembernetscore").val() + '</td></tr>');
+                        
+                        COMPETITION_RESULT.push({member: getMemberByName($("#addcompetitionmembernamebtn").text()), handicap: $("#addcompetitionmemberhandicap").val(), netscore: $("#addcompetitionmembernetscore").val()});
+                        console.log(getMemberByName($("#addcompetitionmembernamebtn").text())["name"]);
+                        
+                        competitionMemberSelected = false;
+                        $("#addcompetitionmembernamebtn").text("Choose Member");
+                        $("#addcompetitionmemberhandicap").val("");
+                        $("#addcompetitionmembernetscore").val("");
+                        
+                        updateCompetitionMemberList();
+                    }
+                    
+                });
+                
                 $("#addmemberbtn").on("click", function(event){
                     if(checkMemberFormValidation()){
                         socket.emit('addMember', {username:$("#addmemberusername").val(), password: $("#addmemberusername").val(), name: $("#addmembername").val(), 
@@ -1006,6 +1139,7 @@
                         }
                 });
                 
+                
                 $("#editmemberslist").on("click", "a", function(event){
                     let id = $(this).attr('id');
                     let propertiesId = "#member"+id;
@@ -1026,6 +1160,18 @@
                     updateEditSocietyEventForm(id);
                     activeEditEvent = id;
                 });
+                
+                $("#addcompetitionmemberlist").on("click", "a", function(event){
+                    let name = $(this).text();
+                    $("#addcompetitionmembernamebtn").text(name);
+                    $("#addcompetitionmemberhandicap").val(getMemberHandicap(name));
+                    competitionMemberSelected = true;
+                    $("#addcompetitionmemberlist").slideToggle();
+                });
+                                
+                $("#addcompetitionmembernamebtn").on("click", function(event){
+                    $("#addcompetitionmemberlist").slideToggle();
+                }); 
                 
                 $("#eventnextyearbtn").on("click", function(event){
                     console.log("Year "+societyEventsYear+"");
@@ -1144,6 +1290,7 @@
                     $("#addmember").hide();
                     $("#editmembers").hide();
                     $("#createsocietyevent").hide();
+                    $("#addcompetition").hide();
                 });
             });
             
@@ -1202,6 +1349,15 @@
                 }
             }
             
+            function getMemberByName(name){
+                for(let i = 0, length = MEMBERS.length; i < length; i++){
+                    if(MEMBERS[i]["name"] === name){
+                        return MEMBERS[i];
+                        break;
+                    }
+                }
+            }            
+            
             function deleteMember(member){    
                 for(let i = 0, length = MEMBERS.length; i < length; i++){
                     if(MEMBERS[i]["username"] === member.username){    
@@ -1213,7 +1369,8 @@
             
             function updateMemberList(){
                 $('#memberstable').find('tbody').empty();
-                $('#editmemberslist').empty();      
+                $('#editmemberslist').empty(); 
+                $('#addcompetitionmemberlist').empty();    
                 
                 for(let i =0, length = MEMBERS.length; i < length; i++){     
                     updateMemberPanels(i);
@@ -1311,6 +1468,25 @@
                         }
                 } else {
                     bootbox.alert({message: "Username data incorrect. Only letters and numbers allowed.", backdrop: true});
+                    return false;
+                }
+            }
+            
+            function checkMemberCompetitionResultFormValidation(){
+                if(competitionMemberSelected){
+                    if($.isNumeric($("#addcompetitionmemberhandicap").val())){
+                        if($.isNumeric($("#addcompetitionmembernetscore").val())){
+                            return true;
+                        } else{
+                            bootbox.alert({message: "Net score data incorrect. Only numbers allowed.", backdrop: true});
+                            return false;
+                        }
+                    } else{
+                        bootbox.alert({message:"Handicap data incorrect. Only numbers allowed.", backdrop: true});
+                        return false;
+                        }
+                } else {
+                    bootbox.alert({message: "Member name data incorrect. Choose member from the list.", backdrop: true});
                     return false;
                 }
             }
@@ -1432,6 +1608,22 @@
                 return arr;
             }
             
+            function updateCompetitionMemberList(){
+                $('#addcompetitionmemberlist').empty();    
+                
+                arr =[];
+                
+                for(let i = 0, length = COMPETITION_RESULT.length; i < length; i++){
+                    arr.push(COMPETITION_RESULT[i].member);
+                }
+                
+                for(let i =0, length = MEMBERS.length; i < length; i++){
+                    if(($.inArray(MEMBERS[i], arr)) == -1){
+                       $('#addcompetitionmemberlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+i+'" >'+MEMBERS[i]["name"]+'</a>');
+                    }
+                }
+            }
+            
             function updateMemberPanels(i){
                 $('#memberstable').find('tbody').append('<tr><td>'+MEMBERS[i]["name"]+'</td><td>'+MEMBERS[i]["handicapExact"]+'</td><td>'+Math.round(Number(MEMBERS[i]["handicapExact"]))+'</td><td>'+MEMBERS[i]["email"]+'</td><td>'+MEMBERS[i]["phone"]+'</td></tr>');
                         
@@ -1448,6 +1640,10 @@
                 $("#member"+i).append('<label for="editmemberhandicap" style="margin-top:20px">Handicap:</label><input type="text" class="form-control list-group-item" id="editmemberhandicap" placeholder="'+MEMBERS[i]["handicapExact"]+'"  value="'+MEMBERS[i]["handicapExact"]+'">');
                         
                 $("#member"+i).append('<button id="editmember" type="button" style="margin-top:20px" class="btn btn-primary btn-block">Apply changes</button>');
+                
+                //add competition result panel
+                
+                $('#addcompetitionmemberlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+i+'" >'+MEMBERS[i]["name"]+'</a>');
             }
             
             
@@ -1554,6 +1750,16 @@
                 }
                 
                 $('#editeventlistbtn').text(year);
+            }
+            
+            function getMemberHandicap(membername){
+                for(let i =0, length = MEMBERS.length; i < length; i++){     
+                    if(MEMBERS[i]["name"] == membername){
+                        return Math.round(MEMBERS[i]["handicapExact"]);
+                    }
+                }
+                
+                return 0;
             }
             
             function getLastEventIndex(){

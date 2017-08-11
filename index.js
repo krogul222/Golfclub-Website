@@ -6,17 +6,17 @@ var db = mongojs('localhost:27017/golf', ['account','event']);      // connect t
 /*
 db.account.remove();
 
-db.account.insert({username:"johnhart", name: "John Hart", password: "johnhart", email: "johnymike@hotmail.com", phone: "07930980836", committee: "true", position: "President", handicapExact: "14.2", account:"member", admin: "true"});
+db.account.insert({username:"johnhart", name: "John Hart", password: "johnhart", email: "johnymike@hotmail.com", phone: "07930980836", committee: "true", position: "President", handicapExact: "14.2", account:"member", admin: "true", id:"1"});
 
-db.account.insert({username:"garynorton", name: "Gary Norton", password: "garynorton", email: "", phone: "", committee: "true", position: "Treasurer", handicapExact: "22", account:"member"});
+db.account.insert({username:"garynorton", name: "Gary Norton", password: "garynorton", email: "", phone: "", committee: "true", position: "Treasurer", handicapExact: "22", account:"member", id:"2"});
 
-db.account.insert({username:"tonylyons", name: "Tony Lyons", password: "tonylyons", email: "", phone: "", committee: "true", position: "Handicap Chairman", handicapExact: "12.3", account:"member"});
+db.account.insert({username:"tonylyons", name: "Tony Lyons", password: "tonylyons", email: "", phone: "", committee: "true", position: "Handicap Chairman", handicapExact: "12.3", account:"member", id:"3"});
 
-db.account.insert({username:"craighulton", name: "Craig Hulton", password: "craighulton", email: "", phone: "", committee: "true", position: "Capitan", handicapExact: "19.4", account:"member"});
+db.account.insert({username:"craighulton", name: "Craig Hulton", password: "craighulton", email: "", phone: "", committee: "true", position: "Capitan", handicapExact: "19.4", account:"member", id:"4"});
 
-db.account.insert({username:"paulcraneybarnie", name: "Paul Craney Barnie", password: "paulcraneybarnie", email: "paulbarniedecor@sol.com", phone: "07402958921", committee: "true", position: "Handicap Secratary", handicapExact: "8", account:"member"});
+db.account.insert({username:"paulcraneybarnie", name: "Paul Craney Barnie", password: "paulcraneybarnie", email: "paulbarniedecor@sol.com", phone: "07402958921", committee: "true", position: "Handicap Secratary", handicapExact: "8", account:"member", id:"5"});
 
-db.account.insert({username:"stephenpercy", name: "Stephen Percy", password: "stephenpercy", email: "steve.percy@nxp.com", phone: "07910751885", committee: "false", position: "", handicapExact: "18.3", admin: "true", account:"member"});
+db.account.insert({username:"stephenpercy", name: "Stephen Percy", password: "stephenpercy", email: "steve.percy@nxp.com", phone: "07910751885", committee: "false", position: "", handicapExact: "18.3", admin: "true", account:"member", id:"6"});
 
 db.account.insert({username:"admin", name: "Stephen Percy", password: "123", admin: "true", account:"admin"});
 
@@ -121,6 +121,7 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
                 socket.emit('usernametaken',{});    // username is already taken, member not added   
             } else{
                 data["account"] = "member";
+                data["id"] = Math.floor(Math.random()*1000000000000);    
                 db.account.insert(data);            // add member to database
                 socket.emit('memberAdded',data);    // sent response to client
             }
