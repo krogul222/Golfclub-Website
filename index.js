@@ -1,11 +1,11 @@
 var mongojs = require('mongojs');
 var express = require('express');
-//var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event']);
+var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition']);
 
-var db = mongojs('localhost:27017/golf', ['account','event','competition']);      // connect to database
+//var db = mongojs('localhost:27017/golf', ['account','event','competition']);      // connect to database
+
+//db.account.remove();
 /*
-db.account.remove();
-
 db.account.insert({username:"johnhart", name: "John Hart", password: "johnhart", email: "johnymike@hotmail.com", phone: "07930980836", committee: "true", position: "President", handicapExact: "14.2", account:"member", admin: "true", id:"1"});
 
 db.account.insert({username:"garynorton", name: "Gary Norton", password: "garynorton", email: "", phone: "", committee: "true", position: "Treasurer", handicapExact: "22", account:"member", id:"2"});
@@ -18,9 +18,9 @@ db.account.insert({username:"paulcraneybarnie", name: "Paul Craney Barnie", pass
 
 db.account.insert({username:"stephenpercy", name: "Stephen Percy", password: "stephenpercy", email: "steve.percy@nxp.com", phone: "07910751885", committee: "false", position: "", handicapExact: "18.3", admin: "true", account:"member", id:"6"});
 
-db.account.insert({username:"admin", name: "Krzysztof Krogulski, password: "123", admin: "true", account:"admin"});
-
+db.account.insert({username:"admin", name: "Krzysztof Krogulski", password: "123", admin: "true", account:"admin"});
 */
+
 //db.event.remove();
 /*
 db.event.insert({name: "August Society Day", course: "Dukinfield Golf Club", postcode: "SK165GF", website: "http://www.dukinfieldgolfclub.co.uk/", price: "15", included: "golf", maxplayers: "20", firstteatime: "09:30", day: "07", month: "08", year: "2017", organiser: "Stephen Percy", notes: "" , id: "1"});
