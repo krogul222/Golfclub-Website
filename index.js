@@ -18,7 +18,7 @@ db.account.insert({username:"paulcraneybarnie", name: "Paul Craney Barnie", pass
 
 db.account.insert({username:"stephenpercy", name: "Stephen Percy", password: "stephenpercy", email: "steve.percy@nxp.com", phone: "07910751885", committee: "false", position: "", handicapExact: "18.3", admin: "true", account:"member", id:"6"});
 
-db.account.insert({username:"admin", name: "Stephen Percy", password: "123", admin: "true", account:"admin"});
+db.account.insert({username:"admin", name: "Krzysztof Krogulski, password: "123", admin: "true", account:"admin"});
 
 */
 //db.event.remove();
