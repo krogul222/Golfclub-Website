@@ -250,6 +250,11 @@
                                     Add Competition Result
                                 </a>
                             </li>
+                            <li class="list-group-item" id="editcompetitionresultsLink">
+                                <a class="notop" href="javascript:void(0)">
+                                    Edit Competition Results
+                                </a>
+                            </li>
                         <!-- Menu with ADMIN access ends -->
                         </ul>
                     </div>
@@ -746,6 +751,108 @@
                         
                         </div>
                         <!-- Add competition result definition ends -->
+                        <!-- Edit competition result panel definition begins -->
+                        <div id="editcompetition" style="display:none">
+                            <div class="well  text-center" >  
+                                <h1>Edit Competition Results</h1> 
+                            </div>
+
+                            <div class = "well">
+                                <button id="editcompetitiondeletebtn" type="button" style = "margin-top:20px" class="btn btn-danger btn-block">
+                                    Delete Competition
+                                </button>
+                            </div>
+                            
+                            <form class="form well" role="form" accept-charset="UTF-8" id="editcompetitionresultpanel">
+                                <div class="form-group">
+                                    <label for="editcompetitioneventname">
+                                        Event name:
+                                    </label>
+                                    <input type="text" class="form-control" id="editcompetitioneventname" placeholder="" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="editcompetitionname">
+                                        Competition
+                                    </label>
+                                    <input type="text" class="form-control" id="editcompetitionname" placeholder="" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="editcompetitionvenue">
+                                        Venue:
+                                    </label>
+                                    <input type="text" class="form-control" id="editcompetitionvenue" placeholder="" required>
+                                </div>
+
+                                <div class="form-group">
+                                <label style = "margin-top:20px" for="editcompetitiondate">
+                                        Date of Competition:
+                                    </label>
+                                    <div class='input-group date' data-date-format="dd MM yyyy" id='editcompetitiondate'>
+                                        <input type='text' class="form-control" readonly id="editnewcompetitiondate">
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>                                
+                            </form>
+                            
+                            <table id="editcompetitionresulttable" class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Member Name</th>
+                                        <th>Handicap</th>
+                                        <th>Net Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            
+                            <div class = "well" id = "editcompetitionmemberresult">
+                                
+                                <label for="editcompetitionmembernamebtn">
+                                        Member name:
+                                </label>
+                                <button id="editcompetitionmembernamebtn" type="button" style = "" class="btn btn-success btn-block">
+                                    Choose Member
+                                </button>
+                                <div class="list-group" id="editcompetitionmemberlist" style = "display:none">
+                                </div>
+                                
+                                <div class="form-group" style = "margin-top:20px">
+                                    <label for="editcompetitionmemberhandicap">
+                                        Member handicap:
+                                    </label>
+                                    <input type="text" class="form-control" id="editcompetitionmemberhandicap" placeholder="" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="editcompetitionmembernetscore">
+                                        Member net score:
+                                    </label>
+                                    <input type="text" class="form-control" id="editcompetitionmembernetscore" placeholder="" required>
+                                    
+                                <button id="editcompetitionmemberresultbtn" type="button" style = "margin-top:20px" class="btn btn-primary btn-block">
+                                    Add Member result
+                                </button>
+                                </div>
+                            </div>
+                            
+                            <div class = "well">
+                                <button id="editcompetitionsubmitbtn" type="button" style = "margin-top:20px" class="btn btn-primary btn-block">
+                                    Apply changes
+                                </button>
+                            </div>
+                            
+                            <div class = "text-center well">
+                                <div class="list-group" id="editcompetitionlist">
+                                </div> 
+                            </div>
+                        </div>
+                        <!-- Edit competition result definition ends -->                        
+                        
                     <!-- ADMIN  panels definitions ends -->
                     </div>
                 </div>
@@ -835,6 +942,10 @@
                     hideAll();
                     $("#addcompetition").show();
                 });    
+                $("#editcompetitionresultsLink").on("click" , function(event){  // show add event panel
+                    hideAll();
+                    $("#editcompetition").show();
+                });   
                 
                 // carrousel and date/time picking
                 
@@ -850,7 +961,18 @@
                     startView: 2,
                     minView: 2,
                     forceParse: 0
-                });                
+                });        
+                
+                $('#editcompetitiondate').datetimepicker({ // fancy date picking for edit socompetition panel
+                    weekStart: 1,
+                    todayBtn:  1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    startView: 2,
+                    minView: 2,
+                    forceParse: 0
+                });
+                
                 
                 $('#addeventdate').datetimepicker({ // fancy date picking for add society event panel
                     weekStart: 1,
@@ -912,6 +1034,7 @@
                     $("#competitionresultscontent").hide();
                     $("#editsocietyevents").hide();
                     $("#addcompetition").hide();
+                    $("#editcompetition").hide();
                     clearSecureData();
                 }
                 
@@ -943,6 +1066,7 @@
             let activeEditEvent = 0;
             let activeEvent = 0;
             let activeCompetition = 0;
+            let activeEditCompetition = 0;
             let competitionMemberSelected = false;
             
             let committee = [];
@@ -974,6 +1098,7 @@
                
                 
                 updateCompetitionList();
+                updateEditCompetitionList();
                 
                 bootbox.alert({message: "New Competition Result has been added.", backdrop: true});
             });
@@ -1032,7 +1157,42 @@
                 
                 console.log("Event deleted");
                 bootbox.alert({message: "Event has been deleted.", backdrop: true});
-            });               
+            });   
+            
+            socket.on('competitionDeleted', function(data){
+                console.log("Competition deleted");
+                
+                if(activeCompetition > -1){
+                    if(ALL_COMPETITION_RESULTS[activeCompetition].id == data.id){
+                        updateCompetitionTables(-1);
+                        activeCompetition = -1;
+                    }
+                }
+                
+                deleteCompetition(data);
+
+                updateEditCompetitionTables(-1);
+                activeEditCompetition = -1;
+                
+                updateEditCompetitionList();
+                updateCompetitionList();
+                
+                console.log("Competition deleted");
+                bootbox.alert({message: "Competition has been deleted.", backdrop: true});
+            });   
+
+            socket.on('competitionEdited', function(data){
+                updateCompetition(data);
+
+                updateEditCompetitionList();
+                updateCompetitionList();
+                if(activeCompetition > -1){
+                    if(data.id == ALL_COMPETITION_RESULTS[activeCompetition].id){
+                        updateCompetitionTables(activeCompetition);
+                    }
+                }
+                bootbox.alert({message: "Competition has been edited.", backdrop: true});
+            });              
             
             socket.on('memberAdded', function(data){
                 MEMBERS.push(data);
@@ -1060,6 +1220,11 @@
                 $(document).ready(function() {
                     for(let i = 0, length = data.length; i < length; i++){
                         MEMBERS.push(data[i]);        
+                    }
+                    
+                    sortMembersByName();
+                    
+                    for(let i = 0, length = data.length; i < length; i++){       
                         updateMemberPanels(i);
                     }
                     committee = getCommittee();
@@ -1079,9 +1244,13 @@
                     
                     let index = getLastCompetitionIndex();
                     activeCompetition = index;
+                    activeEditCompetition = index;
                     
                     updateCompetitionTables(index);
                     updateCompetitionList();
+                    
+                    updateEditCompetitionTables(index);
+                    updateEditCompetitionList();
                     
                 });
             });
@@ -1274,6 +1443,13 @@
                     activeCompetition = id;
                 });
                 
+                $("#editcompetitionlist").on("click", "a", function(event){
+                    let id = $(this).attr('id');
+                    
+                    updateEditCompetitionTables(id);
+                    activeEditCompetition = id;
+                });
+                
                 $("#addcompetitionmemberlist").on("click", "a", function(event){
                     let name = $(this).text();
                     $("#addcompetitionmembernamebtn").text(name);
@@ -1360,6 +1536,36 @@
                      
                  });
                 
+                $("#editcompetition").on("click", "button" ,function(event){
+                     
+                    if(($(this).attr('id')) == "editcompetitionsubmitbtn" && activeEditCompetition >= 0){
+                        if(checkEditCompetitionFormValidation()){
+                            let date = $("#editcompetitiondate").datetimepicker('getDate');
+
+                            let day = parseInt(date.getDate(), 10);
+                            let month = Number(Number(date.getMonth())+1);
+                        
+                            if(Number(day) < 10){
+                                day = "0" + day;
+                            }
+                        
+                            if(Number(month) < 10){
+                                month = "0" + month;
+                            }
+                            socket.emit('editCompetition',{eventname: $("#editcompetitioneventname").val(), competitionname: $("#editcompetitionname").val(), venue: $("#editcompetitionvenue").val(), month: month, year: date.getFullYear(), day: day, id: ALL_COMPETITION_RESULTS[activeEditCompetition]["id"]}); 
+                        }
+                    } else if(($(this).attr('id')) == "editcompetitiondeletebtn"){
+                        if(activeEditCompetition >= 0){
+                            bootbox.confirm("Are you sure to delete competition '"+$("#editcompetitionvenue").val()+"' ?" , function(result){
+                                if(result){
+                                    socket.emit('deleteCompetition',{id: ALL_COMPETITION_RESULTS[activeEditCompetition]["id"]});  
+                                }
+                            }); 
+                        }
+                    }
+                     
+                 });                
+                
                 $("#editmemberslist").on("click", "button", function(event){
                     let username = "";
                     let name = "";
@@ -1443,6 +1649,36 @@
                 }  
             }      
             
+            function updateCompetition(competition){   
+                for(let i = 0, length = ALL_COMPETITION_RESULTS.length; i < length; i++){
+                    if(ALL_COMPETITION_RESULTS[i]["id"] === competition["id"]){
+                        ALL_COMPETITION_RESULTS[i]["eventname"] = competition.eventname;
+                        ALL_COMPETITION_RESULTS[i]["competitionname"] = competition.competitionname;
+                        ALL_COMPETITION_RESULTS[i]["venue"] = competition.venue;
+                        ALL_COMPETITION_RESULTS[i]["year"] = competition.year;
+                        ALL_COMPETITION_RESULTS[i]["month"] = competition.month;
+                        ALL_COMPETITION_RESULTS[i]["day"] = competition.day;
+                    }
+                }
+            }              
+            
+            function deleteCompetition(competition){    
+                
+                let start = -1;
+                let howMany = 0;
+                
+                for(let i = 0, length = ALL_COMPETITION_RESULTS.length; i < length; i++){
+                    if(ALL_COMPETITION_RESULTS[i]["id"] === competition.id){ 
+                        if(start == -1)
+                            start = i;
+
+                        howMany++;
+                    }
+                }
+                
+                ALL_COMPETITION_RESULTS.splice(start, howMany);
+            }
+            
             function updateMember(member){   
                 for(let i = 0, length = MEMBERS.length; i < length; i++){
                     if(MEMBERS[i]["username"] === member.username){
@@ -1484,6 +1720,8 @@
                 $('#memberstable').find('tbody').empty();
                 $('#editmemberslist').empty(); 
                 $('#addcompetitionmemberlist').empty();    
+                
+                sortMembersByName();
                 
                 for(let i =0, length = MEMBERS.length; i < length; i++){     
                     updateMemberPanels(i);
@@ -1590,6 +1828,30 @@
                     if(alphanumeric($("#addcompetitionname").val(), true) && $("#addcompetitionname").val().length > 0 ){
                         if(alphanumeric($("#addcompetitionvenue").val(), true) && $("#addcompetitionvenue").val().length > 0 ){
                             if($("#newcompetitiondate").val().length > 0){
+                                return true;
+                            } else{
+                                bootbox.alert({message:"You need to choose competition date.", backdrop: true});
+                                return false;
+                            }
+                        } else{
+                            bootbox.alert({message: "Competition venue data incorrect. Only letters, numbers and space allowed.", backdrop: true});
+                            return false;
+                        }
+                    } else{
+                        bootbox.alert({message:"Competition name data incorrect. Only letters, numbers and space allowed.", backdrop: true});
+                        return false;
+                        }
+                } else {
+                    bootbox.alert({message: "Event name data incorrect. Only letters and numbers allowed.", backdrop: true});
+                    return false;
+                }
+            }
+            
+            function checkEditCompetitionFormValidation(){
+                if(alphanumeric($("#editcompetitioneventname").val(), false) && $("#editcompetitioneventname").val().length > 0 ){
+                    if(alphanumeric($("#editcompetitionname").val(), true) && $("#editcompetitionname").val().length > 0 ){
+                        if(alphanumeric($("#editcompetitionvenue").val(), true) && $("#editcompetitionvenue").val().length > 0 ){
+                            if($("#editnewcompetitiondate").val().length > 0){
                                 return true;
                             } else{
                                 bootbox.alert({message:"You need to choose competition date.", backdrop: true});
@@ -1762,6 +2024,7 @@
             }
             
             function updateMemberPanels(i){
+                
                 $('#memberstable').find('tbody').append('<tr><td>'+MEMBERS[i]["name"]+'</td><td>'+MEMBERS[i]["handicapExact"]+'</td><td>'+Math.round(Number(MEMBERS[i]["handicapExact"]))+'</td><td>'+MEMBERS[i]["email"]+'</td><td>'+MEMBERS[i]["phone"]+'</td></tr>');
                         
                 $('#editmemberslist').append('<a href="javascript:void(0)" class="list-group-item notop list-group-item-info" id="'+i+'">'+MEMBERS[i]["name"]+'</a><ul class="list-group well" style="display:none" id="member'+i+'"></ul><br>');
@@ -1793,17 +2056,66 @@
                     let day = Number(ALL_COMPETITION_RESULTS[idx]["day"]);
                     
                     $('#competitionresultsinfotable').find('tbody').append('<tr><td>Event:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["eventname"]+'</td></tr>'+'<tr><td>Competition:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["competitionname"]+'</td></tr>'+'<tr><td>Venue:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["venue"]+'</td></tr>'+'<tr><td>Date of Competition:</td><td align="center">'+day+'/'+month+'/'+ALL_COMPETITION_RESULTS[idx]["year"]+'</td></tr>');
-                                                                    
+                    
+                    let competitionResults = [];
+                    let index = 0;
+                    
                     for(let i = 0, length = ALL_COMPETITION_RESULTS.length; i < length; i++){
                         if(ALL_COMPETITION_RESULTS[i]["id"] == ALL_COMPETITION_RESULTS[idx]["id"]){
-                            $('#competitionresultsscoretable').find('tbody').append('<tr><td>'+ALL_COMPETITION_RESULTS[i]["member"]["name"] +'</td><td>'+ ALL_COMPETITION_RESULTS[i]["handicap"] +'</td><td>'+ ALL_COMPETITION_RESULTS[i]["netscore"] + '</td></tr>');
+                            competitionResults[index] = ALL_COMPETITION_RESULTS[i];
+                            index++;
                         }
                     }
-                    
+                    console.log(competitionResults[0]["netscore"]);
+                    competitionResults.sort(compareCompetitionNetScore);
+                    console.log(competitionResults[0]["netscore"]);
+                    for(let i = 0, length = competitionResults.length; i < length; i++){
+                        $('#competitionresultsscoretable').find('tbody').append('<tr><td>'+competitionResults[i]["member"]["name"] +'</td><td>'+ competitionResults[i]["handicap"] +'</td><td>'+ competitionResults[i]["netscore"] + '</td></tr>');
+                    }
                     
                 } else{
                 }
             }
+            
+            function updateEditCompetitionTables(idx){
+                //$('#editcompetitionresultsinfotable').find('tbody').empty();
+                $('#editcompetitionresultsscoretable').find('tbody').empty();
+                
+                if(idx > -1){
+                    let month = Number(ALL_COMPETITION_RESULTS[idx]["month"]);
+                    let day = Number(ALL_COMPETITION_RESULTS[idx]["day"]);
+                    
+                    $('#editcompetitioneventname').val(ALL_COMPETITION_RESULTS[idx]["eventname"]);
+                    $('#editcompetitionname').val(ALL_COMPETITION_RESULTS[idx]["competitionname"]);
+                    $('#editcompetitionvenue').val(ALL_COMPETITION_RESULTS[idx]["venue"]);
+                    
+                    $('#editcompetitiondate').datetimepicker("update", new Date(ALL_COMPETITION_RESULTS[idx]["year"], month-1, day,0,0,0,0));
+                    
+                   /* $('#editcompetitionresultsinfotable').find('tbody').append('<tr><td>Event:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["eventname"]+'</td></tr>'+'<tr><td>Competition:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["competitionname"]+'</td></tr>'+'<tr><td>Venue:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["venue"]+'</td></tr>'+'<tr><td>Date of Competition:</td><td align="center">'+day+'/'+month+'/'+ALL_COMPETITION_RESULTS[idx]["year"]+'</td></tr>');*/
+                    
+                    let competitionResults = [];
+                    let index = 0;
+                    
+                    for(let i = 0, length = ALL_COMPETITION_RESULTS.length; i < length; i++){
+                        if(ALL_COMPETITION_RESULTS[i]["id"] == ALL_COMPETITION_RESULTS[idx]["id"]){
+                            competitionResults[index] = ALL_COMPETITION_RESULTS[i];
+                            index++;
+                        }
+                    }
+                    console.log(competitionResults[0]["netscore"]);
+                    competitionResults.sort(compareCompetitionNetScore);
+                    console.log(competitionResults[0]["netscore"]);
+                    for(let i = 0, length = competitionResults.length; i < length; i++){
+                        $('#editcompetitionresultsscoretable').find('tbody').append('<tr><td>'+competitionResults[i]["member"]["name"] +'</td><td>'+ competitionResults[i]["handicap"] +'</td><td>'+ competitionResults[i]["netscore"] + '</td></tr>');
+                    }
+                    
+                } else{
+                    $('#editcompetitioneventname').val("");
+                    $('#editcompetitionname').val("");
+                    $('#editcompetitionvenue').val("");
+                    $('#editnewcompetitiondate').val("");
+                }
+            }    
             
             function updateSocietyEventTable(idx){
                 
@@ -1862,9 +2174,20 @@
                 
                 for(let i=0, length = arr.length; i < length; i++){
                     
-                    $('#competitionlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+arr[i]+'" >'+ALL_COMPETITION_RESULTS[arr[i]]["competitionname"]+'</a>');   
+                    $('#competitionlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+arr[i]+'" >'+ALL_COMPETITION_RESULTS[arr[i]]["venue"]+'</a>');   
                 }
             }
+            
+            function updateEditCompetitionList(){
+                $('#editcompetitionlist').empty();
+                
+                let arr = getCompetitionIndexList();
+                
+                for(let i=0, length = arr.length; i < length; i++){
+                    
+                    $('#editcompetitionlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+arr[i]+'" >'+ALL_COMPETITION_RESULTS[arr[i]]["venue"]+'</a>');   
+                }
+            }            
             
             function getCompetitionIndexList(){
                 
@@ -2020,6 +2343,26 @@
                 
                 return index;
             }
+            
+            function compareCompetitionNetScore(a,b){
+                if(Number(a["netscore"]) < Number(b["netscore"]))
+                    return 1;
+                if (Number(a["netscore"]) > Number(b["netscore"]))
+                    return -1;
+                return 0;
+            }
+            
+            function compareMemberName(a,b) {
+                if (a.name < b.name)
+                    return -1;
+                if (a.name > b.name)
+                    return 1;
+                return 0;
+            }
+            
+            function sortMembersByName(){
+                MEMBERS.sort(compareMemberName);
+            }         
             
             function sortEvents(){
                 SOCIETY_EVENTS.sort(compareEvents);
