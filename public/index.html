@@ -196,9 +196,9 @@
                                     Membership
                                 </a>
                             </li>
-                            <li class="list-group-item" id="committea">
+                            <li class="list-group-item" id="committee">
                                 <a class="notop" href="javascript:void(0)">
-                                    The Committea
+                                    The Committee
                                 </a>
                             </li>
                             <li class="list-group-item">
@@ -259,18 +259,17 @@
                         </ul>
                     </div>
                     
-                    <!-- Committea list panel definition begins -->
+                    <!-- committee list panel definition begins -->
                     <div class="col-md-6 col-md-offset-1" >
                         <div id="welcome" class="text-center well">
                             <h1>Welcome to Nexperia Golf Society Home Page!</h1>
                         </div>
-                        <div id="committeacontent" style="display:none">
+                        <div id="committeecontent" style="display:none">
                             <div class="well  text-center" >  
-                                <h1>The Committea</h1> 
-                                <h4>Below is a listing of the current Society Committea. If you have any queries about your current handicap or any other specific enquiries then please direct them to the relevant committea member.</h4>
+                                <h1>The Committee</h1> 
                             </div>
 
-                            <table id="committeatable" class="table table-hover">
+                            <table id="committeetable" class="table table-hover">
                                 <thead>
                                     <tr>
                                         <th>Members Name</th>
@@ -284,7 +283,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <!-- Committea list panel definition ends -->
+                        <!-- committee list panel definition ends -->
                         
                         <!-- Members list panel definition begins -->
                         <div id="membershiplistingcontent" style="display:none">
@@ -795,7 +794,11 @@
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>
                                     </div>
-                                </div>                                
+                                </div>    
+                                
+                                <button id="editcompetitionsubmitbtn" type="button" style = "margin-top:20px" class="btn btn-primary btn-block">
+                                    Apply changes
+                                </button>
                             </form>
                             
                            <!-- <table id="editcompetitionresulttable" class="table table-hover">
@@ -843,12 +846,6 @@
                                 </div>
                             </div>
                             
-                            <div class = "well">
-                                <button id="editcompetitionsubmitbtn" type="button" style = "margin-top:20px" class="btn btn-primary btn-block">
-                                    Apply changes
-                                </button>
-                            </div>
-                            
                             <div class = "text-center well">
                                 <div class="list-group" id="editcompetitionlist">
                                 </div> 
@@ -880,12 +877,12 @@
                 
                  //General access links:
                 
-                $("#glofmenu").on("click", "#committea", function(event){;  // show committea 
+                $("#glofmenu").on("click", "#committee", function(event){;  // show committee 
                      hideAll();
-                     $("#committeacontent").show();
+                     $("#committeecontent").show();
                 });
                 
-                $("#glofmenu").on("click", "#competitionresults", function(event){;  // show committea 
+                $("#glofmenu").on("click", "#competitionresults", function(event){;  // show committee 
                      hideAll();
                      $("#competitionresultscontent").show();
                 });
@@ -1026,7 +1023,7 @@
                 
                 function hideAll(){     // hide all panels and clear secure data
                     $("#welcome").hide();
-                    $("#committeacontent").hide();
+                    $("#committeecontent").hide();
                     $("#membershiplistingcontent").hide();
                     $("#accountsettings").hide();
                     $("#userstats").hide();
@@ -1074,14 +1071,25 @@
             let competitionMemberSelected = false;
             let competitionEditMemberSelected = false;
             
-            let committea = [];
+            let committee = [];
             var socket = io(); 
             var committeDataLoaded = false;
             
             socket.emit('dataRequest', "membershiplisting");  
             socket.emit('dataRequest', "societyeventslisting"); 
             socket.emit('dataRequest', "competitionresultslisting"); 
-
+            
+            socket.on('singleMemberCompetitionResultAdded', function(data){
+                ALL_COMPETITION_RESULTS.push(data);
+                COMPETITION_RESULT.length = 0;
+                updateCompetitionMemberList();
+                
+                if(activeCompetition == activeEditCompetition)
+                    updateCompetitionTables(activeCompetition);                
+                
+                bootbox.alert({message: "New member competition result has been added.", backdrop: true})
+            });
+            
             socket.on('competitionResultAdded', function(data){
                 
                 for(let i =0, length = data["results"].length; i < length; i++){
@@ -1105,7 +1113,7 @@
                 updateCompetitionList();
                 updateaditCompetitionList();
                 
-                bootbox.alert({message: "New Competition Result has been added.", backdrop: true});
+                bootbox.alert({message: "New competition result has been added.", backdrop: true});
             });
             
             socket.on('eventAdded', function(data){
@@ -1211,6 +1219,10 @@
                 updateaditCompetitionTables(activeEditCompetition);
                 if(activeEditCompetition == activeCompetition)
                     updateCompetitionTables(activeCompetition);
+                
+                updateaditCompetitionList();
+                updateCompetitionList();
+                
                 bootbox.alert({message: "Member competition result has been deleted.", backdrop: true});
                 
                 updateaditCompetitionMemberList();
@@ -1249,9 +1261,9 @@
                     for(let i = 0, length = data.length; i < length; i++){       
                         updateMemberPanels(i);
                     }
-                    committea = getCommittea();
-                    for(let i = 0, length = committea.length; i < length; i++){
-                        $('#committeatable tr:last').after('<tr><td>'+committea[i]["name"]+'</td><td>'+committea[i]["position"]+'</td><td>'+committea[i]["email"]+'</td><td>'+committea[i]["phone"]+'</td></tr>');       
+                    committee = getcommittee();
+                    for(let i = 0, length = committee.length; i < length; i++){
+                        $('#committeetable tr:last').after('<tr><td>'+committee[i]["name"]+'</td><td>'+committee[i]["position"]+'</td><td>'+committee[i]["email"]+'</td><td>'+committee[i]["phone"]+'</td></tr>');       
                     }
                 });                      
             }); 
@@ -1392,6 +1404,9 @@
                 $("#editcompetitionmemberresultbtn").on("click", function(event){
                     if(checkEditMemberCompetitionResultFormValidation()){
                         
+                        socket.emit('addSingleMemberCompetitionResult',{handicap: $("#editcompetitionmemberhandicap").val(), netscore: $("#editcompetitionmembernetscore").val(), id: ALL_COMPETITION_RESULTS[activeEditCompetition].id, member: getMemberByName($("#editaddcompetitionmembernamebtn").text()), eventname: ALL_COMPETITION_RESULTS[activeEditCompetition]["eventname"],competitionname: ALL_COMPETITION_RESULTS[activeEditCompetition]["competitionname"],venue: ALL_COMPETITION_RESULTS[activeEditCompetition]["venue"], year: ALL_COMPETITION_RESULTS[activeEditCompetition]["year"], month: ALL_COMPETITION_RESULTS[activeEditCompetition]["month"], day: ALL_COMPETITION_RESULTS[activeEditCompetition]["day"]});
+                        
+                         
                         EDIT_COMPETITION_RESULT.push({member: getMemberByName($("#editaddcompetitionmembernamebtn").text()), handicap: $("#editcompetitionmemberhandicap").val(), netscore: $("#editcompetitionmembernetscore").val()});
                         
                         competitionEditMemberSelected = false;
@@ -1458,7 +1473,7 @@
                 $("#addmemberbtn").on("click", function(event){
                     if(checkMemberFormValidation()){
                         socket.emit('addMember', {username:$("#addmemberusername").val(), password: $("#addmemberusername").val(), name: $("#addmembername").val(), 
-                        handicapExact:$("#addmemberhandicap").val(), email:"", admin:"false", handicapPlaying:$("#addmemberhandicap").val(), phone:"", committea: "false"});
+                        handicapExact:$("#addmemberhandicap").val(), email:"", admin:"false", handicapPlaying:$("#addmemberhandicap").val(), phone:"", committee: "false"});
                     }
                 });
                 
@@ -1671,16 +1686,26 @@
                     let member = getMemberByName($(this).parent().data("member"));
                     
                     if(($(this).attr('id')) == "editmembercompetitionresult"){
-                        if(checkEditMemberCompetitionResultFormValidation($(this))){
+                        if(checkEditSingleMemberCompetitionResultFormValidation($(this))){
                             socket.emit('editMemberCompetitionResult',{netscore: netscore, handicap: handicap, id: ALL_COMPETITION_RESULTS[activeEditCompetition].id, member: getMemberByName($(this).parent().data("member"))});
                         }
                     } else{
-                        bootbox.confirm("Are you sure to delete "+$(this).parent().data("member")+" competition result?" , function(result){
-                            if(result){
-                                console.log(member["name"]);
-                                socket.emit('deleteMemberCompetitionResult',{id: ALL_COMPETITION_RESULTS[activeEditCompetition].id, member: member});  
-                            }
-                        }); 
+                        if(EDIT_COMPETITION_RESULT.length > 1){    
+                            bootbox.confirm("Are you sure to delete "+$(this).parent().data("member")+" competition result?" , function(result){
+                                if(result){
+                                    console.log(member["name"]);
+                                    socket.emit('deleteMemberCompetitionResult',{id: ALL_COMPETITION_RESULTS[activeEditCompetition].id, member: member});  
+                                }
+                            }); 
+                        } else{
+                            if(activeEditCompetition >= 0){
+                            bootbox.confirm("At least one member result need to be recorded in competition. If you delete this member resulte whole competition will be deleted. Are you sure to delete competition '"+$("#editcompetitionvenue").val()+"' ?" , function(result){
+                                if(result){
+                                    socket.emit('deleteCompetition',{id: ALL_COMPETITION_RESULTS[activeEditCompetition]["id"]});  
+                                }
+                            }); 
+                        }
+                        }
                     }
                 });
                 
@@ -1823,7 +1848,26 @@
                 console.log(data["member"]["name"]);
                 for(let i = 0, length = ALL_COMPETITION_RESULTS.length; i < length; i++){
                     if(ALL_COMPETITION_RESULTS[i].id === data.id && ALL_COMPETITION_RESULTS[i]["member"]["name"] === data["member"]["name"]){    
+                        
+                        let id = ALL_COMPETITION_RESULTS[i].id;
                         ALL_COMPETITION_RESULTS.splice(i, 1);
+                        
+                        if(i == activeEditCompetition){
+
+                             for(let j = 0, length = ALL_COMPETITION_RESULTS.length; j < length; j++){
+                                 if(id ==  ALL_COMPETITION_RESULTS[j].id){
+                                     activeEditCompetition = j;
+                                     break;
+                                 } 
+                             }
+                        } 
+                        
+                        if(i == activeCompetition){
+                            activeCompetition = -1;
+                            updateCompetitionTables(activeCompetition);
+                        }
+                        
+                        
                         break;
                     }
                 }  
@@ -1963,7 +2007,7 @@
                 }
             }
 
-            function checkEditMemberCompetitionResultFormValidation(btn){
+            function checkEditSingleMemberCompetitionResultFormValidation(btn){
                 let netscore = "";
                 let handicap = "";    
                 
@@ -2183,11 +2227,11 @@
                 }
             }
             
-            function getCommittea(){
+            function getcommittee(){
                 let arr =[];
                 
                 for(let i = 0, length = MEMBERS.length; i < length; i++){
-                    if(MEMBERS[i]["committea"] == "true"){
+                    if(MEMBERS[i]["committee"] == "true"){
                         arr.push(MEMBERS[i]);
                     }
                 }
