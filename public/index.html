@@ -399,7 +399,7 @@
                                     Phone:
                                 </label>
                                 <input type="text" class="form-control" id="accountphone">                                
-                                <button id="updateaccountdetails" style = "margin-top:20px" type="button" class="btn btn-primary btn-block">
+                                <button id="updateeccountdetails" style = "margin-top:20px" type="button" class="btn btn-primary btn-block">
                                     Apply changes
                                 </button>
                             </div>
@@ -548,11 +548,11 @@
                                 </label>
                                 <input type="text" class="form-control" id="editevenorganiser">                                
                                 <div class="form-group">
-                                    <label style = "margin-top:20px" for="editeventteatime">
-                                        First Tea time:
+                                    <label style = "margin-top:20px" for="editeventteetime">
+                                        First tee time:
                                     </label>
-                                    <div class='input-group date form-time' data-date="" data-date-format="hh:ii" id='editeventteatime'>
-                                        <input type='text' class="form-control" readonly id="editneweventteatime">
+                                    <div class='input-group date form-time' data-date="" data-date-format="hh:ii" id='editeventteetime'>
+                                        <input type='text' class="form-control" readonly id="editneweventteetime">
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-time"></span>
                                         </span>
@@ -637,11 +637,11 @@
                                 </label>
                                 <input type="text" class="form-control" id="addevenorganiser"  value="">                                
                                 <div class="form-group">
-                                    <label style = "margin-top:20px" for="addeventteatime">
-                                        First Tea time:
+                                    <label style = "margin-top:20px" for="addeventteetime">
+                                        First tee time:
                                     </label>
-                                    <div class='input-group date form-time' data-date="" data-date-format="hh:ii" id='addeventteatime'>
-                                        <input type='text' class="form-control" id="neweventteatime" readonly>
+                                    <div class='input-group date form-time' data-date="" data-date-format="hh:ii" id='addeventteetime'>
+                                        <input type='text' class="form-control" id="neweventteetime" readonly>
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-time"></span>
                                         </span>
@@ -798,7 +798,7 @@
                                 </div>                                
                             </form>
                             
-                            <table id="editcompetitionresulttable" class="table table-hover">
+                           <!-- <table id="editcompetitionresulttable" class="table table-hover">
                                 <thead>
                                     <tr>
                                         <th>Member Name</th>
@@ -808,17 +808,20 @@
                                 </thead>
                                 <tbody>
                                 </tbody>
-                            </table>
+                            </table>-->
+                            
+                            <div class="list-group" id = "editcompetitionresultlist">
+                            </div> 
                             
                             <div class = "well" id = "editcompetitionmemberresult">
                                 
                                 <label for="editcompetitionmembernamebtn">
                                         Member name:
                                 </label>
-                                <button id="editcompetitionmembernamebtn" type="button" style = "" class="btn btn-success btn-block">
+                                <button id="editaddcompetitionmembernamebtn" type="button" style = "" class="btn btn-success btn-block">
                                     Choose Member
                                 </button>
-                                <div class="list-group" id="editcompetitionmemberlist" style = "display:none">
+                                <div class="list-group" id="editaddcompetitionmemberlist" style = "display:none">
                                 </div>
                                 
                                 <div class="form-group" style = "margin-top:20px">
@@ -984,7 +987,7 @@
                     forceParse: 0
                 });
                 
-                $('#addeventteatime').datetimepicker({ // fancy tea-time picking for add society event panel
+                $('#addeventteetime').datetimepicker({ // fancy tee-time picking for add society event panel
                     autoclose: 1,
                     pickerPosition: "top-right",
                     todayHighlight: 1,
@@ -1004,7 +1007,7 @@
                     forceParse: 0
                 });
                 
-                $('#editeventteatime').datetimepicker({ // fancy tea-time picking for add society event panel
+                $('#editeventteetime').datetimepicker({ // fancy tee-time picking for add society event panel
                     autoclose: 1,
                     pickerPosition: "top-right",
                     todayHighlight: 1,
@@ -1060,6 +1063,7 @@
             const MEMBERS = [];
             const SOCIETY_EVENTS = [];
             const COMPETITION_RESULT = [];
+            let EDIT_COMPETITION_RESULT = [];
             const ALL_COMPETITION_RESULTS = [];
             let societyEventsYear = 0;
             let societyEditEventsYear = 0;
@@ -1192,7 +1196,22 @@
                     }
                 }
                 bootbox.alert({message: "Competition has been edited.", backdrop: true});
+            });         
+            
+            socket.on('memberCompetitionResultEdited', function(data){
+                updateMemberCompetitionResult(data);
+                if(activeEditCompetition == activeCompetition)
+                    updateCompetitionTables(activeCompetition);
+                bootbox.alert({message: "Member competition result has been edited.", backdrop: true});
             });              
+
+            socket.on('memberCompetitionResultDeleted', function(data){
+                deleteMemberCompetitionResult(data);
+                updateEditCompetitionTables(activeEditCompetition);
+                if(activeEditCompetition == activeCompetition)
+                    updateCompetitionTables(activeCompetition);
+                bootbox.alert({message: "Member competition result has been deleted.", backdrop: true});
+            });               
             
             socket.on('memberAdded', function(data){
                 MEMBERS.push(data);
@@ -1410,7 +1429,7 @@
                                 month = "0" + month;
                             }
                             console.log("MONTHAdd "+month);
-                            socket.emit('addSocietyEvent',{name: $("#addeventname").val(), course: $("#addeventcourse").val(), postcode: $("#addeventpostcode").val(), website: $("#addeventclub").val(), price: $("#addeventprice").val(), included: $("#addeventwhatincluded").val(), maxplayers: $("#addeventmaxparticipants").val(), organiser: $("#addevenorganiser").val(), firstteatime: $("#neweventteatime").val(), notes: $("#addeventnotes").val(), month: month, year: date.getFullYear(), day: day}); 
+                            socket.emit('addSocietyEvent',{name: $("#addeventname").val(), course: $("#addeventcourse").val(), postcode: $("#addeventpostcode").val(), website: $("#addeventclub").val(), price: $("#addeventprice").val(), included: $("#addeventwhatincluded").val(), maxplayers: $("#addeventmaxparticipants").val(), organiser: $("#addevenorganiser").val(), firstteetime: $("#neweventteetime").val(), notes: $("#addeventnotes").val(), month: month, year: date.getFullYear(), day: day}); 
                         }
                 });
                 
@@ -1435,6 +1454,13 @@
                     updateEditSocietyEventForm(id);
                     activeEditEvent = id;
                 });
+
+                $("#editcompetitionresultlist").on("click", "a", function(event){
+                    let id = $(this).attr('id');
+                    let propertiesId = "#competitionresult"+id;
+                    
+                    $(propertiesId).slideToggle();
+                });                
                 
                 $("#competitionlist").on("click", "a", function(event){
                     let id = $(this).attr('id');
@@ -1460,6 +1486,10 @@
                                 
                 $("#addcompetitionmembernamebtn").on("click", function(event){
                     $("#addcompetitionmemberlist").slideToggle();
+                }); 
+                
+                $("#editaddcompetitionmembernamebtn").on("click", function(event){
+                    $("#editaddcompetitionmemberlist").slideToggle();
                 }); 
                 
                 $("#eventnextyearbtn").on("click", function(event){
@@ -1522,7 +1552,7 @@
                                 month = "0" + month;
                             }
                             
-                            socket.emit('editSocietyEvent',{name: $("#editeventname").val(), course: $("#editeventcourse").val(), postcode: $("#editeventpostcode").val(), website: $("#editeventclub").val(), price: $("#editeventprice").val(), included: $("#editeventwhatincluded").val(), maxplayers: $("#editeventmaxparticipants").val(), organiser: $("#editevenorganiser").val(), firstteatime: $("#editneweventteatime").val(), notes: $("#editeventnotes").val(), month: month, year: date.getFullYear(), day: day, id: SOCIETY_EVENTS[activeEditEvent]["id"]}); 
+                            socket.emit('editSocietyEvent',{name: $("#editeventname").val(), course: $("#editeventcourse").val(), postcode: $("#editeventpostcode").val(), website: $("#editeventclub").val(), price: $("#editeventprice").val(), included: $("#editeventwhatincluded").val(), maxplayers: $("#editeventmaxparticipants").val(), organiser: $("#editevenorganiser").val(), firstteetime: $("#editneweventteetime").val(), notes: $("#editeventnotes").val(), month: month, year: date.getFullYear(), day: day, id: SOCIETY_EVENTS[activeEditEvent]["id"]}); 
                         }
                     } else{
                         if(activeEditEvent >= 0){
@@ -1564,7 +1594,38 @@
                         }
                     }
                      
-                 });                
+                 });         
+                
+                $("#editcompetitionresultlist").on("click", "button", function(event){
+                    let netscore = "";
+                    let handicap = "";
+                     
+                    $(this).parent().find('input').each(function(){
+                        switch($(this).attr('id')){
+                            case "editmembernetscorecompetitionresult": 
+                                netscore = $(this).val();
+                            break;
+                            case "editmemberhandicapcompetitionresult":
+                                handicap = $(this).val();
+                            break;
+                        }    
+                    });
+                     
+                    let member = getMemberByName($(this).parent().data("member"));
+                    
+                    if(($(this).attr('id')) == "editmembercompetitionresult"){
+                        if(checkEditMemberCompetitionResultFormValidation($(this))){
+                            socket.emit('editMemberCompetitionResult',{netscore: netscore, handicap: handicap, id: ALL_COMPETITION_RESULTS[activeEditCompetition].id, member: getMemberByName($(this).parent().data("member"))});
+                        }
+                    } else{
+                        bootbox.confirm("Are you sure to delete "+$(this).parent().data("member")+" competition result?" , function(result){
+                            if(result){
+                                console.log(member["name"]);
+                                socket.emit('deleteMemberCompetitionResult',{id: ALL_COMPETITION_RESULTS[activeEditCompetition].id, member: member});  
+                            }
+                        }); 
+                    }
+                });
                 
                 $("#editmemberslist").on("click", "button", function(event){
                     let username = "";
@@ -1632,7 +1693,7 @@
                         SOCIETY_EVENTS[i]["year"] = event.year;
                         SOCIETY_EVENTS[i]["month"] = event.month;
                         SOCIETY_EVENTS[i]["day"] = event.day;
-                        SOCIETY_EVENTS[i]["firstteatime"] = event.firstteatime;
+                        SOCIETY_EVENTS[i]["firstteetime"] = event.firstteetime;
                         SOCIETY_EVENTS[i]["organiser"] = event.organiser;
                         SOCIETY_EVENTS[i]["notes"] = event.notes;
                         break;
@@ -1679,6 +1740,7 @@
                 ALL_COMPETITION_RESULTS.splice(start, howMany);
             }
             
+            
             function updateMember(member){   
                 for(let i = 0, length = MEMBERS.length; i < length; i++){
                     if(MEMBERS[i]["username"] === member.username){
@@ -1688,6 +1750,27 @@
                     }
                 }
             }
+            
+            function updateMemberCompetitionResult(data){
+                console.log(data["member"]["name"]);
+                for(let i = 0, length = ALL_COMPETITION_RESULTS.length; i < length; i++){
+                    if(ALL_COMPETITION_RESULTS[i].id === data.id && ALL_COMPETITION_RESULTS[i]["member"]["name"] === data["member"]["name"]){
+                        ALL_COMPETITION_RESULTS[i]["handicap"] = data.handicap;
+                        ALL_COMPETITION_RESULTS[i]["netscore"] = data.netscore;
+                        break;
+                    }
+                }
+            }
+    
+            function deleteMemberCompetitionResult(data){    
+                console.log(data["member"]["name"]);
+                for(let i = 0, length = ALL_COMPETITION_RESULTS.length; i < length; i++){
+                    if(ALL_COMPETITION_RESULTS[i].id === data.id && ALL_COMPETITION_RESULTS[i]["member"]["name"] === data["member"]["name"]){    
+                        ALL_COMPETITION_RESULTS.splice(i, 1);
+                        break;
+                    }
+                }  
+            }  
             
             function getMember(username){
                 for(let i = 0, length = MEMBERS.length; i < length; i++){
@@ -1822,6 +1905,34 @@
                     return false;
                 }
             }
+
+            function checkEditMemberCompetitionResultFormValidation(btn){
+                let netscore = "";
+                let handicap = "";    
+                
+                btn.parent().find('input').each(function(){
+                    switch($(this).attr('id')){
+                        case "editmembernetscorecompetitionresult": 
+                            netscore = $(this).val();
+                            break;
+                        case "editmemberhandicapcompetitionresult" :
+                            handicap = $(this).val();
+                            break;
+                        }        
+                }); 
+                
+                if($.isNumeric(netscore)){
+                    if($.isNumeric(handicap)){
+                        return true;
+                    } else{
+                        bootbox.alert({message: "Handicap data incorrect. Only numbers allowed.", backdrop: true});
+                        return false;
+                    }
+                } else{
+                    bootbox.alert({message:"Net score data incorrect. Only numbers allowed.", backdrop: true});
+                    return false;
+                }
+            }           
             
             function checkCompetitionFormValidation(){
                 if(alphanumeric($("#addcompetitioneventname").val(), false) && $("#addcompetitioneventname").val().length > 0 ){
@@ -1898,7 +2009,7 @@
                                 if(alphanumeric($("#addeventwhatincluded").val(), true) || $("#addeventwhatincluded").val().length == 0 ){
                                     if($.isNumeric($("#addeventmaxparticipants").val()) || $("#addeventmaxparticipants").val().length == 0){
                                         if(alphanumeric($("#addevenorganiser").val(), true) && $("#addevenorganiser").val().length > 0 ){
-                                            if($("#neweventteatime").val().length > 0){
+                                            if($("#neweventteetime").val().length > 0){
                                                 if($("#neweventdate").val().length > 0){
                                                     return true;
                                                 }
@@ -1907,7 +2018,7 @@
                                                     return false; 
                                                 }
                                             } else{
-                                                bootbox.alert({message:"You need to choose first tea time.", backdrop: true});
+                                                bootbox.alert({message:"You need to choose first tee time.", backdrop: true});
                                                 return false; 
                                             }
                                             return true;
@@ -1951,7 +2062,7 @@
                                 if(alphanumeric($("#editeventwhatincluded").val(), true) || $("#editeventwhatincluded").val().length == 0 ){
                                     if($.isNumeric($("#editeventmaxparticipants").val()) || $("#editeventmaxparticipants").val().length == 0){
                                         if(alphanumeric($("#editevenorganiser").val(), true) && $("#editevenorganiser").val().length > 0 ){
-                                            if($("#editneweventteatime").val().length > 0){
+                                            if($("#editneweventteetime").val().length > 0){
                                                 if($("#editneweventdate").val().length > 0){
                                                     return true;
                                                 }
@@ -1960,7 +2071,7 @@
                                                     return false; 
                                                 }
                                             } else{
-                                                bootbox.alert({message:"You need to choose first tea time.", backdrop: true});
+                                                bootbox.alert({message:"You need to choose first tee time.", backdrop: true});
                                                 return false; 
                                             }
                                             return true;
@@ -2023,6 +2134,24 @@
                 }
             }
             
+            
+            function updateEditCompetitionMemberList(){
+                $('#editaddcompetitionmemberlist').empty();    
+                
+                arr =[];
+                
+                for(let i = 0, length = EDIT_COMPETITION_RESULT.length; i < length; i++){
+                    arr.push(EDIT_COMPETITION_RESULT[i].member);
+                    console('AAAAAAAAAAA ');
+                }
+                
+                for(let i =0, length = MEMBERS.length; i < length; i++){
+                    if(($.inArray(MEMBERS[i], arr)) == -1){
+                       $('#editaddcompetitionmemberlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+i+'" >'+MEMBERS[i]["name"]+'</a>');
+                    }
+                }
+            }
+            
             function updateMemberPanels(i){
                 
                 $('#memberstable').find('tbody').append('<tr><td>'+MEMBERS[i]["name"]+'</td><td>'+MEMBERS[i]["handicapExact"]+'</td><td>'+Math.round(Number(MEMBERS[i]["handicapExact"]))+'</td><td>'+MEMBERS[i]["email"]+'</td><td>'+MEMBERS[i]["phone"]+'</td></tr>');
@@ -2079,6 +2208,7 @@
             
             function updateEditCompetitionTables(idx){
                 //$('#editcompetitionresultsinfotable').find('tbody').empty();
+                $('#editcompetitionresultlist').empty();
                 $('#editcompetitionresultsscoretable').find('tbody').empty();
                 
                 if(idx > -1){
@@ -2102,11 +2232,30 @@
                             index++;
                         }
                     }
+                    
+                    EDIT_COMPETITION_RESULT = competitionResults;
+                    
+                    console.log('Result '+EDIT_COMPETITION_RESULT[0]["member"]["name"]);
+                    
+                    updateEditCompetitionMemberList();
+                    
                     console.log(competitionResults[0]["netscore"]);
                     competitionResults.sort(compareCompetitionNetScore);
                     console.log(competitionResults[0]["netscore"]);
                     for(let i = 0, length = competitionResults.length; i < length; i++){
                         $('#editcompetitionresultsscoretable').find('tbody').append('<tr><td>'+competitionResults[i]["member"]["name"] +'</td><td>'+ competitionResults[i]["handicap"] +'</td><td>'+ competitionResults[i]["netscore"] + '</td></tr>');
+                        
+                        $('#editcompetitionresultlist').append('<a href="javascript:void(0)" class="list-group-item notop list-group-item-info" id="'+i+'">'+competitionResults[i]["member"]["name"]+'</a><ul class="list-group well" style="display:none" id="competitionresult'+i+'" data-member="'+competitionResults[i]["member"]["name"]+'"></ul><br>');
+                        
+                        //edit panel - adding members information
+                        
+                        $("#competitionresult"+i).append('<button id="deletemembercompetitionresult" type="button" style="margin-top:20px" class="btn btn-danger btn-block">Delete Member</button>');                        
+
+                        $("#competitionresult"+i).append('<label for="editmembernetscorecompetitionresult" style="margin-top:20px">Member net score:</label><input type="text" class="form-control list-group-item" id="editmembernetscorecompetitionresult" placeholder="'+competitionResults[i]["netscore"]+'" value="'+competitionResults[i]["netscore"]+'">');
+
+                        $("#competitionresult"+i).append('<label for="editmemberhandicapcompetitionresult" style="margin-top:20px">Member handicap:</label><input type="text" class="form-control list-group-item" id="editmemberhandicapcompetitionresult" placeholder="'+competitionResults[i]["handicap"]+'"  value="'+competitionResults[i]["handicap"]+'">');
+
+                        $("#competitionresult"+i).append('<button id="editmembercompetitionresult" type="button" style="margin-top:20px" class="btn btn-primary btn-block">Apply changes</button>');
                     }
                     
                 } else{
@@ -2124,7 +2273,7 @@
                 if(idx > -1){
                     let month = Number(SOCIETY_EVENTS[idx]["month"]);
                     let day = Number(SOCIETY_EVENTS[idx]["day"]);
-                    $('#societyeventstable').find('tbody').append('<tr><td>Event Name:</td><td align="center">'+SOCIETY_EVENTS[idx]["name"]+'</td></tr>'+'<tr><td>Course:</td><td align="center">'+SOCIETY_EVENTS[idx]["course"]+'</td></tr>'+'<tr><td>Post Code of Course:</td><td align="center">'+SOCIETY_EVENTS[idx]["postcode"]+'</td></tr>'+'<tr><td>Club or Course Website:</td><td align="center">'+SOCIETY_EVENTS[idx]["website"]+'</td></tr>'+'<tr><td>Date of Event:</td><td align="center">'+day+'/'+month+'/'+SOCIETY_EVENTS[idx]["year"]+'</td></tr>'+'<tr><td>First Tea Time:</td><td align="center">'+SOCIETY_EVENTS[idx]["firstteatime"]+'</td></tr>'+'<tr><td>Price per Head:</td><td align="center">'+SOCIETY_EVENTS[idx]["price"]+'</td></tr>'+"<tr><td>What's included:</td><td align='center'>"+SOCIETY_EVENTS[idx]["included"]+'</td></tr>'+'<tr><td>Max Number of Participants:</td><td align="center">'+SOCIETY_EVENTS[idx]["maxplayers"]+'</td></tr>'+'<tr><td>Main Event Organiser:</td><td align="center">'+SOCIETY_EVENTS[idx]["organiser"]+'</td></tr>'+'<tr><td>Notes:</td><td align="center">'+SOCIETY_EVENTS[idx]["notes"]+'</td></tr>');
+                    $('#societyeventstable').find('tbody').append('<tr><td>Event Name:</td><td align="center">'+SOCIETY_EVENTS[idx]["name"]+'</td></tr>'+'<tr><td>Course:</td><td align="center">'+SOCIETY_EVENTS[idx]["course"]+'</td></tr>'+'<tr><td>Post Code of Course:</td><td align="center">'+SOCIETY_EVENTS[idx]["postcode"]+'</td></tr>'+'<tr><td>Club or Course Website:</td><td align="center">'+SOCIETY_EVENTS[idx]["website"]+'</td></tr>'+'<tr><td>Date of Event:</td><td align="center">'+day+'/'+month+'/'+SOCIETY_EVENTS[idx]["year"]+'</td></tr>'+'<tr><td>First tee Time:</td><td align="center">'+SOCIETY_EVENTS[idx]["firstteetime"]+'</td></tr>'+'<tr><td>Price per Head:</td><td align="center">'+SOCIETY_EVENTS[idx]["price"]+'</td></tr>'+"<tr><td>What's included:</td><td align='center'>"+SOCIETY_EVENTS[idx]["included"]+'</td></tr>'+'<tr><td>Max Number of Participants:</td><td align="center">'+SOCIETY_EVENTS[idx]["maxplayers"]+'</td></tr>'+'<tr><td>Main Event Organiser:</td><td align="center">'+SOCIETY_EVENTS[idx]["organiser"]+'</td></tr>'+'<tr><td>Notes:</td><td align="center">'+SOCIETY_EVENTS[idx]["notes"]+'</td></tr>');
                 } else{
                 }
 
@@ -2143,9 +2292,9 @@
 
                     $('#editeventdate').datetimepicker("update", new Date(SOCIETY_EVENTS[idx]["year"],Number(SOCIETY_EVENTS[idx]["month"])-1,SOCIETY_EVENTS[idx]["day"],0,0,0,0));
 
-                    let str = SOCIETY_EVENTS[idx]["firstteatime"];
+                    let str = SOCIETY_EVENTS[idx]["firstteetime"];
                     let res = str.split(":");
-                    $('#editeventteatime').datetimepicker("update", new Date(0,0,0,res[0],res[1],0,0));
+                    $('#editeventteetime').datetimepicker("update", new Date(0,0,0,res[0],res[1],0,0));
 
                     $('#editevenorganiser').val(SOCIETY_EVENTS[idx]["organiser"]);
                     $('#editeventnotes').val(SOCIETY_EVENTS[idx]["notes"]);
@@ -2159,7 +2308,7 @@
                     $('#editeventmaxparticipants').val("");
 
                     $('#editneweventdate').val("");
-                    $('#editneweventteatime').val("");
+                    $('#editneweventteetime').val("");
 
                     $('#editevenorganiser').val("");
                     $('#editeventnotes').val("");
