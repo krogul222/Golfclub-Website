@@ -201,11 +201,6 @@
                                     The Committee
                                 </a>
                             </li>
-                            <li class="list-group-item">
-                                <a class="notop" href="javascript:void(0)">
-                                    Society Constitution
-                                </a>
-                            </li>
                             <li class="list-group-item" id="societyeventslisting">
                                 <a class="notop" href="javascript:void(0)">
                                     Society Events
@@ -289,7 +284,6 @@
                         <div id="membershiplistingcontent" style="display:none">
                             <div class="well  text-center" >
                                 <h1>Membership Listing</h1>
-                                <h4>Below is a current list of Members handicaps and contact information. If you have any queries about your current handicap or if you need to change your contact information then please get in touch with one of the society organisers. To view a members handicap record click on the persons name. For a group email list, scroll down to the bottom of the page. </h4>
                             </div>
 
                             <table id="memberstable" class="table table-hover">
@@ -365,9 +359,10 @@
                             <div class = "text-center well">
                                 <div class="list-group" id="competitionlist">
                                 </div> 
+                                <button type="button" class="btn btn-primary btn-arrow-left" style = "margin-bottom: 20px" id = "competitionlistprevyearbtn">Prev</button>
+                                <button type="button" class="btn btn-primary" style = "margin-left: 20px; margin-right: 20px; margin-bottom: 20px" id = "competitionlistbtn">2017</button>
+                                <button type="button" class="btn btn-primary btn-arrow-right" style = "margin-bottom: 20px" id = "competitionlistnextyearbtn">Next</button>
                             </div>
-                            
-                            
                         </div>
                         <!-- Competition results panel definition ends -->
                         
@@ -849,6 +844,9 @@
                             <div class = "text-center well">
                                 <div class="list-group" id="editcompetitionlist">
                                 </div> 
+                                <button type="button" class="btn btn-primary btn-arrow-left" style = "margin-bottom: 20px" id = "editcompetitionlistprevyearbtn">Prev</button>
+                                <button type="button" class="btn btn-primary" style = "margin-left: 20px; margin-right: 20px; margin-bottom: 20px" id = "editcompetitionlistbtn">2017</button>
+                                <button type="button" class="btn btn-primary btn-arrow-right" style = "margin-bottom: 20px" id = "editcompetitionlistnextyearbtn">Next</button>
                             </div>
                         </div>
                         <!-- Edit competition result definition ends -->                        
@@ -1062,6 +1060,8 @@
             const COMPETITION_RESULT = [];
             let EDIT_COMPETITION_RESULT = [];
             const ALL_COMPETITION_RESULTS = [];
+            let competitionYear = 0;
+            let editCompetitionYear = 0;
             let societyEventsYear = 0;
             let societyEditEventsYear = 0;
             let activeEditEvent = 0;
@@ -1110,8 +1110,8 @@
                 
                
                 
-                updateCompetitionList();
-                updateaditCompetitionList();
+                updateCompetitionList(competitionYear);
+                updateaditCompetitionList(editCompetitionYear);
                 
                 bootbox.alert({message: "New competition result has been added.", backdrop: true});
             });
@@ -1187,8 +1187,8 @@
                 updateaditCompetitionTables(-1);
                 activeEditCompetition = -1;
                 
-                updateaditCompetitionList();
-                updateCompetitionList();
+                updateaditCompetitionList(editCompetitionYear);
+                updateCompetitionList(competitionYear);
                 
                 console.log("Competition deleted");
                 bootbox.alert({message: "Competition has been deleted.", backdrop: true});
@@ -1198,7 +1198,7 @@
                 updateCompetition(data);
 
                 updateaditCompetitionList();
-                updateCompetitionList();
+                updateCompetitionList(competitionYear);
                 if(activeCompetition > -1){
                     if(data.id == ALL_COMPETITION_RESULTS[activeCompetition].id){
                         updateCompetitionTables(activeCompetition);
@@ -1220,8 +1220,8 @@
                 if(activeEditCompetition == activeCompetition)
                     updateCompetitionTables(activeCompetition);
                 
-                updateaditCompetitionList();
-                updateCompetitionList();
+                updateaditCompetitionList(editCompetitionYear);
+                updateCompetitionList(competitionYear);
                 
                 bootbox.alert({message: "Member competition result has been deleted.", backdrop: true});
                 
@@ -1280,11 +1280,16 @@
                     activeCompetition = index;
                     activeEditCompetition = index;
                     
+                    competitionYear = ALL_COMPETITION_RESULTS[activeCompetition]["year"];
+                    editCompetitionYear = ALL_COMPETITION_RESULTS[activeEditCompetition]["year"];
+                    
                     updateCompetitionTables(index);
-                    updateCompetitionList();
+                    updateCompetitionList(competitionYear);
+                    
+
                     
                     updateaditCompetitionTables(index);
-                    updateaditCompetitionList();
+                    updateaditCompetitionList(editCompetitionYear);
                     
                 });
             });
@@ -1563,6 +1568,34 @@
                 $("#editaddcompetitionmembernamebtn").on("click", function(event){
                     $("#editaddcompetitionmemberlist").slideToggle();
                 }); 
+                
+                $("#competitionlistnextyearbtn").on("click", function(event){
+                    if(competitionYear < ALL_COMPETITION_RESULTS[getLastCompetitionIndex()]["year"]){
+                        competitionYear++;
+                        updateCompetitionList(competitionYear);
+                    }
+                });  
+
+                $("#competitionlistprevyearbtn").on("click", function(event){
+                    if(competitionYear > ALL_COMPETITION_RESULTS[getOldestCompetitionIndex()]["year"]){
+                        competitionYear--;
+                        updateCompetitionList(competitionYear);
+                    }
+                });
+
+                $("#editcompetitionlistnextyearbtn").on("click", function(event){
+                    if(editCompetitionYear < ALL_COMPETITION_RESULTS[getLastCompetitionIndex()]["year"]){
+                        editCompetitionYear++;
+                        updateaditCompetitionList(editCompetitionYear);
+                    }
+                });    
+
+                $("#editcompetitionlistprevyearbtn").on("click", function(event){
+                    if(editCompetitionYear > ALL_COMPETITION_RESULTS[getOldestCompetitionIndex()]["year"]){
+                        editCompetitionYear--;
+                        updateaditCompetitionList(editCompetitionYear);
+                    }
+                });
                 
                 $("#eventnextyearbtn").on("click", function(event){
                     console.log("Year "+societyEventsYear+"");
@@ -2439,26 +2472,32 @@
 
             }
             
-            function updateCompetitionList(){
+            function updateCompetitionList(year){
                 $('#competitionlist').empty();
                 
                 let arr = getCompetitionIndexList();
                 
                 for(let i=0, length = arr.length; i < length; i++){
-                    
-                    $('#competitionlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+arr[i]+'" >'+ALL_COMPETITION_RESULTS[arr[i]]["venue"]+'</a>');   
+                    if(ALL_COMPETITION_RESULTS[arr[i]]['year'] == year){
+                        $('#competitionlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+arr[i]+'" >'+ALL_COMPETITION_RESULTS[arr[i]]["venue"]+'</a>');
+                    }
                 }
+                
+                $('#competitionlistbtn').text(year);
             }
             
-            function updateaditCompetitionList(){
+            function updateaditCompetitionList(year){
                 $('#editcompetitionlist').empty();
                 
                 let arr = getCompetitionIndexList();
                 
                 for(let i=0, length = arr.length; i < length; i++){
-                    
-                    $('#editcompetitionlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+arr[i]+'" >'+ALL_COMPETITION_RESULTS[arr[i]]["venue"]+'</a>');   
+                    if(ALL_COMPETITION_RESULTS[arr[i]]['year'] == year){
+                        $('#editcompetitionlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+arr[i]+'" >'+ALL_COMPETITION_RESULTS[arr[i]]["venue"]+'</a>');  
+                    }
                 }
+                
+                $('#editcompetitionlistbtn').text(year);
             }            
             
             function getCompetitionIndexList(){
@@ -2576,6 +2615,27 @@
                 
                 for(let i=0, length = SOCIETY_EVENTS.length; i < length; i++){
                     arr.push(Number(SOCIETY_EVENTS[i]['year']*10000)+Number(SOCIETY_EVENTS[i]['month']*100)+Number(SOCIETY_EVENTS[i]['day']));
+                }
+                
+                return indexOfMin(arr);
+            }
+            
+            function getLastCompetitionIndex(){
+                let arr = [];
+                
+                for(let i=0, length = ALL_COMPETITION_RESULTS.length; i < length; i++){
+                    arr.push(Number(ALL_COMPETITION_RESULTS[i]['year']*10000)+Number(ALL_COMPETITION_RESULTS[i]['month']*100)+Number(ALL_COMPETITION_RESULTS[i]['day']));
+                }
+                
+                return indexOfMax(arr);
+                
+            }
+            
+            function getOldestCompetitionIndex(){
+                let arr = [];
+                
+                for(let i=0, length = ALL_COMPETITION_RESULTS.length; i < length; i++){
+                    arr.push(Number(ALL_COMPETITION_RESULTS[i]['year']*10000)+Number(ALL_COMPETITION_RESULTS[i]['month']*100)+Number(ALL_COMPETITION_RESULTS[i]['day']));
                 }
                 
                 return indexOfMin(arr);
