@@ -1,8 +1,8 @@
 var mongojs = require('mongojs');
 var express = require('express');
-var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition']);
+//var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition']);
 
-//var db = mongojs('localhost:27017/golf', ['account','event','competition']);      // connect to database
+var db = mongojs('localhost:27017/golf', ['account','event','competition']);      // connect to database
 
 //db.account.remove();
 /*
@@ -76,7 +76,7 @@ var server = require('http').Server(app);
 
 app.use(express.static('public'));
 
-var listener = server.listen(process.env.PORT || 3000, function(){ 
+var listener = server.listen(process.env.PORT || 2000, function(){ 
     console.log("Listening on port", listener.address().port); 
 }); 
 
@@ -150,7 +150,6 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
                     console.log("Mamber "+data["results"][i]["member"]);
                     db.competition.insert(data["results"][i]); 
                 }
-                //db.event.insert(data);            // add event to database
                 socket.emit('competitionResultAdded',data);    // sent response to client
     });
    
@@ -206,6 +205,19 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
     //requests from editmember panel    
     
     socket.on('editMember', function(data){     // member data was sent to update existing member
+         if(data.oldname !== data.name){
+             let newMember = data.member;
+             newMember.name = data.name;
+             
+             db.competition.update({"member.name": data.oldname}, {$set:{"member.name": data.name}}, { "multi" : true }, function( err, result ) {
+                    if ( err ) throw err;
+             });
+             
+             db.competition.find({}, function(err, res){
+                    socket.emit('competitionresultslistingData',res);   // sent all members data to client
+             }); 
+         }
+         
          db.account.update({username: data.username},{$set:{name: data.name, handicapExact: data.handicapExact}});  // update name and handicap
          socket.emit('memberEdited',data);  // sent response to client with the same data
      });
@@ -235,6 +247,16 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
     socket.on('changeUserDetails', function(data){  // request to change details of user which is logged in was sent
         if(data.oldusername === data.username){     // check if username not changed
             db.account.update({username: data.oldusername},{$set:{username: data.username, name: data.name, email: data.email, phone: data.phone}});    // if not update member data
+            
+            if(data.oldname !== data.name){
+                db.competition.update({"member.name": data.oldname}, {$set:{"member.name": data.name}}, { "multi" : true }, function( err, result ) {
+                    if ( err ) throw err;
+                });
+                
+                db.competition.find({}, function(err, res){
+                    socket.emit('competitionresultslistingData',res);   // sent all members data to client
+                }); 
+            }
             socket.emit('userDetailsChanged',data);
         } else{
             isUsernameTaken(data.username, function(res){   // check if username taken
@@ -242,6 +264,17 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
                 socket.emit('usernametaken',{});   
             } else{
                 db.account.update({username: data.oldusername},{$set:{username: data.username, name: data.name}});      // if not allow to change username and rest of the data
+                
+                if(data.oldname !== data.name){
+                    db.competition.update({"member.name": data.oldname}, {$set:{"member.name": data.name}}, { "multi" : true }, function( err, result ) {
+                        if ( err ) throw err;
+                    });
+                    
+                    db.competition.find({}, function(err, res){
+                        socket.emit('competitionresultslistingData',res);   // sent all members data to client
+                    }); 
+                }
+                    
                 socket.emit('userDetailsChanged',data);
             }});
         }

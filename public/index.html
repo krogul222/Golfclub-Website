@@ -1260,18 +1260,21 @@
             socket.on('memberAdded', function(data){
                 MEMBERS.push(data);
                 updateMemberList();
+                updatePlayerOfTheYearTable(playerYear);
                 bootbox.alert({message: "Member has been added.", backdrop: true});
             });
 
             socket.on('memberEdited', function(data){
                 updateMember(data);
                 updateMemberList();
+                updatePlayerOfTheYearTable(playerYear);
                 bootbox.alert({message: "Member has been edited.", backdrop: true});
             });          
             
             socket.on('memberDeleted', function(data){
                 deleteMember(data);
                 updateMemberList();
+                updatePlayerOfTheYearTable(playerYear);
                 bootbox.alert({message: "Member has been deleted.", backdrop: true});
             });   
             
@@ -1299,6 +1302,9 @@
 
             socket.on('competitionresultslistingData', function(data){ 
                 $(document).ready(function() {
+                    
+                    ALL_COMPETITION_RESULTS.length = 0;
+                    
                     for(let i = 0, length = data.length; i < length; i++){
                         data[i]["month"] = parseInt(data[i]["month"], 10); 
                        // data[i]["month"] = data[i]["month"];
@@ -1666,7 +1672,7 @@
                 
                 $("#changedetailspanel").on("click","button",function(event){
                     if(checkUserDetailsFormValidation()){
-                        socket.emit('changeUserDetails',{username: $("#accountusername").val(), oldusername: user.data.username, name: $("#accountname").val(), phone: $("#accountphone").val(), email: $("#accountemail").val()});   
+                        socket.emit('changeUserDetails',{username: $("#accountusername").val(), oldusername: user.data.username, name: $("#accountname").val(), oldname: user.data.name, phone: $("#accountphone").val(), email: $("#accountemail").val()});   
                     }                    
                 });
                 
@@ -1793,7 +1799,16 @@
                      
                     if(($(this).attr('id')) == "editmember"){
                         if(checkEditFormValidation($(this))){
-                            socket.emit('editMember',{username: username, name: name, handicapExact: handicap});
+                            let oldname = "";
+                            
+                            for(let i = 0, length = MEMBERS.length; i < length; i++){
+                                if(MEMBERS[i]["username"] === username){
+                                    oldname = MEMBERS[i]["name"];
+                                    break;
+                                }
+                            }
+                            
+                            socket.emit('editMember',{username: username, name: name, oldname: oldname, member: getMemberByName(oldname), handicapExact: handicap});
                         }
                     } else{
                         bootbox.confirm("Are you sure to delete "+username+" ?" , function(result){
@@ -2626,10 +2641,12 @@
                 
                 let arr =[];
                 let id = -1;
+                let k = []; 
+                $.in
                 
                 for(let i=0, length = ALL_COMPETITION_RESULTS.length; i < length; i++){
-                    if(ALL_COMPETITION_RESULTS[i]["id"] !== id){
-                        id = ALL_COMPETITION_RESULTS[i]["id"];
+                    if(($.inArray(ALL_COMPETITION_RESULTS[i]["id"] , k)) == -1){
+                        k.push(ALL_COMPETITION_RESULTS[i]["id"]);
                         arr.push(i);
                     }
                 }
