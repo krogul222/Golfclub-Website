@@ -1289,13 +1289,17 @@
             
             socket.on('membershiplistingData', function(data){ 
                 $(document).ready(function() {
-                    MEMBERS.length = 0;
+                    
+                    //MEMBERS.length = 0;
+                    MEMBERS.splice(0,MEMBERS.length);
                     
                     for(let i = 0, length = data.length; i < length; i++){
                         MEMBERS.push(data[i]);        
                     }
                     
                     sortMembersByName();
+                    
+                    $('#memberstable').find('tbody').empty();
                     
                     for(let i = 0, length = data.length; i < length; i++){       
                         updateMemberPanels(i);
