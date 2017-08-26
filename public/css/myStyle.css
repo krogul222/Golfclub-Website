@@ -146,3 +146,9 @@ body {
 width: 100%; /* use this, or not */
 margin: auto;
 }
+/*-------------*/
+
+.well img {
+    height: 70px;
+    width: auto;
+}
