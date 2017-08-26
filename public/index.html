@@ -2389,10 +2389,18 @@
                 let arr = getCompetitionIndexList();
                 
                 let yearCompetitions = [];
+                let resultArr = [];
                 
                 for(let i=0, length = arr.length; i < length; i++){
                     if(ALL_COMPETITION_RESULTS[arr[i]]['year'] == year){
                         yearCompetitions.push(ALL_COMPETITION_RESULTS[arr[i]]["venue"]);
+                        resultArr[ALL_COMPETITION_RESULTS[arr[i]]["venue"]] = [];
+                    }
+                }
+                
+                for(let i=0, length = ALL_COMPETITION_RESULTS.length; i < length; i++){
+                    if($.inArray(ALL_COMPETITION_RESULTS[i]["venue"],yearCompetitions) > -1){
+                        resultArr[ALL_COMPETITION_RESULTS[i]["venue"]][ALL_COMPETITION_RESULTS[i]["member"]["name"]] = ALL_COMPETITION_RESULTS[i]["netscore"];
                     }
                 }
                 
@@ -2401,6 +2409,22 @@
                 
                 for(let i=0, length = yearCompetitions.length; i < length; i++){
                     $('#playeroftheyeartable').find('thead').find('tr').append('<th>'+yearCompetitions[i]+'</th>');
+                }
+                
+                
+                
+                $('#playeroftheyeartable').find('thead').find('tr').append('<th>Total (best 4)</th>');
+                
+                for(let i=0, length = MEMBERS.length; i < length; i++){
+                    console.log('Memb');
+                    $('#playeroftheyeartable').find('tbody').append('<tr></tr>');
+                    $('#playeroftheyeartable > tbody > tr:last-child').append('<td>'+MEMBERS[i]["name"]+'</td>');
+                    
+                    for(let j=0, length = yearCompetitions.length; j < length; j++){
+                        if(resultArr[yearCompetitions[j]][MEMBERS[i]["name"]])
+                        $('#playeroftheyeartable > tbody > tr:last-child').append('<td>'+resultArr[yearCompetitions[j]][MEMBERS[i]["name"]]+'</td>');
+                    }
+                    
                 }
             }
             
