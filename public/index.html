@@ -1110,6 +1110,7 @@
                 if(activeCompetition == activeEditCompetition)
                     updateCompetitionTables(activeCompetition);                
                 
+                updatePlayerOfTheYearTable(playerYear);
                 bootbox.alert({message: "New member competition result has been added.", backdrop: true})
             });
             
@@ -1136,6 +1137,8 @@
                 updateCompetitionList(competitionYear);
                 updateaditCompetitionList(editCompetitionYear);
                 
+                
+                updatePlayerOfTheYearTable(playerYear);
                 bootbox.alert({message: "New competition result has been added.", backdrop: true});
             });
             
@@ -1212,7 +1215,7 @@
                 
                 updateaditCompetitionList(editCompetitionYear);
                 updateCompetitionList(competitionYear);
-                
+                updatePlayerOfTheYearTable(playerYear);
                 console.log("Competition deleted");
                 bootbox.alert({message: "Competition has been deleted.", backdrop: true});
             });   
@@ -1227,6 +1230,7 @@
                         updateCompetitionTables(activeCompetition);
                     }
                 }
+                updatePlayerOfTheYearTable(playerYear);
                 bootbox.alert({message: "Competition has been edited.", backdrop: true});
             });         
             
@@ -1234,6 +1238,7 @@
                 updateMemberCompetitionResult(data);
                 if(activeEditCompetition == activeCompetition)
                     updateCompetitionTables(activeCompetition);
+                updatePlayerOfTheYearTable(playerYear);
                 bootbox.alert({message: "Member competition result has been edited.", backdrop: true});
             });              
 
@@ -1246,6 +1251,7 @@
                 updateaditCompetitionList(editCompetitionYear);
                 updateCompetitionList(competitionYear);
                 
+                updatePlayerOfTheYearTable(playerYear);
                 bootbox.alert({message: "Member competition result has been deleted.", backdrop: true});
                 
                 updateaditCompetitionMemberList();
@@ -1305,6 +1311,7 @@
                     
                     competitionYear = ALL_COMPETITION_RESULTS[activeCompetition]["year"];
                     editCompetitionYear = ALL_COMPETITION_RESULTS[activeEditCompetition]["year"];
+                    playerYear = competitionYear; 
                     
                     updateCompetitionTables(index);
                     updateCompetitionList(competitionYear);
@@ -1312,7 +1319,7 @@
                     updateaditCompetitionTables(index);
                     updateaditCompetitionList(editCompetitionYear);
                     
-                    updatePlayerOfTheYearTable(competitionYear);
+                    updatePlayerOfTheYearTable(playerYear);
                     
                 });
             });
