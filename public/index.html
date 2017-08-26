@@ -1099,8 +1099,9 @@
             var committeDataLoaded = false;
             
             socket.emit('dataRequest', "membershiplisting");  
-            socket.emit('dataRequest', "societyeventslisting"); 
             socket.emit('dataRequest', "competitionresultslisting"); 
+            socket.emit('dataRequest', "societyeventslisting"); 
+
             
             socket.on('singleMemberCompetitionResultAdded', function(data){
                 ALL_COMPETITION_RESULTS.push(data);
@@ -1269,6 +1270,10 @@
                 updateMemberList();
                 updatePlayerOfTheYearTable(playerYear);
                 bootbox.alert({message: "Member has been edited.", backdrop: true});
+                
+                socket.emit('dataRequest', "membershiplisting");  
+                socket.emit('dataRequest', "competitionresultslisting"); 
+                
             });          
             
             socket.on('memberDeleted', function(data){
@@ -1296,6 +1301,7 @@
                         updateMemberPanels(i);
                     }
                     committee = getcommittee();
+                    $('#committeetable').find('tbody').empty();
                     for(let i = 0, length = committee.length; i < length; i++){
                         $('#committeetable tr:last').after('<tr><td>'+committee[i]["name"]+'</td><td>'+committee[i]["position"]+'</td><td>'+committee[i]["email"]+'</td><td>'+committee[i]["phone"]+'</td></tr>');       
                     }
@@ -1396,6 +1402,9 @@
                 showUserTab();
                 
                 bootbox.alert({message: "User details were changed!", backdrop: true});
+                
+                socket.emit('dataRequest', "membershiplisting");  
+                socket.emit('dataRequest', "competitionresultslisting"); 
             });
             
             socket.on('signInResponse', function(data){

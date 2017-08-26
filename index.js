@@ -212,14 +212,14 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
              db.competition.update({"member.name": data.oldname}, {$set:{"member.name": data.name}}, { "multi" : true }, function( err, result ) {
                     if ( err ) throw err;
              });
-             console.log("WYSYLAMY");
+         /*    console.log("WYSYLAMY");
              db.competition.find({}, function(err, res){
                     socket.emit('competitionresultslistingData',res);   // sent all members data to client
              }); 
              
             db.account.find({account: "member"}, function(err, res){
                 socket.emit('membershiplistingData',res);   // sent all members data to client
-            });
+            });*/
          }
          
          db.account.update({username: data.username},{$set:{name: data.name, handicapExact: data.handicapExact}});  // update name and handicap
@@ -257,13 +257,13 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
                     if ( err ) throw err;
                 });
                 
-                db.competition.find({}, function(err, res){
+              /*  db.competition.find({}, function(err, res){
                     socket.emit('competitionresultslistingData',res);   // sent all members data to client
                 }); 
                 
                 db.account.find({account: "member"}, function(err, res){
                     socket.emit('membershiplistingData',res);   // sent all members data to client
-                });
+                });*/
             }
             socket.emit('userDetailsChanged',data);
         } else{
@@ -278,13 +278,13 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
                         if ( err ) throw err;
                     });
                     
-                    db.competition.find({}, function(err, res){
+                /*    db.competition.find({}, function(err, res){
                         socket.emit('competitionresultslistingData',res);   // sent all members data to client
                     }); 
                     
                     db.account.find({account: "member"}, function(err, res){
                         socket.emit('membershiplistingData',res);   // sent all members data to client
-                    });
+                    });*/
                 }
                     
                 socket.emit('userDetailsChanged',data);
