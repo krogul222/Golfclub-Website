@@ -216,6 +216,10 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
              db.competition.find({}, function(err, res){
                     socket.emit('competitionresultslistingData',res);   // sent all members data to client
              }); 
+             
+            db.account.find({committea: "true"}, function(err, res){
+                    socket.emit('committeaData',res);   // sent committe data to client
+                });
          }
          
          db.account.update({username: data.username},{$set:{name: data.name, handicapExact: data.handicapExact}});  // update name and handicap
@@ -256,6 +260,10 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
                 db.competition.find({}, function(err, res){
                     socket.emit('competitionresultslistingData',res);   // sent all members data to client
                 }); 
+                
+                db.account.find({committea: "true"}, function(err, res){
+                    socket.emit('committeaData',res);   // sent committe data to client
+                });
             }
             socket.emit('userDetailsChanged',data);
         } else{
@@ -273,6 +281,10 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
                     db.competition.find({}, function(err, res){
                         socket.emit('competitionresultslistingData',res);   // sent all members data to client
                     }); 
+                    
+                    db.account.find({committea: "true"}, function(err, res){
+                    socket.emit('committeaData',res);   // sent committe data to client
+                    });
                 }
                     
                 socket.emit('userDetailsChanged',data);
