@@ -2424,6 +2424,8 @@
                         if(resultArr[yearCompetitions[j]][MEMBERS[i]["name"]]){
                             score.push(resultArr[yearCompetitions[j]][MEMBERS[i]["name"]]);
                             $('#playeroftheyeartable > tbody > tr:last-child').append('<td>'+resultArr[yearCompetitions[j]][MEMBERS[i]["name"]]+'</td>');
+                        } else{
+                            $('#playeroftheyeartable > tbody > tr:last-child').append('<td></td>');
                         }
                     }
                     
