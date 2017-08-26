@@ -2415,22 +2415,40 @@
                 
                 $('#playeroftheyeartable').find('thead').find('tr').append('<th>Total (best 4)</th>');
                 
+                let totalResults = [];
+                
                 for(let i=0, length = MEMBERS.length; i < length; i++){
                     let score = [];
-                    $('#playeroftheyeartable').find('tbody').append('<tr></tr>');
-                    $('#playeroftheyeartable > tbody > tr:last-child').append('<td>'+MEMBERS[i]["name"]+'</td>');
                     
                     for(let j=0, length = yearCompetitions.length; j < length; j++){
                         if(resultArr[yearCompetitions[j]][MEMBERS[i]["name"]]){
                             score.push(resultArr[yearCompetitions[j]][MEMBERS[i]["name"]]);
-                            $('#playeroftheyeartable > tbody > tr:last-child').append('<td>'+resultArr[yearCompetitions[j]][MEMBERS[i]["name"]]+'</td>');
+                        }
+                    }
+                    
+                    totalResults.push({score : get4BestInOne(score), index: i});
+                }
+                
+                totalResults.sort(compareTotalScore);
+                
+                for(let i=0, length = MEMBERS.length; i < length; i++){
+                
+                    $('#playeroftheyeartable').find('tbody').append('<tr></tr>');
+                    $('#playeroftheyeartable > tbody > tr:last-child').append('<td>'+MEMBERS[totalResults[i]["index"]]["name"]+'</td>');
+                    
+                    for(let j=0, length = yearCompetitions.length; j < length; j++){
+                        if(resultArr[yearCompetitions[j]][MEMBERS[totalResults[i]["index"]]["name"]]){
+                            $('#playeroftheyeartable > tbody > tr:last-child').append('<td>'+resultArr[yearCompetitions[j]][MEMBERS[totalResults[i]["index"]]["name"]]+'</td>');
                         } else{
                             $('#playeroftheyeartable > tbody > tr:last-child').append('<td></td>');
                         }
                     }
                     
-                    $('#playeroftheyeartable > tbody > tr:last-child').append('<td>'+get4BestInOne(score)+'</td>');
+                    $('#playeroftheyeartable > tbody > tr:last-child').append('<td>'+totalResults[i]["score"]+'</td>');
+                    //totalResults[i]["index"]    
+                              
                 }
+                
             }
             
             function get4BestInOne(score){
@@ -2780,6 +2798,14 @@
                     return -1;
                 return 0;
             }
+            
+            function compareTotalScore(a,b){
+                if(Number(a["score"]) < Number(b["score"]))
+                    return 1;
+                if (Number(a["score"]) > Number(b["score"]))
+                    return -1;
+                return 0;
+            }            
             
             function compareMemberName(a,b) {
                 if (a.name < b.name)
