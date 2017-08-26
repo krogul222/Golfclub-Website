@@ -1284,6 +1284,8 @@
             
             socket.on('membershiplistingData', function(data){ 
                 $(document).ready(function() {
+                    MEMBERS.length = 0;
+                    
                     for(let i = 0, length = data.length; i < length; i++){
                         MEMBERS.push(data[i]);        
                     }

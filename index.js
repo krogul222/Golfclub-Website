@@ -217,9 +217,9 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
                     socket.emit('competitionresultslistingData',res);   // sent all members data to client
              }); 
              
-            db.account.find({committea: "true"}, function(err, res){
-                    socket.emit('committeaData',res);   // sent committe data to client
-                });
+            db.account.find({account: "member"}, function(err, res){
+                socket.emit('membershiplistingData',res);   // sent all members data to client
+            });
          }
          
          db.account.update({username: data.username},{$set:{name: data.name, handicapExact: data.handicapExact}});  // update name and handicap
@@ -261,8 +261,8 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
                     socket.emit('competitionresultslistingData',res);   // sent all members data to client
                 }); 
                 
-                db.account.find({committea: "true"}, function(err, res){
-                    socket.emit('committeaData',res);   // sent committe data to client
+                db.account.find({account: "member"}, function(err, res){
+                    socket.emit('membershiplistingData',res);   // sent all members data to client
                 });
             }
             socket.emit('userDetailsChanged',data);
@@ -282,8 +282,8 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
                         socket.emit('competitionresultslistingData',res);   // sent all members data to client
                     }); 
                     
-                    db.account.find({committea: "true"}, function(err, res){
-                    socket.emit('committeaData',res);   // sent committe data to client
+                    db.account.find({account: "member"}, function(err, res){
+                        socket.emit('membershiplistingData',res);   // sent all members data to client
                     });
                 }
                     
