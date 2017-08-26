@@ -2416,16 +2416,42 @@
                 $('#playeroftheyeartable').find('thead').find('tr').append('<th>Total (best 4)</th>');
                 
                 for(let i=0, length = MEMBERS.length; i < length; i++){
-                    console.log('Memb');
+                    let score = [];
                     $('#playeroftheyeartable').find('tbody').append('<tr></tr>');
                     $('#playeroftheyeartable > tbody > tr:last-child').append('<td>'+MEMBERS[i]["name"]+'</td>');
                     
                     for(let j=0, length = yearCompetitions.length; j < length; j++){
-                        if(resultArr[yearCompetitions[j]][MEMBERS[i]["name"]])
-                        $('#playeroftheyeartable > tbody > tr:last-child').append('<td>'+resultArr[yearCompetitions[j]][MEMBERS[i]["name"]]+'</td>');
+                        if(resultArr[yearCompetitions[j]][MEMBERS[i]["name"]]){
+                            score.push(resultArr[yearCompetitions[j]][MEMBERS[i]["name"]]);
+                            $('#playeroftheyeartable > tbody > tr:last-child').append('<td>'+resultArr[yearCompetitions[j]][MEMBERS[i]["name"]]+'</td>');
+                        }
                     }
                     
+                    $('#playeroftheyeartable > tbody > tr:last-child').append('<td>'+get4BestInOne(score)+'</td>');
                 }
+            }
+            
+            function get4BestInOne(score){
+                let sum = 0;
+                let index = 0;
+                let best = [];
+                
+                for(let i = 0; i < score.length; i++){
+                    if(index < 4){
+                        best[index] = score[i];
+                        index++;
+                    } else{
+                        if(best[indexOfMin(best)] < score[i]){
+                            best[indexOfMin(best)] = score[i];
+                        }
+                    }
+                }
+                
+                for(let i = 0; i < best.length; i++){
+                    sum += Number(best[i]); 
+                }
+                
+                return sum;
             }
             
             function updateaditCompetitionTables(idx){
