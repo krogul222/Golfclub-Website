@@ -1302,7 +1302,7 @@
 
             socket.on('competitionresultslistingData', function(data){ 
                 $(document).ready(function() {
-                    
+                    console.log('DANE');
                     ALL_COMPETITION_RESULTS.length = 0;
                     
                     for(let i = 0, length = data.length; i < length; i++){
