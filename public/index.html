@@ -211,7 +211,7 @@
                                     Competition Results
                                 </a>
                             </li>
-                            <li class="list-group-item">
+                            <li class="list-group-item" id = "playeroftheyear">
                                 <a class="notop" href="javascript:void(0)">
                                     Player of the Year
                                 </a>
@@ -365,6 +365,23 @@
                             </div>
                         </div>
                         <!-- Competition results panel definition ends -->
+                        
+                        <!-- Player of the Year panel definition begins -->
+                        <div id="playeroftheyearcontent" style="display:none">
+                            <div class="well  text-center" >
+                                <h1>Player of the Year</h1>
+                                <h4></h4>
+                            </div>
+
+                            <table id = "playeroftheyeartable" class=  "table table-hover">
+                                <thead>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>                        
+                        </div>
+                        <!-- Player of the Year panel definition ends -->
                         
                     <!-- Logged user panel definitions begin -->
                         <!-- Account Settings panel definition begins -->
@@ -884,6 +901,11 @@
                      hideAll();
                      $("#competitionresultscontent").show();
                 });
+
+                $("#glofmenu").on("click", "#playeroftheyear", function(event){;  // show committee 
+                     hideAll();
+                     $("#playeroftheyearcontent").show();
+                });                
                 
                 $("#glofmenu").on("click", "#membershiplisting", function(event){   // show members list
                     hideAll();
@@ -1030,6 +1052,7 @@
                     $("#createsocietyevent").hide();
                     $("#societyeventscontent").hide();
                     $("#competitionresultscontent").hide();
+                    $("#cplayeroftheyearcontent").hide();
                     $("#editsocietyevents").hide();
                     $("#addcompetition").hide();
                     $("#editcompetition").hide();
@@ -1286,10 +1309,10 @@
                     updateCompetitionTables(index);
                     updateCompetitionList(competitionYear);
                     
-
-                    
                     updateaditCompetitionTables(index);
                     updateaditCompetitionList(editCompetitionYear);
+                    
+                    updatePlayerOfTheYearTable(competitionYear);
                     
                 });
             });
@@ -2356,6 +2379,28 @@
                     }
                     
                 } else{
+                }
+            }
+            
+            function updatePlayerOfTheYearTable(year){
+                $('#playeroftheyeartable').find('tbody').empty();
+                $('#playeroftheyeartable').find('thead').empty();
+                
+                let arr = getCompetitionIndexList();
+                
+                let yearCompetitions = [];
+                
+                for(let i=0, length = arr.length; i < length; i++){
+                    if(ALL_COMPETITION_RESULTS[arr[i]]['year'] == year){
+                        yearCompetitions.push(ALL_COMPETITION_RESULTS[arr[i]]["venue"]);
+                    }
+                }
+                
+                $('#playeroftheyeartable').find('thead').append('<tr></tr>');
+                $('#playeroftheyeartable').find('thead').find('tr').append('<th>Members Name</th>');
+                
+                for(let i=0, length = yearCompetitions.length; i < length; i++){
+                    $('#playeroftheyeartable').find('thead').find('tr').append('<th>'+yearCompetitions[i]+'</th>');
                 }
             }
             
