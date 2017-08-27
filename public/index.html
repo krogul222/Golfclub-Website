@@ -1377,6 +1377,9 @@
             socket.on('memberDeleted', function(data){
                 deleteMember(data);
                 updateMemberList();
+                
+                socket.emit('dataRequest', "competitionresultslisting"); 
+                
                 updatePlayerOfTheYearTable(playerYear);
                 bootbox.alert({message: "Member has been deleted.", backdrop: true});
             });   

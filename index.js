@@ -1,8 +1,7 @@
 var mongojs = require('mongojs');
 var express = require('express');
-var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition']);
-
-//var db = mongojs('localhost:27017/golf', ['account','event','competition']);      // connect to database
+//var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition']);
+var db = mongojs('localhost:27017/golf', ['account','event','competition']);      // connect to database
 
 //db.account.remove();
 /*
@@ -232,6 +231,7 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
     
     socket.on('deleteMember', function(data){   // request to delete specific username was sent
         db.account.remove({username: data.username}); 
+        db.competition.remove({"member.name": data.name}); 
         socket.emit('memberDeleted',data);  // sent response to client
     });     
 
