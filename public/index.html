@@ -230,6 +230,12 @@
                                 <a class="notop" href="javascript:void(0)">
                                     Edit Members
                                 </a>
+                            </li>
+                            <li class="list-group-item" id="editcommitteeLink">
+                                <a class="notop" href="javascript:void(0)">
+                                    Edit Committee
+                                </a>
+                            </li>
                             <li class="list-group-item" id="createsocietyeventLink">
                                 <a class="notop" href="javascript:void(0)">
                                     Add Society Event
@@ -256,12 +262,18 @@
                     
                     <!-- committee list panel definition begins -->
                     <div class="col-md-9" >
-                        <div id="welcome" class="text-center well">
-                            <h1>Welcome to Nexperia Golf Society Home Page!</h1>
+                        <div id="welcome" class="text-center">
+                            <div class="text-center well">
+                                <h1>Welcome to Nexperia Golf Society Home Page!</h1>
+                            </div>
+                             <img class = "img-rounded" src="img/committee.png" alt=""  align="center">
                         </div>
+                        
                         <div id="committeecontent" style="display:none">
                             <div class="well  text-center" >  
-                                <h1>The Committee</h1> 
+                                <img class = "img-rounded" src="img/committee.png" style="display:inline-block"  alt="" align="left"> 
+                                <h1 style="display:inline-block">The Committee</h1> 
+                                <img class = "img-rounded" style="display:inline-block" src="img/committee.png" alt=""  align="right">
                             </div>
 
                             <table id="committeetable" class="table table-hover">
@@ -504,6 +516,17 @@
                             </div> 
                         </div>
                         <!-- Edit members panel definition ends -->
+                        
+                        <!-- Edit committee panel definition begins -->
+                        <div id="editcommittee" style="display:none">
+                            <div class="well  text-center" >  
+                                <h1>Edit committee</h1>     
+                            </div>
+
+                            <div class="list-group" id = "editcommitteelist">
+                            </div> 
+                        </div>
+                        <!-- Edit committee panel definition ends -->                        
                         
                         <!-- Edit Society Events definition begins -->
                         <div id="editsocietyevents" style="display:none">
@@ -957,6 +980,11 @@
                     $("#editmembers").show();
                 });
                 
+                $("#editcommitteeLink").on("click", function(event){  // show edits member panel
+                    hideAll();
+                    $("#editcommittee").show();
+                });
+                
                 $("#editsocietyeventsLink").on("click", function(event){  // show edits member panel
                     hideAll();
                     $("#editsocietyevents").show();
@@ -1058,6 +1086,7 @@
                     $("#userstats").hide();
                     $("#addmember").hide();
                     $("#editmembers").hide();
+                    $("#editcommittee").hide();
                     $("#createsocietyevent").hide();
                     $("#societyeventscontent").hide();
                     $("#competitionresultscontent").hide();
@@ -1274,6 +1303,66 @@
                 bootbox.alert({message: "Member has been added.", backdrop: true});
             });
 
+            socket.on('committeeMemberEdited', function(data){
+                    
+                $('#committeetable').find('tbody').empty();                    
+                    
+                    getMember(data.username)["position"] = data.position;
+                
+                    committee.length = 0;
+                    committee = getcommittee();
+                    for(let i = 0, length = committee.length; i < length; i++){
+                        $('#committeetable').find('tbody').append('<tr><td>'+committee[i]["name"]+'</td><td>'+committee[i]["position"]+'</td><td>'+committee[i]["email"]+'</td><td>'+committee[i]["phone"]+'</td></tr>');       
+                    }
+                    
+                    $('#editcommitteelist').empty(); 
+                    
+                    for(let i = 0, length = committee.length; i < length; i++){       
+                        
+                        $('#editcommitteelist').append('<a href="javascript:void(0)" class="list-group-item notop list-group-item-info" id="'+i+'">'+committee[i]["name"]+'</a><ul class="list-group well" style="display:none" id="committee'+i+'" data-member="'+committee[i]["name"]+'"></ul><br>');
+                        
+                        $("#committee"+i).append('<button id="deletecommitteemember" type="button" style="margin-top:20px" class="btn btn-danger btn-block">Delete Member</button>');                        
+                        
+                        $("#committee"+i).append('<label for="editcommitteememberposition" style="margin-top:20px">Position:</label><input type="text" class="form-control list-group-item" id="editcommitteememberposition" placeholder="'+committee[i]["position"]+'" value="'+committee[i]["position"]+'" >');
+                        
+                        $("#committee"+i).append('<button id="editcommitteemember" type="button" style="margin-top:20px" class="btn btn-primary btn-block">Apply changes</button>');
+                    }
+
+                bootbox.alert({message: "Committee member has been edited.", backdrop: true});
+                
+            });       
+            
+            socket.on('committeeMemberDeleted', function(data){
+                    
+                $('#committeetable').find('tbody').empty();                    
+                    
+                    getMember(data.username)["committee"] = false;
+                
+                    committee.length = 0;
+                    committee = getcommittee();
+        
+                    for(let i = 0, length = committee.length; i < length; i++){
+                        $('#committeetable').find('tbody').append('<tr><td>'+committee[i]["name"]+'</td><td>'+committee[i]["position"]+'</td><td>'+committee[i]["email"]+'</td><td>'+committee[i]["phone"]+'</td></tr>');       
+                    }
+                    
+                    $('#editcommitteelist').empty(); 
+                    
+                    for(let i = 0, length = committee.length; i < length; i++){       
+                        
+                        $('#editcommitteelist').append('<a href="javascript:void(0)" class="list-group-item notop list-group-item-info" id="'+i+'">'+committee[i]["name"]+'</a><ul class="list-group well" style="display:none" id="committee'+i+'" data-member="'+committee[i]["name"]+'"></ul><br>');
+                        
+                        $("#committee"+i).append('<button id="deletecommitteemember" type="button" style="margin-top:20px" class="btn btn-danger btn-block">Delete Member</button>');                        
+                        
+                        $("#committee"+i).append('<label for="editcommitteememberposition" style="margin-top:20px">Position:</label><input type="text" class="form-control list-group-item" id="editcommitteememberposition" placeholder="'+committee[i]["position"]+'" value="'+committee[i]["position"]+'" >');
+                        
+                        $("#committee"+i).append('<button id="editcommitteemember" type="button" style="margin-top:20px" class="btn btn-primary btn-block">Apply changes</button>');
+                    } 
+                     
+
+                bootbox.alert({message: "Committee member has been deleted.", backdrop: true});
+                
+            });                
+            
             socket.on('memberEdited', function(data){
                 updateMember(data);
                 updateMemberList();
@@ -1316,9 +1405,23 @@
                     
                     $('#committeetable').find('tbody').empty();                    
                     
+                    committee.length = 0;
                     committee = getcommittee();
                     for(let i = 0, length = committee.length; i < length; i++){
                         $('#committeetable').find('tbody').append('<tr><td>'+committee[i]["name"]+'</td><td>'+committee[i]["position"]+'</td><td>'+committee[i]["email"]+'</td><td>'+committee[i]["phone"]+'</td></tr>');       
+                    }
+                    
+                    $('#editcommitteelist').empty(); 
+                    
+                    for(let i = 0, length = committee.length; i < length; i++){       
+                        
+                        $('#editcommitteelist').append('<a href="javascript:void(0)" class="list-group-item notop list-group-item-info" id="'+i+'">'+committee[i]["name"]+'</a><ul class="list-group well" style="display:none" id="committee'+i+'" data-member="'+committee[i]["name"]+'"></ul><br>');
+                        
+                        $("#committee"+i).append('<button id="deletecommitteemember" type="button" style="margin-top:20px" class="btn btn-danger btn-block">Delete Member</button>');                        
+                        
+                        $("#committee"+i).append('<label for="editcommitteememberposition" style="margin-top:20px">Position:</label><input type="text" class="form-control list-group-item" id="editcommitteememberposition" placeholder="'+committee[i]["position"]+'" value="'+committee[i]["position"]+'" >');
+                        
+                        $("#committee"+i).append('<button id="editcommitteemember" type="button" style="margin-top:20px" class="btn btn-primary btn-block">Apply changes</button>');
                     }
                 });                      
             }); 
@@ -1568,6 +1671,13 @@
                 $("#editmemberslist").on("click", "a", function(event){
                     let id = $(this).attr('id');
                     let propertiesId = "#member"+id;
+                    
+                    $(propertiesId).slideToggle();
+                });
+    
+                $("#editcommitteelist").on("click", "a", function(event){
+                    let id = $(this).attr('id');
+                    let propertiesId = "#committee"+id;
                     
                     $(propertiesId).slideToggle();
                 });
@@ -1844,6 +1954,33 @@
                         }); 
                     }
                 });
+                
+                $("#editcommitteelist").on("click", "button", function(event){
+                    let position = "";
+                     
+                    $(this).parent().find('input').each(function(){
+                        switch($(this).attr('id')){
+                            case "editcommitteememberposition": 
+                                position = $(this).val();
+                            break;
+                        }    
+                    });
+                     
+                    let member = getMemberByName($(this).parent().data("member"));
+                    
+                    if(($(this).attr('id')) == "editcommitteemember"){
+                        if(checkCommitteeEditFormValidation($(this))){
+
+                            socket.emit('editCommitteeMember',{username: member.username, position: position});
+                        }
+                    } else{
+                        bootbox.confirm("Are you sure to delete "+member.name+" from committee?" , function(result){
+                            if(result){
+                                socket.emit('deleteCommitteeMember',{username: member.username});  
+                            }
+                        }); 
+                    }
+                });                
             
                 $("#logoutLink").on("click" , function(event){
                     user.loggedin = false;
@@ -1857,6 +1994,8 @@
                     $("#editmembers").hide();
                     $("#createsocietyevent").hide();
                     $("#addcompetition").hide();
+                    $("#editcompetition").hide();
+                    $("#editcommittee").hide();
                 });
             });
             
@@ -2039,6 +2178,25 @@
                 let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 return re.test(email);
             }
+
+            function checkCommitteeEditFormValidation(btn){
+                let position = "";
+                
+                btn.parent().find('input').each(function(){
+                    switch($(this).attr('id')){
+                        case "editcommitteememberposition": 
+                            position = $(this).val();
+                            break;
+                        }        
+                }); 
+                
+                if(alphanumeric(position, true) && position.length > 0){
+                        return true;
+                } else{
+                    bootbox.alert({message:"Position data incorrect. Only letters, numbers and space allowed.", backdrop: true});
+                    return false;
+                }
+            }            
             
             function checkEditFormValidation(btn){
                 let name = "";
@@ -2140,7 +2298,7 @@
             }           
             
             function checkCompetitionFormValidation(){
-                if(alphanumeric($("#addcompetitioneventname").val(), false) && $("#addcompetitioneventname").val().length > 0 ){
+                if(alphanumeric($("#addcompetitioneventname").val(), true) && $("#addcompetitioneventname").val().length > 0 ){
                     if(alphanumeric($("#addcompetitionname").val(), true) && $("#addcompetitionname").val().length > 0 ){
                         if(alphanumeric($("#addcompetitionvenue").val(), true) && $("#addcompetitionvenue").val().length > 0 ){
                             if($("#newcompetitiondate").val().length > 0){
@@ -2158,13 +2316,13 @@
                         return false;
                         }
                 } else {
-                    bootbox.alert({message: "Event name data incorrect. Only letters and numbers allowed.", backdrop: true});
+                    bootbox.alert({message: "Event name data incorrect. Only letters, numbers and space allowed.", backdrop: true});
                     return false;
                 }
             }
             
             function checkEditCompetitionFormValidation(){
-                if(alphanumeric($("#editcompetitioneventname").val(), false) && $("#editcompetitioneventname").val().length > 0 ){
+                if(alphanumeric($("#editcompetitioneventname").val(), true) && $("#editcompetitioneventname").val().length > 0 ){
                     if(alphanumeric($("#editcompetitionname").val(), true) && $("#editcompetitionname").val().length > 0 ){
                         if(alphanumeric($("#editcompetitionvenue").val(), true) && $("#editcompetitionvenue").val().length > 0 ){
                             if($("#editnewcompetitiondate").val().length > 0){
@@ -2182,7 +2340,7 @@
                         return false;
                         }
                 } else {
-                    bootbox.alert({message: "Event name data incorrect. Only letters and numbers allowed.", backdrop: true});
+                    bootbox.alert({message: "Event name data incorrect. Only letters, numbers and space allowed.", backdrop: true});
                     return false;
                 }
             }

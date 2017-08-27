@@ -1,8 +1,8 @@
 var mongojs = require('mongojs');
 var express = require('express');
-var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition']);
+//var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition']);
 
-//var db = mongojs('localhost:27017/golf', ['account','event','competition']);      // connect to database
+var db = mongojs('localhost:27017/golf', ['account','event','competition']);      // connect to database
 
 //db.account.remove();
 /*
@@ -202,6 +202,18 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
         socket.emit('memberCompetitionResultDeleted',data);  // sent response to client
     });     
     
+    
+     socket.on('editCommitteeMember', function(data){
+         db.account.update({username: data.username}, {$set:{position: data.position}});
+         socket.emit('committeeMemberEdited', data);
+     });
+    
+     socket.on('deleteCommitteeMember', function(data){
+         db.account.update({username: data.username}, {$set:{committee: false}});
+         
+         socket.emit('committeeMemberDeleted', data);
+     });    
+    
     //requests from editmember panel    
     
     socket.on('editMember', function(data){     // member data was sent to update existing member
@@ -212,14 +224,6 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
              db.competition.update({"member.name": data.oldname}, {$set:{"member.name": data.name}}, { "multi" : true }, function( err, result ) {
                     if ( err ) throw err;
              });
-         /*    console.log("WYSYLAMY");
-             db.competition.find({}, function(err, res){
-                    socket.emit('competitionresultslistingData',res);   // sent all members data to client
-             }); 
-             
-            db.account.find({account: "member"}, function(err, res){
-                socket.emit('membershiplistingData',res);   // sent all members data to client
-            });*/
          }
          
          db.account.update({username: data.username},{$set:{name: data.name, handicapExact: data.handicapExact}});  // update name and handicap
