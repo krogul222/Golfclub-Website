@@ -2732,11 +2732,13 @@
                         resultArr[ALL_COMPETITION_RESULTS[arr[i]]["venue"]] = [];
                     }
                 }
-                
+                console.log("Competition results:");
                 for(let i=0, length = ALL_COMPETITION_RESULTS.length; i < length; i++){
                     if($.inArray(ALL_COMPETITION_RESULTS[i]["venue"],yearCompetitions) > -1){
                         resultArr[ALL_COMPETITION_RESULTS[i]["venue"]][ALL_COMPETITION_RESULTS[i]["member"]["name"]] = ALL_COMPETITION_RESULTS[i]["netscore"];
                     }
+                    
+                    console.log("venue: "+ALL_COMPETITION_RESULTS[i]["venue"]+", name: "+ALL_COMPETITION_RESULTS[i]["member"]["name"]+ ", score: "+ALL_COMPETITION_RESULTS[i]["netscore"] );
                 }
                 
                 $('#playeroftheyeartable').find('thead').append('<tr></tr>');
