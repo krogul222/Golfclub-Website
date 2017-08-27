@@ -1262,7 +1262,7 @@
             socket.on('competitionEdited', function(data){
                 updateCompetition(data);
 
-                updateaditCompetitionList();
+                updateaditCompetitionList(editCompetitionYear);
                 updateCompetitionList(competitionYear);
                 if(activeCompetition > -1){
                     if(data.id == ALL_COMPETITION_RESULTS[activeCompetition].id){
