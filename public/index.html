@@ -364,6 +364,19 @@
                                     <tr></tr>
                                 </tbody>
                             </table>
+                            
+                            <div class = "well text-center">
+                                <h3 class = "text-center">Nearest the Pin</h3>
+                                <table id = "competitionnearestthepintable" class=  "table table-hover">
+                                <thead align="center">
+                                    <th style="text-align:center">Hole Number</th>
+                                    <th style="text-align:center">Winner</th>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                            </div>
     
                             <table id = "competitionresultsscoretable" class=  "table table-hover">
                                 <thead>
@@ -2924,8 +2937,8 @@
                     $('#editeventdate').datetimepicker("update", new Date(SOCIETY_EVENTS[idx]["year"],Number(SOCIETY_EVENTS[idx]["month"])-1,SOCIETY_EVENTS[idx]["day"],0,0,0,0));
 
                     let str = SOCIETY_EVENTS[idx]["firstteatime"];
-                   // let res = str.split(":");
-                    //$('#editeventteatime').datetimepicker("update", new Date(0,0,0,res[0],res[1],0,0));
+                    let res = str.split(":");
+                    $('#editeventteatime').datetimepicker("update", new Date(0,0,0,res[0],res[1],0,0));
 
                     $('#editevenorganiser').val(SOCIETY_EVENTS[idx]["organiser"]);
                     $('#editeventnotes').val(SOCIETY_EVENTS[idx]["notes"]);
