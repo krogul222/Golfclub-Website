@@ -201,6 +201,11 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
         socket.emit('memberCompetitionResultDeleted',data);  // sent response to client
     });     
     
+
+    socket.on('addCommitteeMember', function(data){
+         db.account.update({username: data.username}, {$set:{position: data.position, committee: "true"}});
+         socket.emit('committeeMemberAdded', data);
+     });
     
      socket.on('editCommitteeMember', function(data){
          db.account.update({username: data.username}, {$set:{position: data.position}});
