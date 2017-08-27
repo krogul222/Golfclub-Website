@@ -1,7 +1,7 @@
 var mongojs = require('mongojs');
 var express = require('express');
-var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition']);
-//var db = mongojs('localhost:27017/golf', ['account','event','competition']);      // connect to database
+//var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition']);
+var db = mongojs('localhost:27017/golf', ['account','event','competition']);      // connect to database
 
 //db.account.remove();
 /*
@@ -146,6 +146,7 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
                     data["results"][i]["month"] = data["month"];
                     data["results"][i]["day"] = data["day"];
                     data["results"][i]["id"] = data["id"];
+                    data["results"][i]["notes"] = data["notes"];
                     console.log("Mamber "+data["results"][i]["member"]);
                     db.competition.insert(data["results"][i]); 
                 }
@@ -179,7 +180,7 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
     });     
     
     socket.on('editCompetition', function(data){     
-         db.competition.update({id: data.id},{$set:{eventname: data.eventname, competitionname: data.competitionname, venue: data.venue, day: data.day, month: data.month, year: data.year}}, { "multi" : true });  
+         db.competition.update({id: data.id},{$set:{eventname: data.eventname, competitionname: data.competitionname, venue: data.venue, day: data.day, month: data.month, year: data.year, notes: data.notes}}, { "multi" : true });  
          socket.emit('competitionEdited',data);  // sent response to client with the same data
      });        
     

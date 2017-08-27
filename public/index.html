@@ -275,7 +275,7 @@
                                 <h1 style="display:inline-block">The Committee</h1> 
                                 <img class = "img-rounded" style="display:inline-block" src="img/committee2.png" alt=""  align="right">
                             </div>
-
+                                
                             <table id="committeetable" class="table table-hover">
                                 <thead>
                                     <tr>
@@ -393,14 +393,15 @@
                                 <h1 style="display:inline-block">Player of the Year</h1>
                                 <img class = "img-rounded" style="display:inline-block" src="img/playeroftheyear.png" alt=""  align="right" >
                             </div>
-
-                            <table id = "playeroftheyeartable" class=  "table table-hover">
-                                <thead>
-                                </thead>
-                                <tbody>
-                                    <tr></tr>
-                                </tbody>
-                            </table>                        
+                            <div class = "score">
+                                <table id = "playeroftheyeartable" class=  "table table-hover">
+                                    <thead>
+                                    </thead>
+                                    <tbody>
+                                        <tr></tr>
+                                    </tbody>
+                                </table>    
+                            </div>
                         </div>
                         <!-- Player of the Year panel definition ends -->
                         
@@ -770,7 +771,12 @@
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>
                                     </div>
-                                </div>                                
+                                </div>  
+                                
+                                <div class="form-group">
+                                    <label for="addcompetitionnotes">Notes:</label>
+                                    <textarea class="form-control" rows="5" id="addcompetitionnotes"  value=""></textarea>
+                                </div> 
                             </form>
                             
                             <table id="addcompetitionresulttable" class="table table-hover">
@@ -862,6 +868,11 @@
                                         </span>
                                     </div>
                                 </div>    
+                                
+                                <div class="form-group">
+                                    <label for="editcompetitionnotes">Notes:</label>
+                                    <textarea class="form-control" rows="5" id="editcompetitionnotes"></textarea>
+                                </div> 
                                 
                                 <button id="editcompetitionsubmitbtn" type="button" style = "margin-top:20px" class="btn btn-primary btn-block">
                                     Apply changes
@@ -1194,6 +1205,7 @@
                 $("#addcompetitionname").val("");
                 $("#addcompetitionvenue").val("");
                 $("#newcompetitiondate").val("");
+                $("#addcompetitionnotes").val("");
                 
                
                 
@@ -1741,7 +1753,7 @@
                             month = "0" + month;
                         }
                        
-                       socket.emit('addCompetitionResult', {results: COMPETITION_RESULT, eventname: $("#addcompetitioneventname").val(), competitionname: $("#addcompetitionname").val(), venue: $("#addcompetitionvenue").val(), month: month, year: date.getFullYear(), day: day });
+                       socket.emit('addCompetitionResult', {results: COMPETITION_RESULT, eventname: $("#addcompetitioneventname").val(), competitionname: $("#addcompetitionname").val(), venue: $("#addcompetitionvenue").val(), month: month, year: date.getFullYear(), day: day, notes: $("#addcompetitionnotes").val() });
                    } 
                 });
                 
@@ -1975,7 +1987,7 @@
                             if(Number(month) < 10){
                                 month = "0" + month;
                             }
-                            socket.emit('editCompetition',{eventname: $("#editcompetitioneventname").val(), competitionname: $("#editcompetitionname").val(), venue: $("#editcompetitionvenue").val(), month: month, year: date.getFullYear(), day: day, id: ALL_COMPETITION_RESULTS[activeEditCompetition]["id"]}); 
+                            socket.emit('editCompetition',{eventname: $("#editcompetitioneventname").val(), competitionname: $("#editcompetitionname").val(), venue: $("#editcompetitionvenue").val(), month: month, year: date.getFullYear(), day: day, id: ALL_COMPETITION_RESULTS[activeEditCompetition]["id"], notes: $("#editcompetitionnotes").val()}); 
                         }
                     } else if(($(this).attr('id')) == "editcompetitiondeletebtn"){
                         if(activeEditCompetition >= 0){
@@ -2160,6 +2172,7 @@
                         ALL_COMPETITION_RESULTS[i]["year"] = competition.year;
                         ALL_COMPETITION_RESULTS[i]["month"] = competition.month;
                         ALL_COMPETITION_RESULTS[i]["day"] = competition.day;
+                        ALL_COMPETITION_RESULTS[i]["notes"] = competition.notes;
                     }
                 }
             }              
@@ -2516,8 +2529,8 @@
             function checkAddSocietyEventFormValidation(){
                 if(alphanumeric($("#addeventname").val(), true) && $("#addeventname").val().length > 0 ){
                     if(alphanumeric($("#addeventcourse").val(), true) && $("#addeventcourse").val().length > 0 ){
-                        if(alphanumeric($("#addeventpostcode").val(), false) || $("#addeventpostcode").val().length == 0 ){
-                            if($.isNumeric($("#addeventprice").val())){
+                        if(alphanumeric($("#addeventpostcode").val(), true) || $("#addeventpostcode").val().length == 0 ){
+                            if($.isNumeric($("#addeventprice").val().replace("£", ""))){
                                 if(alphanumeric($("#addeventwhatincluded").val(), true) || $("#addeventwhatincluded").val().length == 0 ){
                                     if($.isNumeric($("#addeventmaxparticipants").val()) || $("#addeventmaxparticipants").val().length == 0){
                                         if(alphanumeric($("#addevenorganiser").val(), true) && $("#addevenorganiser").val().length > 0 ){
@@ -2547,12 +2560,12 @@
                                     return false;    
                                 }
                             } else{
-                                bootbox.alert({message: "Price data incorrect. Only numbers allowed.", backdrop: true});
+                                bootbox.alert({message: "Price data incorrect. Only numbers and £ symbol allowed.", backdrop: true});
                                 return false;
                             }
                             
                         } else{
-                            bootbox.alert({message:"Post code data incorrect. Only letters and numbers allowed.", backdrop: true});
+                            bootbox.alert({message:"Post code data incorrect. Only letters, numbers and space allowed.", backdrop: true});
                             return false;    
                         }
             
@@ -2569,8 +2582,8 @@
             function checkEditSocietyEventFormValidation(){
                 if(alphanumeric($("#editeventname").val(), true) && $("#editeventname").val().length > 0 ){
                     if(alphanumeric($("#editeventcourse").val(), true) && $("#editeventcourse").val().length > 0 ){
-                        if(alphanumeric($("#editeventpostcode").val(), false) || $("#editeventpostcode").val().length == 0 ){
-                            if($.isNumeric($("#editeventprice").val())){
+                        if(alphanumeric($("#editeventpostcode").val(), true) || $("#editeventpostcode").val().length == 0 ){
+                            if($.isNumeric($("#editeventprice").val().replace("£", ""))){
                                 if(alphanumeric($("#editeventwhatincluded").val(), true) || $("#editeventwhatincluded").val().length == 0 ){
                                     if($.isNumeric($("#editeventmaxparticipants").val()) || $("#editeventmaxparticipants").val().length == 0){
                                         if(alphanumeric($("#editevenorganiser").val(), true) && $("#editevenorganiser").val().length > 0 ){
@@ -2600,12 +2613,12 @@
                                     return false;    
                                 }
                             } else{
-                                bootbox.alert({message: "Price data incorrect. Only numbers allowed.", backdrop: true});
+                                bootbox.alert({message: "Price data incorrect. Only numbers and £ symbol allowed.", backdrop: true});
                                 return false;
                             }
                             
                         } else{
-                            bootbox.alert({message:"Post code data incorrect. Only letters and numbers allowed.", backdrop: true});
+                            bootbox.alert({message:"Post code data incorrect. Only letters, numbers and space allowed.", backdrop: true});
                             return false;    
                         }
             
@@ -2695,7 +2708,11 @@
                     let month = Number(ALL_COMPETITION_RESULTS[idx]["month"]);
                     let day = Number(ALL_COMPETITION_RESULTS[idx]["day"]);
                     
-                    $('#competitionresultsinfotable').find('tbody').append('<tr><td>Event:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["eventname"]+'</td></tr>'+'<tr><td>Competition:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["competitionname"]+'</td></tr>'+'<tr><td>Venue:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["venue"]+'</td></tr>'+'<tr><td>Date of Competition:</td><td align="center">'+day+'/'+month+'/'+ALL_COMPETITION_RESULTS[idx]["year"]+'</td></tr>');
+                    if(!ALL_COMPETITION_RESULTS[idx]["notes"]){
+                        ALL_COMPETITION_RESULTS[idx]["notes"] = "";
+                    }
+                    
+                    $('#competitionresultsinfotable').find('tbody').append('<tr><td>Event:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["eventname"]+'</td></tr>'+'<tr><td>Competition:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["competitionname"]+'</td></tr>'+'<tr><td>Venue:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["venue"]+'</td></tr>'+'<tr><td>Date of Competition:</td><td align="center">'+day+'/'+month+'/'+ALL_COMPETITION_RESULTS[idx]["year"]+'</td></tr>'+'<tr><td>Notes:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["notes"]+'</td></tr>');
                     
                     let competitionResults = [];
                     let index = 0;
@@ -2825,6 +2842,12 @@
                     $('#editcompetitionvenue').val(ALL_COMPETITION_RESULTS[idx]["venue"]);
                     
                     $('#editcompetitiondate').datetimepicker("update", new Date(ALL_COMPETITION_RESULTS[idx]["year"], month-1, day,0,0,0,0));
+                    
+                    if(!ALL_COMPETITION_RESULTS[idx]["notes"]){
+                        ALL_COMPETITION_RESULTS[idx]["notes"] = "";
+                    }
+                        
+                    $('#editcompetitionnotes').val(ALL_COMPETITION_RESULTS[idx]["notes"]);
                     
                    /* $('#editcompetitionresultsinfotable').find('tbody').append('<tr><td>Event:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["eventname"]+'</td></tr>'+'<tr><td>Competition:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["competitionname"]+'</td></tr>'+'<tr><td>Venue:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["venue"]+'</td></tr>'+'<tr><td>Date of Competition:</td><td align="center">'+day+'/'+month+'/'+ALL_COMPETITION_RESULTS[idx]["year"]+'</td></tr>');*/
                     
