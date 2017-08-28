@@ -1923,7 +1923,7 @@
                 $("#editcompetitionwinner1list").on("click", "a", function(event){
                     let name = $(this).text();
                     $("#editcompetitionwinner1").text(name);
-                    if($("#editcompetitionwinner1").text(name) !== "none")
+                   // if($("#editcompetitionwinner1").text(name) !== "none")
                         competitionFirstWinnerSelected = true;
                     $("#editcompetitionwinner1list").slideToggle();
                 });      
@@ -1931,7 +1931,7 @@
                 $("#editcompetitionwinner2list").on("click", "a", function(event){
                     let name = $(this).text();
                     $("#editcompetitionwinner2").text(name);
-                    if($("#editcompetitionwinner2").text(name) !== "none")
+                    //if($("#editcompetitionwinner2").text(name) !== "none")
                         competitionSecondWinnerSelected = true;
                     $("#editcompetitionwinner2list").slideToggle();
                 });                
@@ -2109,7 +2109,7 @@
                                 if($("#editcompetitionhole1").text() !== "none")
                                     firsthole = $("#editcompetitionhole1").text();
                                 
-                                if($("#editcompetitionwinner1").text() !== "none")
+                                //if($("#editcompetitionwinner1").text() !== "none")
                                     firstwinner = $("#editcompetitionwinner1").text();
                             }
                             
@@ -2118,7 +2118,7 @@
                             if($("#editcompetitionhole2").text() !== "none")
                                 secondhole = $("#editcompetitionhole2").text();
                                 
-                            if($("#editcompetitionwinner2").text() !== "none")
+                           // if($("#editcompetitionwinner2").text() !== "none")
                                 secondwinner = $("#editcompetitionwinner2").text();
                             }
                             
@@ -3037,7 +3037,7 @@
                         $("#editcompetitionhole2").text(ALL_COMPETITION_RESULTS[idx]["secondhole"]);
                         competitionSecondHoleSelected = true;
                     } else{
-                        $("#editcompetitionhole2").text("Choose first Hole");
+                        $("#editcompetitionhole2").text("Choose second Hole");
                         competitionSecondHoleSelected = false;
                     }  
                     
@@ -3045,7 +3045,7 @@
                         $("#editcompetitionwinner2").text(ALL_COMPETITION_RESULTS[idx]["secondwinner"]);
                         competitionSecondWinnerSelected = true;
                     } else{
-                        $("#editcompetitionwinner2").text("Choose first Hole");
+                        $("#editcompetitionwinner2").text("Choose second Winner");
                         competitionSecondWinnerSelected = false;
                     }                    
 
@@ -3053,7 +3053,7 @@
                         $("#editcompetitionwinner1").text(ALL_COMPETITION_RESULTS[idx]["firstwinner"]);
                         competitionFirstWinnerSelected = true;
                     } else{
-                        $("#editcompetitionwinner1").text("Choose first Hole");
+                        $("#editcompetitionwinner1").text("Choose first Winner");
                         competitionFirstWinnerSelected = false;
                     }                    
                     
