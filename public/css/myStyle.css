@@ -153,7 +153,14 @@ margin: auto;
     width: auto;
 }
 
+.well .pin img {
+    height: 190px;
+    width: auto;
+}
+
 /* -----------------*/
+
+
 /*
 .score {
   width: 100%;
