@@ -369,7 +369,7 @@
                                 <div style="display:inline-block">
                                     <img class = "img-rounded pin" src="img/nearestthepin.png" style="width:200px;height:auto" alt="">
                                 </div>
-                                <div style="display:inline-block;margin-left:50px">
+                                <div style="display:inline-block;margin-left:50px;vertical-align: middle">
                                     <table id = "competitionnearestthepintable" class=  "table table-hover" style="width:400px">
                                     <thead align="center">
                                         <th style="text-align:center">Hole Number</th>
@@ -891,6 +891,48 @@
                                     <textarea class="form-control" rows="5" id="editcompetitionnotes"></textarea>
                                 </div> 
                                 
+                                <div class="well">
+                                    <h3 class="text-center">First Hole</h3>
+                                    <label for="editcompetitionwinner1"  style = "margin-top:20px">
+                                            First winner name:
+                                    </label>
+                                    <button id="editcompetitionwinner1" type="button" class="btn btn-success btn-block">
+                                        Choose first winner
+                                    </button>
+                                    <div class="list-group" id="editcompetitionwinner1list" style = "display:none">
+                                    </div>
+
+                                    <label for="editcompetitionhole1" style = "margin-top:20px">
+                                            First hole number:
+                                    </label>
+                                    <button id="editcompetitionhole1" type="button"  class="btn btn-success btn-block">
+                                        Choose first Hole
+                                    </button>
+                                    <div class="list-group" id="editcompetitionhole1list" style = "display:none">
+                                    </div>      
+                                </div>
+
+                                <div class="well">
+                                    <h3 class="text-center">Second Hole</h3>
+                                    <label for="editcompetitionwinner2"  style = "margin-top:20px">
+                                            Second winner name:
+                                    </label>
+                                    <button id="editcompetitionwinner2" type="button" class="btn btn-success btn-block">
+                                        Choose second winner
+                                    </button>
+                                    <div class="list-group" id="editcompetitionwinner2list" style = "display:none">
+                                    </div>
+
+                                    <label for="editcompetitionhole2" style = "margin-top:20px">
+                                            Second hole number:
+                                    </label>
+                                    <button id="editcompetitionhole2" type="button"  class="btn btn-success btn-block">
+                                        Choose second Hole
+                                    </button>
+                                    <div class="list-group" id="editcompetitionhole2list" style = "display:none">
+                                    </div>      
+                                </div>
+                                
                                 <button id="editcompetitionsubmitbtn" type="button" style = "margin-top:20px" class="btn btn-primary btn-block">
                                     Apply changes
                                 </button>
@@ -1183,6 +1225,10 @@
             let competitionMemberSelected = false;
             let committeeMemberSelected = false
             let competitionEditMemberSelected = false;
+            let competitionFirstHoleSelected = false;
+            let competitionSecondHoleSelected = false;
+            let competitionFirstWinnerSelected = false;
+            let competitionSecondWinnerSelected = false;
             
             let committee = [];
             var socket = io(); 
@@ -1873,6 +1919,38 @@
                     competitionEditMemberSelected = true;
                     $("#editaddcompetitionmemberlist").slideToggle();
                 });
+                
+                $("#editcompetitionwinner1list").on("click", "a", function(event){
+                    let name = $(this).text();
+                    $("#editcompetitionwinner1").text(name);
+                    if($("#editcompetitionwinner1").text(name) !== "none")
+                        competitionFirstWinnerSelected = true;
+                    $("#editcompetitionwinner1list").slideToggle();
+                });      
+                
+                $("#editcompetitionwinner2list").on("click", "a", function(event){
+                    let name = $(this).text();
+                    $("#editcompetitionwinner2").text(name);
+                    if($("#editcompetitionwinner2").text(name) !== "none")
+                        competitionSecondWinnerSelected = true;
+                    $("#editcompetitionwinner2list").slideToggle();
+                });                
+                
+                $("#editcompetitionhole1list").on("click", "a", function(event){
+                    let name = $(this).text();
+                    $("#editcompetitionhole1").text(name);
+                    if($("#editcompetitionhole1").text(name) !== "none")
+                        competitionFirstHoleSelected = true;
+                    $("#editcompetitionhole1list").slideToggle();
+                });            
+                
+                $("#editcompetitionhole2list").on("click", "a", function(event){
+                    let name = $(this).text();
+                    $("#editcompetitionhole2").text(name);
+                    if($("#editcompetitionhole2").text(name) !== "none")
+                        competitionSecondHoleSelected = true;
+                    $("#editcompetitionhole2list").slideToggle();
+                });             
              
                 $("#editcommitteeaddmembernamebtn").on("click", function(event){
                     $("#editcommitteeaddmembernamelist").slideToggle();
@@ -1881,6 +1959,22 @@
                 $("#addcompetitionmembernamebtn").on("click", function(event){
                     $("#addcompetitionmemberlist").slideToggle();
                 }); 
+
+                $("#editcompetitionhole1").on("click", function(event){
+                    $("#editcompetitionhole1list").slideToggle();
+                });                 
+                
+                $("#editcompetitionhole2").on("click", function(event){
+                    $("#editcompetitionhole2list").slideToggle();
+                });     
+                
+                $("#editcompetitionwinner2").on("click", function(event){
+                    $("#editcompetitionwinner2list").slideToggle();
+                });          
+                
+                $("#editcompetitionwinner1").on("click", function(event){
+                    $("#editcompetitionwinner1list").slideToggle();
+                });          
                 
                 $("#editaddcompetitionmembernamebtn").on("click", function(event){
                     $("#editaddcompetitionmemberlist").slideToggle();
@@ -2004,7 +2098,33 @@
                             if(Number(month) < 10){
                                 month = "0" + month;
                             }
-                            socket.emit('editCompetition',{eventname: $("#editcompetitioneventname").val(), competitionname: $("#editcompetitionname").val(), venue: $("#editcompetitionvenue").val(), month: month, year: date.getFullYear(), day: day, id: ALL_COMPETITION_RESULTS[activeEditCompetition]["id"], notes: $("#editcompetitionnotes").val()}); 
+                            
+                            let firsthole = "";
+                            let secondhole = "";   
+                            
+                            let firstwinner = "";
+                            let secondwinner = "";   
+                            
+                            if(competitionFirstHoleSelected && competitionFirstWinnerSelected){
+                                if($("#editcompetitionhole1").text() !== "none")
+                                    firsthole = $("#editcompetitionhole1").text();
+                                
+                                if($("#editcompetitionwinner1").text() !== "none")
+                                    firstwinner = $("#editcompetitionwinner1").text();
+                            }
+                            
+                            if(competitionSecondHoleSelected && competitionSecondWinnerSelected){
+                                
+                            if($("#editcompetitionhole2").text() !== "none")
+                                secondhole = $("#editcompetitionhole2").text();
+                                
+                            if($("#editcompetitionwinner2").text() !== "none")
+                                secondwinner = $("#editcompetitionwinner2").text();
+                            }
+                            
+                            
+                            
+                            socket.emit('editCompetition',{eventname: $("#editcompetitioneventname").val(), competitionname: $("#editcompetitionname").val(), venue: $("#editcompetitionvenue").val(), month: month, year: date.getFullYear(), day: day, id: ALL_COMPETITION_RESULTS[activeEditCompetition]["id"], notes: $("#editcompetitionnotes").val(), firsthole: firsthole, firstwinner: firstwinner, secondhole: secondhole, secondwinner: secondwinner}); 
                         }
                     } else if(($(this).attr('id')) == "editcompetitiondeletebtn"){
                         if(activeEditCompetition >= 0){
@@ -2190,6 +2310,10 @@
                         ALL_COMPETITION_RESULTS[i]["month"] = competition.month;
                         ALL_COMPETITION_RESULTS[i]["day"] = competition.day;
                         ALL_COMPETITION_RESULTS[i]["notes"] = competition.notes;
+                        ALL_COMPETITION_RESULTS[i]["firsthole"] = competition.firsthole;
+                        ALL_COMPETITION_RESULTS[i]["firstwinner"] = competition.firstwinner;
+                        ALL_COMPETITION_RESULTS[i]["secondhole"] = competition.secondhole;
+                        ALL_COMPETITION_RESULTS[i]["secondwinner"] = competition.secondwinner;
                     }
                 }
             }              
@@ -2472,7 +2596,12 @@
                     if(alphanumeric($("#editcompetitionname").val(), true) && $("#editcompetitionname").val().length > 0 ){
                         if(alphanumeric($("#editcompetitionvenue").val(), true) && $("#editcompetitionvenue").val().length > 0 ){
                             if($("#editnewcompetitiondate").val().length > 0){
-                                return true;
+                                if($("#editcompetitionhole1").text() !== $("#editcompetitionhole2").text()){
+                                    return true;
+                                } else{
+                                    bootbox.alert({message:"First hole and second hole cannot be the same number.", backdrop: true});
+                                return false;
+                                }
                             } else{
                                 bootbox.alert({message:"You need to choose competition date.", backdrop: true});
                                 return false;
@@ -2679,6 +2808,19 @@
             
             function updateaditCompetitionMemberList(){
                 $('#editaddcompetitionmemberlist').empty();    
+                $('#editcompetitionwinner1list').empty();
+                $('#editcompetitionwinner2list').empty();
+                
+                $('#editcompetitionhole1list').empty();
+                $('#editcompetitionhole2list').empty();
+                
+                for(let i = 1; i < 19; i++){
+                     $('#editcompetitionhole1list').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+i+'" >'+i+'</a>');   
+                     $('#editcompetitionhole2list').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+i+'" >'+i+'</a>');   
+                }
+                
+                $('#editcompetitionhole1list').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="none" >none</a>');   
+                     $('#editcompetitionhole2list').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="none" >none</a>');  
                 
                 arr =[];
                 
@@ -2688,9 +2830,17 @@
                 
                 for(let i =0, length = MEMBERS.length; i < length; i++){
                     if(($.inArray(MEMBERS[i]["name"], arr)) == -1){
-                       $('#editaddcompetitionmemberlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+i+'" >'+MEMBERS[i]["name"]+'</a>');
+                       $('#editaddcompetitionmemberlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+i+'" >'+MEMBERS[i]["name"]+'</a>');  
+                    } else{
+                        $('#editcompetitionwinner1list').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+i+'" >'+MEMBERS[i]["name"]+'</a>');   
+                        
+                       $('#editcompetitionwinner2list').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+i+'" >'+MEMBERS[i]["name"]+'</a>');   
                     }
                 }
+                
+                $('#editcompetitionwinner1list').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="none" >none</a>');   
+                        
+                $('#editcompetitionwinner2list').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="none" >none</a>');   
             }
             
             function updateMemberPanels(i){
@@ -2720,6 +2870,7 @@
             function updateCompetitionTables(idx){
                 $('#competitionresultsinfotable').find('tbody').empty();
                 $('#competitionresultsscoretable').find('tbody').empty();
+                $('#competitionnearestthepintable').find('tbody').empty();
                 
                 if(idx > -1){
                     let month = Number(ALL_COMPETITION_RESULTS[idx]["month"]);
@@ -2730,6 +2881,16 @@
                     }
                     
                     $('#competitionresultsinfotable').find('tbody').append('<tr><td>Event:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["eventname"]+'</td></tr>'+'<tr><td>Competition:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["competitionname"]+'</td></tr>'+'<tr><td>Venue:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["venue"]+'</td></tr>'+'<tr><td>Date of Competition:</td><td align="center">'+day+'/'+month+'/'+ALL_COMPETITION_RESULTS[idx]["year"]+'</td></tr>'+'<tr><td>Notes:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["notes"]+'</td></tr>');
+                    
+                    
+                    
+                    if(ALL_COMPETITION_RESULTS[idx]["firsthole"] && ALL_COMPETITION_RESULTS[idx]["firstwinner"]){
+                        $('#competitionnearestthepintable').find('tbody').append('<tr><td align="center">'+ALL_COMPETITION_RESULTS[idx]["firsthole"]+'</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["firstwinner"]+'</td></tr>');
+                    }
+                    
+                    if(ALL_COMPETITION_RESULTS[idx]["secondhole"] && ALL_COMPETITION_RESULTS[idx]["secondwinner"]){
+                        $('#competitionnearestthepintable').find('tbody').append('<tr><td align="center">'+ALL_COMPETITION_RESULTS[idx]["secondhole"]+'</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["secondwinner"]+'</td></tr>');
+                    }
                     
                     let competitionResults = [];
                     let index = 0;
@@ -2863,7 +3024,41 @@
                     if(!ALL_COMPETITION_RESULTS[idx]["notes"]){
                         ALL_COMPETITION_RESULTS[idx]["notes"] = "";
                     }
-                        
+                    
+                    if(ALL_COMPETITION_RESULTS[idx]["firsthole"] && ALL_COMPETITION_RESULTS[idx]["firsthole"]!==""){
+                        $("#editcompetitionhole1").text(ALL_COMPETITION_RESULTS[idx]["firsthole"]);
+                        competitionFirstHoleSelected = true;
+                    } else{
+                        $("#editcompetitionhole1").text("Choose first Hole");
+                        competitionFirstHoleSelected = false;
+                    }
+
+                    if(ALL_COMPETITION_RESULTS[idx]["secondhole"] && ALL_COMPETITION_RESULTS[idx]["secondhole"]!==""){
+                        $("#editcompetitionhole2").text(ALL_COMPETITION_RESULTS[idx]["secondhole"]);
+                        competitionSecondHoleSelected = true;
+                    } else{
+                        $("#editcompetitionhole2").text("Choose first Hole");
+                        competitionSecondHoleSelected = false;
+                    }  
+                    
+                    if(ALL_COMPETITION_RESULTS[idx]["secondwinner"] && ALL_COMPETITION_RESULTS[idx]["secondwinner"]!==""){
+                        $("#editcompetitionwinner2").text(ALL_COMPETITION_RESULTS[idx]["secondwinner"]);
+                        competitionSecondWinnerSelected = true;
+                    } else{
+                        $("#editcompetitionwinner2").text("Choose first Hole");
+                        competitionSecondWinnerSelected = false;
+                    }                    
+
+                    if(ALL_COMPETITION_RESULTS[idx]["firstwinner"] && ALL_COMPETITION_RESULTS[idx]["firstwinner"]!==""){
+                        $("#editcompetitionwinner1").text(ALL_COMPETITION_RESULTS[idx]["firstwinner"]);
+                        competitionFirstWinnerSelected = true;
+                    } else{
+                        $("#editcompetitionwinner1").text("Choose first Hole");
+                        competitionFirstWinnerSelected = false;
+                    }                    
+                    
+                    
+                    
                     $('#editcompetitionnotes').val(ALL_COMPETITION_RESULTS[idx]["notes"]);
                     
                    /* $('#editcompetitionresultsinfotable').find('tbody').append('<tr><td>Event:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["eventname"]+'</td></tr>'+'<tr><td>Competition:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["competitionname"]+'</td></tr>'+'<tr><td>Venue:</td><td align="center">'+ALL_COMPETITION_RESULTS[idx]["venue"]+'</td></tr>'+'<tr><td>Date of Competition:</td><td align="center">'+day+'/'+month+'/'+ALL_COMPETITION_RESULTS[idx]["year"]+'</td></tr>');*/

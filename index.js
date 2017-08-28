@@ -180,7 +180,7 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
     });     
     
     socket.on('editCompetition', function(data){     
-         db.competition.update({id: data.id},{$set:{eventname: data.eventname, competitionname: data.competitionname, venue: data.venue, day: data.day, month: data.month, year: data.year, notes: data.notes}}, { "multi" : true });  
+         db.competition.update({id: data.id},{$set:{eventname: data.eventname, competitionname: data.competitionname, venue: data.venue, day: data.day, month: data.month, year: data.year, notes: data.notes, firsthole: data.firsthole, firstwinner: data.firstwinner, secondhole: data.secondhole, secondwinner: data.secondwinner}}, { "multi" : true });  
          socket.emit('competitionEdited',data);  // sent response to client with the same data
      });        
     
