@@ -216,6 +216,11 @@
                                     Player of the Year
                                 </a>
                             </li>
+                            <li class="list-group-item" id = "rollofhonour">
+                                <a class="notop" href="javascript:void(0)">
+                                    Roll of Honour
+                                </a>
+                            </li>
                         <!-- Menu with general access ends -->
                         </ul>
                         
@@ -402,6 +407,27 @@
                             </div>
                         </div>
                         <!-- Competition results panel definition ends -->
+                        
+                        <!-- Roll of Honour panel definition begins -->
+                        <div id="rollofhonourcontent" style="display:none">
+                            <div class="well  text-center" >
+                                <img class = "img-rounded" src="img/playeroftheyear.png" style="display:inline-block"  alt="" align="left" > 
+                                <h1 style="display:inline-block">Roll of Honour</h1>
+                                <img class = "img-rounded" style="display:inline-block" src="img/playeroftheyear.png" alt=""  align="right" >
+                            </div>
+            
+                            <div class="text-center" align="center" >
+                                <img class = "img-rounded" src="img/rollofhonour.png" style=""  alt="" align="center" > 
+                            </div>
+                            
+                            <div class = "text-center well">
+                                <button type="button" class="btn btn-primary btn-arrow-left" style = "margin-bottom: 20px" id = "rollofhonourprevyearbtn">Prev</button>
+                                <button type="button" class="btn btn-primary" style = "margin-left: 20px; margin-right: 20px; margin-bottom: 20px" id = "rollofhonourlistbtn">2017</button>
+                                <button type="button" class="btn btn-primary btn-arrow-right" style = "margin-bottom: 20px" id = "rollofhonournextyearbtn">Next</button>
+                            </div>
+                            
+                        </div>
+                        <!-- Roll of Honour panel definition ends -->                        
                         
                         <!-- Player of the Year panel definition begins -->
                         <div id="playeroftheyearcontent" style="display:none">
@@ -1037,7 +1063,12 @@
                 $("#glofmenu").on("click", "#playeroftheyear", function(event){;  // show committee 
                      hideAll();
                      $("#playeroftheyearcontent").show();
-                });                
+                });             
+                
+                $("#glofmenu").on("click", "#rollofhonour", function(event){;  // show committee 
+                     hideAll();
+                     $("#rollofhonourcontent").show();
+                });      
                 
                 $("#glofmenu").on("click", "#membershiplisting", function(event){   // show members list
                     hideAll();
@@ -1194,6 +1225,7 @@
                     $("#editsocietyevents").hide();
                     $("#addcompetition").hide();
                     $("#editcompetition").hide();
+                    $("#rollofhonourcontent").hide();
                     clearSecureData();
                 }
                 
