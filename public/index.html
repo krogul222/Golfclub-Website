@@ -208,7 +208,7 @@
                             </li>
                             <li class="list-group-item" id = "competitionresults">
                                 <a class="notop" href="javascript:void(0)">
-                                    Competition Results
+                                    Scoreboard
                                 </a>
                             </li>
                             <li class="list-group-item" id = "playeroftheyear">
@@ -248,12 +248,12 @@
                             </li>
                             <li class="list-group-item" id="addcompetitionresultsLink">
                                 <a class="notop" href="javascript:void(0)">
-                                    Add Competition Result
+                                    Add Scoreboard Result
                                 </a>
                             </li>
                             <li class="list-group-item" id="editcompetitionresultsLink">
                                 <a class="notop" href="javascript:void(0)">
-                                    Edit Competition Results
+                                    Edit Scoreboard Results
                                 </a>
                             </li>
                         <!-- Menu with ADMIN access ends -->
@@ -352,7 +352,7 @@
                             <div class="well  text-center" >
                                 <div>
                                     <img class = "img-rounded" src="img/competitionresultslisting.png" style="display:inline-block" alt="" align="left"> 
-                                    <h1 style="display:inline-block">Competition results</h1>
+                                    <h1 style="display:inline-block">Scoreboard</h1>
                                     <img class = "img-rounded" style="display:inline-block" src="img/competitionresultslisting.png" alt="" align="right">
                                 </div>
                             </div>
@@ -419,6 +419,13 @@
                                     </tbody>
                                 </table>    
                             </div>
+                            
+                            <div class = "text-center well">
+                                <button type="button" class="btn btn-primary btn-arrow-left" style = "margin-bottom: 20px" id = "playeroftheyearprevyearbtn">Prev</button>
+                                <button type="button" class="btn btn-primary" style = "margin-left: 20px; margin-right: 20px; margin-bottom: 20px" id = "playeroftheyearlistbtn">2017</button>
+                                <button type="button" class="btn btn-primary btn-arrow-right" style = "margin-bottom: 20px" id = "playeroftheyearnextyearbtn">Next</button>
+                            </div>
+                            
                         </div>
                         <!-- Player of the Year panel definition ends -->
                         
@@ -747,12 +754,12 @@
                         <!-- Add competition result panel definition begins -->
                         <div id="addcompetition" style="display:none">
                             <div class="well  text-center" >  
-                                <h1>Add Competition Result</h1> 
+                                <h1>Add Scoreboard Result</h1> 
                             </div>
 
                             <div class = "well">
                                 <button id="addcompetitionsubmitbtn" type="button" style = "margin-top:20px" class="btn btn-primary btn-block">
-                                    Submit Competition Result
+                                    Submit Scoreboard Result
                                 </button>
                             </div>
                             
@@ -843,12 +850,12 @@
                         <!-- Edit competition result panel definition begins -->
                         <div id="editcompetition" style="display:none">
                             <div class="well  text-center" >  
-                                <h1>Edit Competition Results</h1> 
+                                <h1>Edit Scoreboard Results</h1> 
                             </div>
 
                             <div class = "well">
                                 <button id="editcompetitiondeletebtn" type="button" style = "margin-top:20px" class="btn btn-danger btn-block">
-                                    Delete Competition
+                                    Delete Scoreboard Result
                                 </button>
                             </div>
                             
@@ -1980,6 +1987,20 @@
                     $("#editaddcompetitionmemberlist").slideToggle();
                 }); 
                 
+                $("#playeroftheyearnextyearbtn").on("click", function(event){
+                    if(playerYear < ALL_COMPETITION_RESULTS[getLastCompetitionIndex()]["year"]){
+                        playerYear++;
+                        updatePlayerOfTheYearTable(playerYear);
+                    }
+                }); 
+                
+                $("#playeroftheyearprevyearbtn").on("click", function(event){
+                    if(playerYear > ALL_COMPETITION_RESULTS[getOldestCompetitionIndex()]["year"]){
+                        playerYear--;
+                        updatePlayerOfTheYearTable(playerYear);
+                    }
+                });
+                
                 $("#competitionlistnextyearbtn").on("click", function(event){
                     if(competitionYear < ALL_COMPETITION_RESULTS[getLastCompetitionIndex()]["year"]){
                         competitionYear++;
@@ -2913,8 +2934,13 @@
             }
             
             function updatePlayerOfTheYearTable(year){
+                
+                $('#playeroftheyearlistbtn').text(year);
+                
                 $('#playeroftheyeartable').find('tbody').empty();
                 $('#playeroftheyeartable').find('thead').empty();
+                
+                
                 
                 let arr = getCompetitionIndexList();
                 
