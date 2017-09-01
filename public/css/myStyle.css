@@ -161,6 +161,15 @@ margin: auto;
 /* -----------------*/
 
 
+.badgetext{
+  width:200px;
+  padding:20px;
+  min-height:100px;
+  line-height:5px;
+  margin:10px;
+  align-content:center;
+}
+
 /*
 .score {
   width: 100%;
