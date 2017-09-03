@@ -3111,10 +3111,10 @@
                 
                 winners.sort(compareMonth);
                 
-                for(let winner in winners){
-                    $("#badgename"+i).text(winner.membername);
-                    $("#badgevenue"+i).text(winner.venue);
-                    $("#badgemonth"+i).text(months[winner.month-1]);
+                for(let i=1, length = winners.length; i < (length+1); i++){
+                    $("#badgename"+i).text(winners[i-1].membername);
+                    $("#badgevenue"+i).text(winners[i-1].venue);
+                    $("#badgemonth"+i).text(months[winners[i-1].month-1]);
                 }
             }
             
