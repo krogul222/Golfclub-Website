@@ -445,6 +445,8 @@
                             <div class="text-center" align="center" style="position:relative">
                                 <img class = "img-rounded" src="img/rollofhonour.png" style=""  alt="" align="center" > 
                                 
+
+                                
                                 <div id = "badge3" style="position:absolute; top: 50px; left: 425px; z-index: 1;display:none">
                                     <img  src="img/badge.png" alt="">
                                     <div style="position:relative">
@@ -525,13 +527,22 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id = "badge8" style="position:absolute; top: 520px; left: 345px; z-index: 1;display:none ">
+                                <div id = "badge8" style="position:absolute; top: 520px; left: 355px; z-index: 1;display:none ">
                                     <img  src="img/badge.png"   alt="">
                                     <div style="position:relative">
                                         <div style="position:absolute; top: -130px; left: -31px; z-index: 1;" class="badgetext">
                                             <p id = "badgename8" style="color:yellow;font-size: 12px;margin-bottom: 10px;">John Hart</p>
                                             <p id = "badgevenue8" style="color:yellow;font-size: 12px;margin-bottom: 10px;" >Dunkenfield</p>
                                             <p id = "badgemonth8" style="color:yellow;font-size: 12px;margin-bottom: 10px;" >June</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div id = "yearbadge" style="position:absolute; top: 400px; left: 387px; z-index: 1;">
+                                    <img  src="img/yearbadge.png" alt="">
+                                    <div style="position:relative">
+                                        <div style="position:absolute; top: -75px; left: -68px; z-index: 1;" class="badgetext">
+                                            <p id = "badgeyearname" style="color:yellow;font-size: 16px;margin-bottom: 10px;">2017</p>
                                         </div>
                                     </div>
                                 </div>
@@ -3119,6 +3130,7 @@
             function updateRollOfHonour(year){
                 
                 $("#rollofhonourlistbtn").text(year);
+                 $("#badgeyearname").text(year);
                 
                 let arr = getCompetitionIndexList();
                 
@@ -3546,7 +3558,10 @@
                 for(let i=0, length = SOCIETY_EVENTS.length; i < length; i++){
                     if(SOCIETY_EVENTS[i]['year'] == year){
                        if(currnentDate.getFullYear() <= SOCIETY_EVENTS[i]["year"]){
-                           if(currnentDate.getMonth() <= SOCIETY_EVENTS[i]["month"]){
+                           if(currnentDate.getMonth() < SOCIETY_EVENTS[i]["month"]){
+                                   $('#eventlist').append('<a class = "notop list-group-item text-center list-group-item-success" href="javascript:void(0)" id="'+i+'" >'+SOCIETY_EVENTS[i]["name"]+'</a>');
+                                   future = true;
+                           } else if(currnentDate.getMonth() == SOCIETY_EVENTS[i]["month"]){
                                if(currnentDate.getDate() <= SOCIETY_EVENTS[i]["day"]){
                                    $('#eventlist').append('<a class = "notop list-group-item text-center list-group-item-success" href="javascript:void(0)" id="'+i+'" >'+SOCIETY_EVENTS[i]["name"]+'</a>');
                                    future = true;
