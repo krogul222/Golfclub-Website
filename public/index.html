@@ -425,7 +425,7 @@
                             <div class="text-center" align="center" style="position:relative">
                                 <img class = "img-rounded" src="img/halloffame.png" style=""  alt="" align="center" >
                                 
-                                <div id = "halloffamelist" style="position:absolute; top: 175px; left: 335px; z-index: 1;">
+                                <div id = "halloffamelist" style="position:absolute; top: 175px; left: 325px; z-index: 1;">
                                 </div>
                             </div>
                         </div>
@@ -3191,7 +3191,7 @@
                 $("#halloffamelist").empty();
                 
                 for(let i = 0; i < hallOfFame.length; i++){
-                    $("#halloffamelist").append('<p style="color:yellow;font-size:16">'+hallOfFame[hallOfFame.length-1].year+"  "+hallOfFame[hallOfFame.length-1].name+"  "+hallOfFame[hallOfFame.length-1].score+" points</p>");
+                    $("#halloffamelist").append('<p style="color:yellow;font-size:16">'+hallOfFame[hallOfFame.length-1-i].year+"  "+hallOfFame[hallOfFame.length-1-i].name+"  "+hallOfFame[hallOfFame.length-1-i].score+" points</p>");
                 }
                 
                 updatePlayerOfTheYearTable(playerYear);
