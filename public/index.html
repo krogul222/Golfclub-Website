@@ -418,12 +418,15 @@
                         <div id="halloffamecontent" style="display:none">
                             <div class="well  text-center" >
                                 <img class = "img-rounded" src="img/playeroftheyear.png" style="display:inline-block"  alt="" align="left" > 
-                                <h1 style="display:inline-block">Roll of Honour</h1>
+                                <h1 style="display:inline-block">Hall of Fame</h1>
                                 <img class = "img-rounded" style="display:inline-block" src="img/playeroftheyear.png" alt=""  align="right" >
                             </div>
                             
                             <div class="text-center" align="center" style="position:relative">
                                 <img class = "img-rounded" src="img/halloffame.png" style=""  alt="" align="center" >
+                                
+                                <div id = "halloffamelist" style="position:absolute; top: 175px; left: 345px; z-index: 1;">
+                                </div>
                             </div>
                         </div>
                         
@@ -1369,6 +1372,7 @@
             const COMPETITION_RESULT = [];
             let EDIT_COMPETITION_RESULT = [];
             const ALL_COMPETITION_RESULTS = [];
+            let hallOfFame = [];
             let competitionYear = 0;
             let playerYear = 0;
             let rollYear;
@@ -1790,7 +1794,7 @@
                     
                     updatePlayerOfTheYearTable(playerYear);
                     updateRollOfHonour(rollYear);
-                    
+                    updateHallOfFame();
                 });
             });
             
@@ -3173,6 +3177,26 @@
                 }
             }
             
+            function updateHallOfFame(){
+                
+                let  start = ALL_COMPETITION_RESULTS[getOldestCompetitionIndex()]["year"];
+                let  end = ALL_COMPETITION_RESULTS[getLastCompetitionIndex()]["year"];
+                
+                hallOfFame = [];
+                
+                for(let i = start; i <= end; i++ ){
+                    updatePlayerOfTheYearTable(i);
+                }
+                
+                $("#halloffamelist").empty();
+                
+                for(let i = 0; i < hallOfFame.length; i++){
+                    $("#halloffamelist").append('<p style="color:yellow;font-size:16">'+hallOfFame[i].year+"  "+hallOfFame[i].name+"  "+hallOfFame[i].score+" points</p>");
+                }
+                
+                updatePlayerOfTheYearTable(playerYear);
+            }
+            
             function updatePlayerOfTheYearTable(year){
                 
                 $('#playeroftheyearlistbtn').text(year);
@@ -3265,7 +3289,7 @@
                         } 
                     }
                     
-                
+                hallOfFame.push({year: year, name: MEMBERS[totalResults[0]["index"]]["name"], score: totalResults[0].score});
                 
                 for(let i=0, length = MEMBERS.length; i < length; i++){
                 
