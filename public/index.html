@@ -425,7 +425,11 @@
                             <div class="text-center" align="center" style="position:relative">
                                 <img class = "img-rounded" src="img/halloffame.png" style=""  alt="" align="center" >
                                 
-                                <div id = "halloffamelist" style="position:absolute; top: 175px; left: 325px; z-index: 1;">
+                                <div  style="position:absolute; top: 175px; left: 300px; z-index: 1;">
+                                    <table id = "halloffamelist" style="border:none">
+                                        <tbody>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -3188,10 +3192,10 @@
                     updatePlayerOfTheYearTable(i);
                 }
                 
-                $("#halloffamelist").empty();
-                
+                $("#halloffamelist").find('tbody').empty();
+                $("#halloffamelist").find('tbody').append()
                 for(let i = 0; i < hallOfFame.length; i++){
-                    $("#halloffamelist").append('<p style="color:yellow;font-size:16">'+hallOfFame[hallOfFame.length-1-i].year+"  "+hallOfFame[hallOfFame.length-1-i].name+"  "+hallOfFame[hallOfFame.length-1-i].score+" points</p>");
+                    $("#halloffamelist").find('tbody').append('<tr style="color:yellow;font-size:16"><td style="width: 50px">'+hallOfFame[i].year+'</td><td style="width: 100px">'+hallOfFame[i].name+'</td><td style="width: 100px">'+hallOfFame[i].score+" points</td></tr>");
                 }
                 
                 updatePlayerOfTheYearTable(playerYear);
