@@ -2113,6 +2113,20 @@
                 $("#editaddcompetitionmembernamebtn").on("click", function(event){
                     $("#editaddcompetitionmemberlist").slideToggle();
                 }); 
+
+                $("#rollofhonournextyearbtn").on("click", function(event){
+                    if(rollYear < ALL_COMPETITION_RESULTS[getLastCompetitionIndex()]["year"]){
+                        rollYear++;
+                        updateRollOfHonour(rollYear);
+                    }
+                }); 
+                
+                $("#rollofhonourprevyearbtn").on("click", function(event){
+                    if(rollYear > ALL_COMPETITION_RESULTS[getOldestCompetitionIndex()]["year"]){
+                        rollYear--;
+                        updateRollOfHonour(rollYear);
+                    }
+                });                
                 
                 $("#playeroftheyearnextyearbtn").on("click", function(event){
                     if(playerYear < ALL_COMPETITION_RESULTS[getLastCompetitionIndex()]["year"]){
