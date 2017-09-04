@@ -1901,7 +1901,29 @@
                     
                    if(user["data"].admin === "true"){
                        $("#adminpanel").show();
-                   }    
+                       
+                            $("#addmemberLink").show();
+                           $("#editmembersLink").show();
+                           $("#editcommitteeLink").show();
+                           $("#createsocietyeventLink").show();
+                           $("#editsocietyeventsLink").show();
+                           $("#addcompetitionresultsLink").show();
+                           $("#editcompetitionresultsLink").show();
+                   }  else{
+                       if(user.loggedin){
+                           $("#adminpanel").show();
+                           
+                           $("#addmemberLink").hide();
+                           $("#editmembersLink").hide();
+                           $("#editcommitteeLink").hide();
+                           $("#createsocietyeventLink").show();
+                           $("#editsocietyeventsLink").hide();
+                           $("#addcompetitionresultsLink").hide();
+                           $("#editcompetitionresultsLink").hide();
+                           
+                                 
+                       }
+                   }  
                 }
             });
             
