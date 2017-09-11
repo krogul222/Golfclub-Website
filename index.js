@@ -155,6 +155,11 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
    
     socket.on('addSingleMemberCompetitionResult', function(data){
         db.competition.insert(data); 
+        
+        if(data.handicap !== data.newhandicap){
+            db.account.update({name: data.member.name},{$set:{handicapExact: data.newhandicap}});  // update name and handicap
+         }
+        
         socket.emit('singleMemberCompetitionResultAdded',data);
     });
     
@@ -193,6 +198,11 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
     socket.on('editMemberCompetitionResult', function(data){     // member data was sent to update existing member
          db.competition.update({id: data.id, member: data.member},{$set:{handicap: data.handicap, netscore: data.netscore}});  // update netscore and handicap
          console.log(data["member"]["name"]);
+        
+         if(data.handicap !== data.newhandicap){
+            db.account.update({name: data.member.name},{$set:{handicapExact: data.newhandicap}});  // update name and handicap
+         }
+        
          socket.emit('memberCompetitionResultEdited',data);  // sent response to client with the same data
      });    
 

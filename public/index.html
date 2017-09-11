@@ -1132,6 +1132,13 @@
                                     <input type="text" class="form-control" id="editcompetitionmemberhandicap" placeholder="" required>
                                 </div>
                                 
+                                <div class="form-group" style = "margin-top:20px">
+                                    <label for="editcompetitionmembernewhandicap">
+                                        Member new handicap:
+                                    </label>
+                                    <input type="text" class="form-control" id="editcompetitionmembernewhandicap" placeholder="" required>
+                                </div>
+                                
                                 <div class="form-group">
                                     <label for="editcompetitionmembernetscore">
                                         Member net score:
@@ -1434,6 +1441,12 @@
 
             
             socket.on('singleMemberCompetitionResultAdded', function(data){
+                
+                if(data.newhandicap !== data.handicap){
+                    updateMemberHandicap(data.member.name, data.newhandicap);
+                    updateMemberList();
+                }
+                
                 ALL_COMPETITION_RESULTS.push(data);
                 COMPETITION_RESULT.length = 0;
                 updateCompetitionMemberList();
@@ -1571,6 +1584,10 @@
             });         
             
             socket.on('memberCompetitionResultEdited', function(data){
+                if(data.handicap !== data.newhandicap){
+                    updateMemberHandicap(data.member.name, data.newhandicap);
+                    updateMemberList();
+                }
                 updateMemberCompetitionResult(data);
                 if(activeEditCompetition == activeCompetition)
                     updateCompetitionTables(activeCompetition);
@@ -1981,14 +1998,15 @@
                 $("#editcompetitionmemberresultbtn").on("click", function(event){
                     if(checkEditMemberCompetitionResultFormValidation()){
                         
-                        socket.emit('addSingleMemberCompetitionResult',{handicap: $("#editcompetitionmemberhandicap").val(), netscore: $("#editcompetitionmembernetscore").val(), id: ALL_COMPETITION_RESULTS[activeEditCompetition].id, member: getMemberByName($("#editaddcompetitionmembernamebtn").text()), eventname: ALL_COMPETITION_RESULTS[activeEditCompetition]["eventname"],competitionname: ALL_COMPETITION_RESULTS[activeEditCompetition]["competitionname"],venue: ALL_COMPETITION_RESULTS[activeEditCompetition]["venue"], year: ALL_COMPETITION_RESULTS[activeEditCompetition]["year"], month: ALL_COMPETITION_RESULTS[activeEditCompetition]["month"], day: ALL_COMPETITION_RESULTS[activeEditCompetition]["day"]});
+                        socket.emit('addSingleMemberCompetitionResult',{handicap: $("#editcompetitionmemberhandicap").val(), newhandicap: $("#editcompetitionmembernewhandicap").val(), netscore: $("#editcompetitionmembernetscore").val(), id: ALL_COMPETITION_RESULTS[activeEditCompetition].id, member: getMemberByName($("#editaddcompetitionmembernamebtn").text()), eventname: ALL_COMPETITION_RESULTS[activeEditCompetition]["eventname"],competitionname: ALL_COMPETITION_RESULTS[activeEditCompetition]["competitionname"],venue: ALL_COMPETITION_RESULTS[activeEditCompetition]["venue"], year: ALL_COMPETITION_RESULTS[activeEditCompetition]["year"], month: ALL_COMPETITION_RESULTS[activeEditCompetition]["month"], day: ALL_COMPETITION_RESULTS[activeEditCompetition]["day"]});
                         
                          
-                        EDIT_COMPETITION_RESULT.push({member: getMemberByName($("#editaddcompetitionmembernamebtn").text()), handicap: $("#editcompetitionmemberhandicap").val(), netscore: $("#editcompetitionmembernetscore").val()});
+                        EDIT_COMPETITION_RESULT.push({member: getMemberByName($("#editaddcompetitionmembernamebtn").text()), handicap: $("#editcompetitionmemberhandicap").val(), newhandicap: $("#editcompetitionmembernewhandicap").val(), netscore: $("#editcompetitionmembernetscore").val()});
                         
                         competitionEditMemberSelected = false;
                         $("#editaddcompetitionmembernamebtn").text("Choose Member");
                         $("#editcompetitionmemberhandicap").val("");
+                        $("#editcompetitionmembernewhandicap").val("");
                         $("#editcompetitionmembernetscore").val("");
                         
                         //updateaditCompetitionTables(activeEditCompetition);
@@ -2006,7 +2024,9 @@
 
                         $("#competitionresult"+i).append('<label for="editmembernetscorecompetitionresult" style="margin-top:20px">Member net score:</label><input type="text" class="form-control list-group-item" id="editmembernetscorecompetitionresult" placeholder="'+EDIT_COMPETITION_RESULT[last]["netscore"]+'" value="'+EDIT_COMPETITION_RESULT[last]["netscore"]+'">');
 
-                        $("#competitionresult"+i).append('<label for="editmemberhandicapcompetitionresult" style="margin-top:20px">Member handicap:</label><input type="text" class="form-control list-group-item" id="editmemberhandicapcompetitionresult" placeholder="'+EDIT_COMPETITION_RESULT[last]["handicap"]+'"  value="'+EDIT_COMPETITION_RESULT[last]["handicap"]+'">');
+                        $("#competitionresult"+i).append('<label for="editmemberhandicapcompetitionresult" style="margin-top:20px">Member handicap:</label><input type="text" class="form-control list-group-item" id="editmemberhandicapcompetitionresult" placeholder="'+EDIT_COMPETITION_RESULT[last]["handicap"].toString()+'"  value="'+EDIT_COMPETITION_RESULT[last]["handicap"].toString()+'">');
+                        
+                        $("#competitionresult"+i).append('<label for="editmembernewhandicapcompetitionresult" style="margin-top:20px">Member new handicap:</label><input type="text" class="form-control list-group-item" id="editmembernewhandicapcompetitionresult" placeholder="'+getMemberHandicap(EDIT_COMPETITION_RESULT[last]["member"]["name"], true)+'"  value="'+getMemberHandicap(EDIT_COMPETITION_RESULT[last]["member"]["name"], true)+'">');
 
                         $("#competitionresult"+i).append('<button id="editmembercompetitionresult" type="button" style="margin-top:20px" class="btn btn-primary btn-block">Apply changes</button>');                        
                         
@@ -2143,6 +2163,7 @@
                     let name = $(this).text();
                     $("#editaddcompetitionmembernamebtn").text(name);
                     $("#editcompetitionmemberhandicap").val(getMemberHandicap(name));
+                    $("#editcompetitionmembernewhandicap").val(getMemberHandicap(name, true));
                     competitionEditMemberSelected = true;
                     $("#editaddcompetitionmemberlist").slideToggle();
                 });
@@ -2397,6 +2418,7 @@
                 $("#editcompetitionresultlist").on("click", "button", function(event){
                     let netscore = "";
                     let handicap = "";
+                    let newhandicap = "";
                      
                     $(this).parent().find('input').each(function(){
                         switch($(this).attr('id')){
@@ -2406,6 +2428,9 @@
                             case "editmemberhandicapcompetitionresult":
                                 handicap = $(this).val();
                             break;
+                            case "editmembernewhandicapcompetitionresult":
+                                newhandicap = $(this).val();
+                            break;
                         }    
                     });
                      
@@ -2413,7 +2438,7 @@
                     
                     if(($(this).attr('id')) == "editmembercompetitionresult"){
                         if(checkEditSingleMemberCompetitionResultFormValidation($(this))){
-                            socket.emit('editMemberCompetitionResult',{netscore: netscore, handicap: handicap, id: ALL_COMPETITION_RESULTS[activeEditCompetition].id, member: getMemberByName($(this).parent().data("member"))});
+                            socket.emit('editMemberCompetitionResult',{netscore: netscore, handicap: handicap, newhandicap: newhandicap, id: ALL_COMPETITION_RESULTS[activeEditCompetition].id, member: getMemberByName($(this).parent().data("member"))});
                         }
                     } else{
                         if(EDIT_COMPETITION_RESULT.length > 1){    
@@ -2597,6 +2622,16 @@
                     if(MEMBERS[i]["username"] === member.username){
                         MEMBERS[i]["name"] = member.name;
                         MEMBERS[i]["handicapExact"] = member.handicapExact;
+                        break;
+                    }
+                }
+            }
+            
+            function updateMemberHandicap(membername, handicap){   
+                for(let i = 0, length = MEMBERS.length; i < length; i++){
+                    if(MEMBERS[i]["name"] === membername){
+                        //MEMBERS[i]["name"] = member.name;
+                        MEMBERS[i]["handicapExact"] = handicap;
                         break;
                     }
                 }
@@ -3492,7 +3527,9 @@
 
                         $("#competitionresult"+i).append('<label for="editmembernetscorecompetitionresult" style="margin-top:20px">Member net score:</label><input type="text" class="form-control list-group-item" id="editmembernetscorecompetitionresult" placeholder="'+competitionResults[i]["netscore"]+'" value="'+competitionResults[i]["netscore"]+'">');
 
-                        $("#competitionresult"+i).append('<label for="editmemberhandicapcompetitionresult" style="margin-top:20px">Member handicap:</label><input type="text" class="form-control list-group-item" id="editmemberhandicapcompetitionresult" placeholder="'+competitionResults[i]["handicap"]+'"  value="'+competitionResults[i]["handicap"]+'">');
+                        $("#competitionresult"+i).append('<label for="editmemberhandicapcompetitionresult" style="margin-top:20px">Member handicap:</label><input type="text" class="form-control list-group-item" id="editmemberhandicapcompetitionresult" placeholder="'+competitionResults[i]["handicap"].toString()+'"  value="'+competitionResults[i]["handicap"].toString()+'">');
+                        
+                        $("#competitionresult"+i).append('<label for="editmembernewhandicapcompetitionresult" style="margin-top:20px">Member new handicap:</label><input type="text" class="form-control list-group-item" id="editmembernewhandicapcompetitionresult" placeholder="'+getMemberHandicap(competitionResults[i]["member"]["name"], true)+'"  value="'+getMemberHandicap(competitionResults[i]["member"]["name"], true)+'">');
 
                         $("#competitionresult"+i).append('<button id="editmembercompetitionresult" type="button" style="margin-top:20px" class="btn btn-primary btn-block">Apply changes</button>');
                     }
@@ -3657,10 +3694,15 @@
                 $('#editeventlistbtn').text(year);
             }
             
-            function getMemberHandicap(membername){
+            function getMemberHandicap(membername, noRoundHandicap){
                 for(let i =0, length = MEMBERS.length; i < length; i++){     
                     if(MEMBERS[i]["name"] == membername){
-                        return Math.round(MEMBERS[i]["handicapExact"]);
+                        if(noRoundHandicap === true){
+                            return MEMBERS[i]["handicapExact"];
+                        } else{
+                            return Math.round(MEMBERS[i]["handicapExact"]);
+                        }
+                        
                     }
                 }
                 
