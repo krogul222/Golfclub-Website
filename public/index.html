@@ -3258,7 +3258,7 @@
                     if($.inArray(ALL_COMPETITION_RESULTS[i]["venue"],yearCompetitions) > -1){
                         resultArr[ALL_COMPETITION_RESULTS[i]["venue"]][ALL_COMPETITION_RESULTS[i]["member"]["name"]] = ALL_COMPETITION_RESULTS[i]["netscore"];
                         
-                        competition[ALL_COMPETITION_RESULTS[i]["venue"]].push({score : ALL_COMPETITION_RESULTS[i]["netscore"], membername: ALL_COMPETITION_RESULTS[i]["member"]["name"], month: ALL_COMPETITION_RESULTS[i]["month"]});
+                        competition[ALL_COMPETITION_RESULTS[i]["venue"]].push({score : ALL_COMPETITION_RESULTS[i]["netscore"], win : ALL_COMPETITION_RESULTS[i]["win"], membername: ALL_COMPETITION_RESULTS[i]["member"]["name"], month: ALL_COMPETITION_RESULTS[i]["month"]});
                     }
                     
                 }                
@@ -3278,6 +3278,7 @@
                 for(let i=1, length = yearCompetitions.length; i < (length+1); i++){
                     if(i<10){
                         competition[yearCompetitions[i-1]].sort(compareTotalScore);
+                        competition[yearCompetitions[i-1]] = updateWinner(competition[yearCompetitions[i-1]]);
                         badge = "#badge"+i;
                         $(badge).show();
                         
