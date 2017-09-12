@@ -1,7 +1,7 @@
 var mongojs = require('mongojs');
 var express = require('express');
-var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition']);
-//var db = mongojs('localhost:27017/golf', ['account','event','competition']);      // connect to database
+//var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition']);
+var db = mongojs('localhost:27017/golf', ['account','event','competition']);      // connect to database
 
 //db.account.remove();
 /*
@@ -215,6 +215,13 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
         
          socket.emit('memberCompetitionResultEdited',data);  // sent response to client with the same data
      });    
+    
+    socket.on('forceWin', function(data){     // member data was sent to update existing member
+         db.competition.update({id: data.id},{$set:{win: false}}, { "multi" : true });  // update netscore and handicap
+         console.log(data["member"]["name"]);
+         db.competition.update({id: data.id, member: data.member},{$set:{win: true}});  // update netscore and handicap
+         socket.emit('forceWon',data);  // sent response to client with the same data
+     });        
 
     socket.on('deleteMemberCompetitionResult', function(data){   // request to delete specific username was sent
         db.competition.remove({id: data.id, member: data.member}); 

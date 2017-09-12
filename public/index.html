@@ -1598,6 +1598,12 @@
                 bootbox.alert({message: "Competition has been edited.", backdrop: true});
             });         
             
+            socket.on('forceWon', function(data){
+                 
+                 socket.emit('dataRequest', "competitionresultslisting"); 
+                 bootbox.alert({message: "Member was marked as winner.", backdrop: true});
+            });
+            
             socket.on('memberCompetitionResultEdited', function(data){
                 if(data.handicap !== data.newhandicap){
                     updateMemberHandicap(data.member.name, data.newhandicap);
@@ -2457,7 +2463,7 @@
                         if(checkEditSingleMemberCompetitionResultFormValidation($(this))){
                             socket.emit('editMemberCompetitionResult',{netscore: netscore, handicap: handicap, newhandicap: newhandicap, id: ALL_COMPETITION_RESULTS[activeEditCompetition].id, member: getMemberByName($(this).parent().data("member"))});
                         }
-                    } else{
+                    } else if($(this).attr('id') == "deletemembercompetitionresult"){
                         if(EDIT_COMPETITION_RESULT.length > 1){    
                             bootbox.confirm("Are you sure to delete "+$(this).parent().data("member")+" competition result?" , function(result){
                                 if(result){
@@ -2474,6 +2480,8 @@
                             }); 
                         }
                         }
+                    } else{
+                        socket.emit('forceWin',{netscore: netscore, handicap: handicap, newhandicap: newhandicap, id: ALL_COMPETITION_RESULTS[activeEditCompetition].id, member: getMemberByName($(this).parent().data("member"))});
                     }
                 });
                 
@@ -3173,7 +3181,7 @@
                 
                 $('#addcompetitionmemberlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+i+'" >'+MEMBERS[i]["name"]+'</a>');
             }
-            
+           
             
             function updateCompetitionTables(idx){
                 $('#competitionresultsinfotable').find('tbody').empty();
@@ -3211,6 +3219,7 @@
                     }
                     console.log(competitionResults[0]["netscore"]);
                     competitionResults.sort(compareCompetitionNetScore);
+                    competitionResults = updateWinner(competitionResults);
                     console.log(competitionResults[0]["netscore"]);
                     for(let i = 0, length = competitionResults.length; i < length; i++){
                         $('#competitionresultsscoretable').find('tbody').append('<tr><td>'+competitionResults[i]["member"]["name"] +'</td><td>'+ competitionResults[i]["handicap"] +'</td><td>'+ competitionResults[i]["netscore"] + '</td></tr>');
@@ -3430,7 +3439,20 @@
                 }
                 
             }
-            
+            function updateWinner(arr){
+                let winIndex = 0;
+                for(let i = 0; i < arr.length ; i++){
+                    if(arr[i]["win"] == true){
+                        winIndex = i;
+                    }
+                }
+                
+                let tmp = arr[0];
+                arr[0] = arr[winIndex];
+                arr[winIndex] = tmp;
+                
+                return arr;
+            }
             function get4BestInOne(score){
                 let sum = 0;
                 let index = 0;
@@ -3532,11 +3554,31 @@
                     
                     console.log(competitionResults[0]["netscore"]);
                     competitionResults.sort(compareCompetitionNetScore);
+                    
+                    competitionResults = updateWinner(competitionResults);
                     console.log(competitionResults[0]["netscore"]);
+                    
+                    
+                    let bestresult = 0;
+                    
                     for(let i = 0, length = competitionResults.length; i < length; i++){
+                        
+
+                        
                         $('#editcompetitionresultsscoretable').find('tbody').append('<tr><td>'+competitionResults[i]["member"]["name"] +'</td><td>'+ competitionResults[i]["handicap"] +'</td><td>'+ competitionResults[i]["netscore"] + '</td></tr>');
                         
-                        $('#editcompetitionresultlist').append('<a href="javascript:void(0)" class="list-group-item notop list-group-item-info" id="'+i+'">'+competitionResults[i]["member"]["name"]+'</a><ul class="list-group well" style="display:none" id="competitionresult'+i+'" data-member="'+competitionResults[i]["member"]["name"]+'"></ul><br>');
+                        if(competitionResults[i]["netscore"] == competitionResults[0]["netscore"]){
+                            
+                            $('#editcompetitionresultlist').append('<a href="javascript:void(0)" class="list-group-item notop list-group-item-success" id="'+i+'">'+competitionResults[i]["member"]["name"]+'</a><ul class="list-group well" style="display:none" id="competitionresult'+i+'" data-member="'+competitionResults[i]["member"]["name"]+'"></ul><br>');
+                            
+                             $("#competitionresult"+i).append('<button id="forcewinmembercompetitionresult" type="button" style="margin-top:20px" class="btn btn-warning btn-block">Make Member a Winner</button>');                      
+                            
+                            bestresult++;
+                        } else{
+                            $('#editcompetitionresultlist').append('<a href="javascript:void(0)" class="list-group-item notop list-group-item-info" id="'+i+'">'+competitionResults[i]["member"]["name"]+'</a><ul class="list-group well" style="display:none" id="competitionresult'+i+'" data-member="'+competitionResults[i]["member"]["name"]+'"></ul><br>');
+                        }
+                        
+
                         
                         //edit panel - adding members information
                         
@@ -3549,6 +3591,10 @@
                         $("#competitionresult"+i).append('<label for="editmembernewhandicapcompetitionresult" style="margin-top:20px">Member new handicap:</label><input type="text" class="form-control list-group-item" id="editmembernewhandicapcompetitionresult" placeholder="'+getMemberHandicap(competitionResults[i]["member"]["name"], true)+'"  value="'+getMemberHandicap(competitionResults[i]["member"]["name"], true)+'">');
 
                         $("#competitionresult"+i).append('<button id="editmembercompetitionresult" type="button" style="margin-top:20px" class="btn btn-primary btn-block">Apply changes</button>');
+                    }
+                    
+                    if(bestresult>1){
+                      //  alert("UWAGA " +bestresult);
                     }
                     
                 } else{
