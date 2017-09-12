@@ -1,7 +1,7 @@
 var mongojs = require('mongojs');
 var express = require('express');
-//var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition']);
-var db = mongojs('localhost:27017/golf', ['account','event','competition']);      // connect to database
+var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition']);
+//var db = mongojs('localhost:27017/golf', ['account','event','competition']);      // connect to database
 
 //db.account.remove();
 /*
@@ -224,12 +224,12 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
     
 
     socket.on('addCommitteeMember', function(data){
-         db.account.update({username: data.username}, {$set:{position: data.position, committee: "true"}});
+         db.account.update({username: data.username}, {$set:{position: data.position, committee: "true", admin: "true"}});
          socket.emit('committeeMemberAdded', data);
      });
     
      socket.on('editCommitteeMember', function(data){
-         db.account.update({username: data.username}, {$set:{position: data.position}});
+         db.account.update({username: data.username}, {$set:{position: data.position, admin: "true"}});
          socket.emit('committeeMemberEdited', data);
      });
     
