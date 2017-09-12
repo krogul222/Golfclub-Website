@@ -241,7 +241,7 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
      });
     
      socket.on('deleteCommitteeMember', function(data){
-         db.account.update({username: data.username}, {$set:{committee: false}});
+         db.account.update({username: data.username}, {$set:{committee: false, admin: "false"}});
          
          socket.emit('committeeMemberDeleted', data);
      });    

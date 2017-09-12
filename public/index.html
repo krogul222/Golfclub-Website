@@ -266,6 +266,12 @@
                                     Edit Scoreboard Results
                                 </a>
                             </li>
+                            
+                            <li class="list-group-item" id="addcontestLink" style="display:true">
+                                <a class="notop" href="javascript:void(0)">
+                                    Add Contest
+                                </a>
+                            </li>
                         <!-- Menu with ADMIN access ends -->
                         </ul>
                     </div>
@@ -684,6 +690,22 @@
                             </form>
                         </div>
                         <!-- Add member panel definition ends -->
+
+                        <!-- Edit members panel definition begins -->
+                        <div id="addcontest" style="display:none">
+                            <div class="well  text-center" >  
+                                <h1>Add contest</h1>     
+                            </div>
+                            <input type="text" class="form-control" id="contestsize" placeholder="10">
+                            <button id="contestgeneratebtn" type="button" class="btn btn-primary btn-block">
+                                        Generate
+                            </button>
+                            
+                            <div id = "contestcontent" style="position:relative">
+                            </div>
+                            
+                        </div>
+                        <!-- Edit members panel definition ends -->                        
                         
                         <!-- Edit members panel definition begins -->
                         <div id="editmembers" style="display:none">
@@ -1282,6 +1304,11 @@
                     $("#editcompetition").show();
                 });   
                 
+                $("#addcontestLink").on("click" , function(event){  // show add event panel
+                    hideAll();
+                    $("#addcontest").show();
+                });                   
+                
                 // carrousel and date/time picking
                 
                 $('#myCarousel').carousel({ // change carrousel slide each 10s
@@ -1389,6 +1416,7 @@
                     $("#editsocietyevents").hide();
                     $("#addcompetition").hide();
                     $("#editcompetition").hide();
+                    $("#addcontests").hide();
                     $("#rollofhonourcontent").hide();
                     $("#halloffamecontent").hide();
                     clearSecureData();
@@ -2222,7 +2250,28 @@
                         competitionSecondHoleSelected = true;
                     $("#editcompetitionhole2list").slideToggle();
                 });             
-             
+
+                $("#contestgeneratebtn").on("click", function(event){
+                    $('#contestcontent').empty();
+                   
+                    
+                    let counter = 0;
+                    let num = Number($("#contestsize").val());
+                    
+                    while(Math.floor(num)>1){
+                        num= num/2;
+                        counter++;
+                    }
+                    
+                    if(counter>0 ){
+                        counter--;
+                    }
+                    
+                     $('#contestcontent').css('height',(11*counter+20)*30+'px');
+                    
+                    generateContest(Number($("#contestsize").val()), 5, 10*counter+20,1, 10*counter+20);
+                });                    
+                
                 $("#editcommitteeaddmembernamebtn").on("click", function(event){
                     $("#editcommitteeaddmembernamelist").slideToggle();
                 });                 
@@ -3418,8 +3467,10 @@
                             
                         } 
                     }
-                    
-                hallOfFame.push({year: year, name: MEMBERS[totalResults[0]["index"]]["name"], score: totalResults[0].score});
+                if(totalResults.length > 0){
+                    hallOfFame.push({year: year, name: MEMBERS[totalResults[0]["index"]]["name"], score: totalResults[0].score});
+                }
+                
                 
                 for(let i=0, length = MEMBERS.length; i < length; i++){
                 
@@ -3654,6 +3705,37 @@
                     $('#editeventnotes').val("");
                 }
 
+            }
+            
+            function generateContest(num,k,r,s,space){
+                console.log(num+ " "+k+" "+r);
+                
+                $("#contestcontent").append('<img class = "img-rounded" src="img/rectangle.png"  style="position:absolute; top: '+Number(Number((r)*15)+Number(0))+'px; left: '+k*130+'px; z-index: 1">');
+                
+                if(num == 1){
+                    
+                    return;
+                } else{
+                    let a = Math.floor(num/2);
+                    let b = num - a;
+                    
+                    
+                    if(a == 1){
+                        $("#contestcontent").append('<img class = "img-rounded" src="img/rectangle.png"  style="position:absolute; top: '+Number(Number((r-space/2)
+                        *15)+Number(0))+'px; left: '+(k-1)*130+'px; z-index: 1">');
+                    } else{
+                        generateContest(a,k-1,r-space/2,-1,space/2);
+                    }
+                    
+                    if(b == 1){
+                        $("#contestcontent").append('<img class = "img-rounded" src="img/rectangle.png"  style="position:absolute; top: '+Number(Number((r+space/2)*15)+Number(0))+'px; left: '+(k-1)*130+'px; z-index: 1">');
+                    } else{
+                        generateContest(b,k-1,r+space/2,1,space/2);
+                    }     
+                    
+                    return;
+                    
+                }
             }
             
             function updateCompetitionList(year){
