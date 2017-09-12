@@ -3751,7 +3751,7 @@
             function generateContest(num,k,r,s,space){
                 console.log(num+ " "+k+" "+r);
                 
-                $("#contestcontent").append('<button id="but" type="button" style="width:140px;height:40px;position:absolute; top: '+Number(Number((r)*15)+Number(0))+'px; left: '+(k*140+50)+'px; z-index: 1" class="btn btn-primary"></button>');
+                $("#contestcontent").append('<button id="but" type="button" style="width:140px;height:40px;position:absolute; top: '+Number(Number((r)*15)+Number(0))+'px; left: '+(k*145)+'px; z-index: 1" class="btn btn-primary"></button>');
                 
                 if(num == 1){
                     /*$("#contestcontent").append('<p style="position:absolute; top: '+Number(Number((r)*15)+Number(0))+'px; left: '+k*130+'px; z-index: 1">bababa</p>');*/
@@ -3764,14 +3764,14 @@
                     if(a == 1){
                         
                         $("#contestcontent").append('<button id="but" type="button" style="width:140px;height:40px;position:absolute; top: '+Number(Number((r-space/2)
-                        *15)+Number(0))+'px; left: '+((k-1)*140+50)+'px; z-index: 1" class="btn btn-primary">'+contestMembers.splice(0,1)[0]+'</button>');
+                        *15)+Number(0))+'px; left: '+((k-1)*145)+'px; z-index: 1" class="btn btn-primary">'+contestMembers.splice(0,1)[0]+'</button>');
                     
                     } else{
                         generateContest(a,k-1,r-space/2,-1,space/2);
                     }
                     
                     if(b == 1){
-                        $("#contestcontent").append('<button id="but" type="button" style="width:140px;height:40px;position:absolute; top: '+Number(Number((r+space/2)*15)+Number(0))+'px; left: '+((k-1)*140+50)+'px; z-index: 1" class="btn btn-primary">'+contestMembers.splice(0,1)[0]+'</button>');
+                        $("#contestcontent").append('<button id="but" type="button" style="width:140px;height:40px;position:absolute; top: '+Number(Number((r+space/2)*15)+Number(0))+'px; left: '+((k-1)*145)+'px; z-index: 1" class="btn btn-primary">'+contestMembers.splice(0,1)[0]+'</button>');
                     } else{
                         generateContest(b,k-1,r+space/2,1,space/2);
                     }     
