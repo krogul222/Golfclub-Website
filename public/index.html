@@ -987,6 +987,13 @@
                                     <input type="text" class="form-control" id="addcompetitionmemberhandicap" placeholder="" required>
                                 </div>
                                 
+                                <div class="form-group" style = "margin-top:20px">
+                                    <label for="addcompetitionmembernewhandicap">
+                                        Member new handicap:
+                                    </label>
+                                    <input type="text" class="form-control" id="addcompetitionmembernewhandicap" placeholder="" required>
+                                </div>
+                                
                                 <div class="form-group">
                                     <label for="addcompetitionmembernetscore">
                                         Member net score:
@@ -1463,13 +1470,21 @@
                 
                 for(let i =0, length = data["results"].length; i < length; i++){
                     ALL_COMPETITION_RESULTS.push(data["results"][i]);
+                    if(data["results"][i]["newhandicap"] !== data["results"][i]["handicap"]){
+                        updateMemberHandicap(data["results"][i]["member"]["name"], data["results"][i]["newhandicap"]);
+                    }
                 }
+                
+                updateMemberList();
+
+                
                 
                 COMPETITION_RESULT.length = 0;
                 updateCompetitionMemberList();
                 $('#addcompetitionresulttable').find('tbody').empty(); 
                 
                 $("#addcompetitionmemberhandicap").val("");
+                $("#addcompetitionmembernewhandicap").val("");
                 $("#addcompetitionmembernetscore").val("");
                 
                 $("#addcompetitioneventname").val("");
@@ -1982,12 +1997,13 @@
                     if(checkMemberCompetitionResultFormValidation()){
                         $('#addcompetitionresulttable').find('tbody').append('<tr><td>'+$("#addcompetitionmembernamebtn").text() +'</td><td>'+ $("#addcompetitionmemberhandicap").val() +'</td><td>'+ $("#addcompetitionmembernetscore").val() + '</td></tr>');
                         
-                        COMPETITION_RESULT.push({member: getMemberByName($("#addcompetitionmembernamebtn").text()), handicap: $("#addcompetitionmemberhandicap").val(), netscore: $("#addcompetitionmembernetscore").val()});
+                        COMPETITION_RESULT.push({member: getMemberByName($("#addcompetitionmembernamebtn").text()), handicap: $("#addcompetitionmemberhandicap").val(), newhandicap: $("#addcompetitionmembernewhandicap").val(), netscore: $("#addcompetitionmembernetscore").val()});
                         console.log(getMemberByName($("#addcompetitionmembernamebtn").text())["name"]);
                         
                         competitionMemberSelected = false;
                         $("#addcompetitionmembernamebtn").text("Choose Member");
                         $("#addcompetitionmemberhandicap").val("");
+                        $("#addcompetitionmembernewhandicap").val("");
                         $("#addcompetitionmembernetscore").val("");
                         
                         updateCompetitionMemberList();
@@ -2148,6 +2164,7 @@
                     let name = $(this).text();
                     $("#addcompetitionmembernamebtn").text(name);
                     $("#addcompetitionmemberhandicap").val(getMemberHandicap(name));
+                    $("#addcompetitionmembernewhandicap").val(getMemberHandicap(name, true));
                     competitionMemberSelected = true;
                     $("#addcompetitionmemberlist").slideToggle();
                 });

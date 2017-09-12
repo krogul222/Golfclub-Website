@@ -1,7 +1,7 @@
 var mongojs = require('mongojs');
 var express = require('express');
-var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition']);
-//var db = mongojs('localhost:27017/golf', ['account','event','competition']);      // connect to database
+//var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition']);
+var db = mongojs('localhost:27017/golf', ['account','event','competition']);      // connect to database
 
 //db.account.remove();
 /*
@@ -147,9 +147,19 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
                     data["results"][i]["day"] = data["day"];
                     data["results"][i]["id"] = data["id"];
                     data["results"][i]["notes"] = data["notes"];
+                    
+                    if(data["results"][i]["handicap"]  !== data["results"][i]["newhandicap"]){
+                        let handicap = data["results"][i]["newhandicap"];
+                        let name = data["results"][i]["member"]["name"];
+                        db.account.update({name: name},{$set:{handicapExact: handicap}});
+                    }
+                    
                     console.log("Mamber "+data["results"][i]["member"]);
                     db.competition.insert(data["results"][i]); 
                 }
+        
+            
+        
                 socket.emit('competitionResultAdded',data);    // sent response to client
     });
    
