@@ -1,7 +1,7 @@
 var mongojs = require('mongojs');
 var express = require('express');
-//var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition','contest']);
-var db = mongojs('localhost:27017/golf', ['account','event','competition','contest']);      // connect to database
+var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition','contest']);
+//var db = mongojs('localhost:27017/golf', ['account','event','competition','contest']);      // connect to database
 
 //db.contest.remove();
 /*
