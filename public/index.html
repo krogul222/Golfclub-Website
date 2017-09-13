@@ -437,7 +437,9 @@
                             <div id="championcupgrid">
                             </div>
                             
-                            <div id="championcuplist">
+                            <div class = "text-center well">
+                                <div id="championcuplist">
+                                </div>
                             </div>
                         </div>
                         <!-- Champion Cup panel definition ends -->
@@ -1962,12 +1964,15 @@
                     
                        let counter = ALL_CONTEST_RESULTS[0].gridInfo.counter;
                         
-                       $('#championcupcontent').css('height',(9*counter+10)*30+'px');    
+                       $('#championcupcontent').css('min-height',(12*counter+10)*30+'px');    
+                        $('#championcupgrid').css('min-height',(9*counter+10)*30+'px'); 
                        showContest(ALL_CONTEST_RESULTS[0].gridInfo.membersnumber,5,8*counter+10,1,8*counter+10, ALL_CONTEST_RESULTS[0].gridInfo.idStart, ALL_CONTEST_RESULTS[0].gridInfo.idParent,0);
                        
                     }
                     
                     updateEditContestTables(0);
+                    updateContestGrid(ALL_CONTEST_RESULTS[0].id);
+                    updateContestList(0);
                 });
             });
             
@@ -2239,7 +2244,8 @@
                 
                 $("#contestcreatebtn").on("click", function(event){
                     
-                    socket.emit('addChampionCup',{grid: contestGrid, name: $("#contestname").text(), gridInfo: gridInfo[0]});
+                    socket.emit('addChampionCup',{grid: contestGrid, name: $("#contestName").val(), gridInfo: gridInfo[0]});
+                    console.log("Name contest " + $("#contestName").val());
                 });
                 
                 
@@ -2320,6 +2326,15 @@
                     
                     updateCompetitionTables(id);
                     activeCompetition = id;
+                });
+                
+                
+                
+                $("#championcuplist").on("click", "a", function(event){
+                    let id = $(this).attr('id');
+                    
+                    updateContestGrid(id);
+                    //activeCompetition = id;
                 });
                 
                 $("#contestcontent").on("click", "button", function(event){
@@ -2901,22 +2916,28 @@
                 }  
             }      
 
-                    if(ALL_CONTEST_RESULTS.length > 0){
+
+            function updateContestGrid(id){
+                    $("#championcupgrid").empty();
                     
-                       let counter = ALL_CONTEST_RESULTS[0].gridInfo.counter;
+                    for(let i = 0, length = ALL_CONTEST_RESULTS.length; i < length; i++){
+                        if(ALL_CONTEST_RESULTS[i].id == id){
+                            let counter = ALL_CONTEST_RESULTS[i].gridInfo.counter;
                         
-                       $('#championcupcontent').css('height',(9*counter+10)*30+'px');    
-                       showContest(ALL_CONTEST_RESULTS[0].gridInfo.membersnumber,5,8*counter+10,1,8*counter+10, ALL_CONTEST_RESULTS[0].gridInfo.idStart, ALL_CONTEST_RESULTS[0].gridInfo.idParent,0);
-                       
+                            $('#championcupcontent').css('min-height',(12*counter+10)*30+'px');    
+                            $('#championcupgrid').css('min-height',(9*counter+10)*30+'px'); 
+                            showContest(ALL_CONTEST_RESULTS[i].gridInfo.membersnumber,5,8*counter+10,1,8*counter+10, ALL_CONTEST_RESULTS[i].gridInfo.idStart, ALL_CONTEST_RESULTS[i].gridInfo.idParent,i);
+                            break;
+                        }
                     }
-                    
+            }              
                     
             function updateEditContestTables(i){
                     if(ALL_CONTEST_RESULTS[i]){
                     
                        let counter = ALL_CONTEST_RESULTS[i].gridInfo.counter;
                         
-                       $('#editcontestcontent').css('height',(9*counter+10)*30+'px');    
+                       $('#editcontestcontent').css('min-height',(9*counter+10)*30+'px');    
                        showEditContest(ALL_CONTEST_RESULTS[i].gridInfo.membersnumber,5,8*counter+10,1,8*counter+10, ALL_CONTEST_RESULTS[i].gridInfo.idStart, ALL_CONTEST_RESULTS[i].gridInfo.idParent,0);
                        
                     }
@@ -3796,6 +3817,20 @@
                 
                 return sum;
             }
+            
+            function updateContestList(idx){
+            $('#championcuplist').empty();
+                
+            if(idx > -1){
+                for(let i = 0, length = ALL_CONTEST_RESULTS.length; i < length; i++){
+                    
+                    $('#championcuplist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+ALL_CONTEST_RESULTS[i]["id"]+'" >'+ALL_CONTEST_RESULTS[i]["name"]+'</a>');
+                    
+                }
+            }
+                
+            }
+            
             
             function updateaditCompetitionTables(idx){
                 //$('#editcompetitionresultsinfotable').find('tbody').empty();
