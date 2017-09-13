@@ -211,6 +211,11 @@
                                     Scoreboard
                                 </a>
                             </li>
+                            <li class="list-group-item" id = "championcup">
+                                <a class="notop" href="javascript:void(0)">
+                                    Champion Cup
+                                </a>
+                            </li>                            
                             <li class="list-group-item" id = "playeroftheyear">
                                 <a class="notop" href="javascript:void(0)">
                                     Player of the Year
@@ -270,6 +275,11 @@
                             <li class="list-group-item" id="addcontestLink" style="display:true">
                                 <a class="notop" href="javascript:void(0)">
                                     Add Contest
+                                </a>
+                            </li>
+                            <li class="list-group-item" id="editcontestLink" style="display:true">
+                                <a class="notop" href="javascript:void(0)">
+                                    Edit Contest
                                 </a>
                             </li>
                         <!-- Menu with ADMIN access ends -->
@@ -418,6 +428,19 @@
                             </div>
                         </div>
                         <!-- Competition results panel definition ends -->
+                        
+                        
+                        
+                        
+                        <!-- Champion Cup panel definition begins -->
+                        <div id="championcupcontent" style="display:none;">
+                            <div id="championcupgrid">
+                            </div>
+                            
+                            <div id="championcuplist">
+                            </div>
+                        </div>
+                        <!-- Champion Cup panel definition ends -->
                         
                         
                         <!-- Hall of Fame panel definition begins -->
@@ -691,7 +714,25 @@
                         </div>
                         <!-- Add member panel definition ends -->
 
-                        <!-- Edit members panel definition begins -->
+                        <!-- Edit contest panel definition begins -->
+                        <div id="editcontest" style="display:none">
+                            <div class="well  text-center" >  
+                                <h1>Edit contest</h1>     
+                            </div>
+                                
+                           <button id="editcontestbtn" type="button" class="btn btn-primary btn-block" style="margin-top:20px;margin-bottom:20px;">
+                                        Apply Changes
+                            </button>
+                            
+                            <div id = "editcontestcontent" style="position:relative">
+                            </div>
+                            
+                            
+                            
+                        </div>
+                        <!-- Edit contest panel definition ends -->                          
+                        
+                        <!-- Add contest panel definition begins -->
                         <div id="addcontest" style="display:none">
                             <div class="well  text-center" >  
                                 <h1>Add contest</h1>     
@@ -704,18 +745,22 @@
                                         Generate
                             </button>
                             
-                             <label for="contestName">
-                                        Contest Name:
+                             <label for="contestName" style="margin-top:20px">
+                                        Champion Cup Name:
                              </label>
-                             <input type="text" class="form-control" id="editcommitteeaddmemberposition" placeholder="" required>
+                             <input type="text" class="form-control" id="contestName" placeholder="" required>
                             
-                            
+                            <button id="contestcreatebtn" type="button" class="btn btn-primary btn-block" style="display:none; margin-top:20px;margin-bottom:20px;">
+                                        Create Champion Cup
+                            </button>
     
                             <div id = "contestcontent" style="position:relative">
                             </div>
                             
+                            
+                            
                         </div>
-                        <!-- Edit members panel definition ends -->                        
+                        <!-- Add contest panel definition ends -->                        
                         
                         <!-- Edit members panel definition begins -->
                         <div id="editmembers" style="display:none">
@@ -1249,6 +1294,11 @@
                      $("#halloffamecontent").show();
                 });
                 
+                $("#glofmenu").on("click", "#championcup", function(event){;  // show committee 
+                     hideAll();
+                     $("#championcupcontent").show();
+                });
+                
                 $("#glofmenu").on("click", "#membershiplisting", function(event){   // show members list
                     hideAll();
                     $("#membershiplistingcontent").show();
@@ -1317,7 +1367,12 @@
                 $("#addcontestLink").on("click" , function(event){  // show add event panel
                     hideAll();
                     $("#addcontest").show();
-                });                   
+                });     
+            
+                $("#editcontestLink").on("click" , function(event){  // show add event panel
+                    hideAll();
+                    $("#editcontest").show();
+                });
                 
                 // carrousel and date/time picking
                 
@@ -1426,10 +1481,12 @@
                     $("#editsocietyevents").hide();
                     $("#addcompetition").hide();
                     $("#editcompetition").hide();
-                    $("#addcontests").hide();
+                    $("#addcontest").hide();
+                    $("#editcontest").hide();
                     $("#rollofhonourcontent").hide();
                     $("#halloffamecontent").hide();
                     $("#addcontest").hide();
+                    $("#championcupcontent").hide();
                     clearSecureData();
                 }
                 
@@ -1457,6 +1514,7 @@
             const COMPETITION_RESULT = [];
             let EDIT_COMPETITION_RESULT = [];
             const ALL_COMPETITION_RESULTS = [];
+            const ALL_CONTEST_RESULTS = [];
             let hallOfFame = [];
             let competitionYear = 0;
             let playerYear = 0;
@@ -1477,6 +1535,8 @@
             let competitionFirstWinnerSelected = false;
             let competitionSecondWinnerSelected = false;
             let contestMembers =[];
+            let contestGrid = [];
+            let gridInfo = [];
             
             let committee = [];
             var socket = io(); 
@@ -1485,7 +1545,13 @@
             socket.emit('dataRequest', "membershiplisting");  
             socket.emit('dataRequest', "competitionresultslisting"); 
             socket.emit('dataRequest', "societyeventslisting"); 
-
+            socket.emit('dataRequest', "contestlisting");
+            
+            socket.on('contestAdded', function(data){
+                ALL_CONTEST_RESULTS.push(data);
+                
+                bootbox.alert({message: "New contest has been added.", backdrop: true});
+            });
             
             socket.on('singleMemberCompetitionResultAdded', function(data){
                 
@@ -1564,6 +1630,11 @@
                 updateSocietyEventList(societyEventsYear);
                 bootbox.alert({message: "New Event has been added.", backdrop: true});
             });            
+            
+            socket.on('contestEdited', function(data){
+                socket.emit('dataRequest', "contestlisting");
+                bootbox.alert({message: "Champion Cup has been edited.", backdrop: true});
+            });               
             
             socket.on('eventEdited', function(data){
                 updateavent(data);
@@ -1877,6 +1948,30 @@
                 });                      
             }); 
 
+            socket.on('contestlistingData', function(data){ 
+                $(document).ready(function() { 
+                  ALL_CONTEST_RESULTS.length = 0;
+                    
+                    for(let i = 0, length = data.length; i < length; i++){
+                        //data[i]["month"] = parseInt(data[i]["month"], 10); 
+                       // data[i]["month"] = data[i]["month"];
+                        ALL_CONTEST_RESULTS.push(data[i]);        
+                    }
+                    
+                    if(ALL_CONTEST_RESULTS.length > 0){
+                    
+                       let counter = ALL_CONTEST_RESULTS[0].gridInfo.counter;
+                        
+                       $('#championcupcontent').css('height',(9*counter+10)*30+'px');    
+                       showContest(ALL_CONTEST_RESULTS[0].gridInfo.membersnumber,5,8*counter+10,1,8*counter+10, ALL_CONTEST_RESULTS[0].gridInfo.idStart, ALL_CONTEST_RESULTS[0].gridInfo.idParent,0);
+                       
+                    }
+                    
+                    updateEditContestTables(0);
+                });
+            });
+            
+            
             socket.on('competitionresultslistingData', function(data){ 
                 $(document).ready(function() {
                     console.log('DANE');
@@ -2057,6 +2152,12 @@
                     
                 });
                 
+                
+                $("#editcontestbtn").on("click", function(event){
+                    
+                    socket.emit('editContest',ALL_CONTEST_RESULTS[0]);
+                });
+                
                 $("#editcompetitionmemberresultbtn").on("click", function(event){
                     if(checkEditMemberCompetitionResultFormValidation()){
                         
@@ -2136,6 +2237,13 @@
                     }
                 });
                 
+                $("#contestcreatebtn").on("click", function(event){
+                    
+                    socket.emit('addChampionCup',{grid: contestGrid, name: $("#contestname").text(), gridInfo: gridInfo[0]});
+                });
+                
+                
+                
                 $("#addeventbtn").on("click", function(event){
                     let date = $("#addeventdate").datetimepicker('getDate');
                     console.log('YEAR ' + date.getFullYear() + 'DAY '+date.getDate());
@@ -2213,6 +2321,89 @@
                     updateCompetitionTables(id);
                     activeCompetition = id;
                 });
+                
+                $("#contestcontent").on("click", "button", function(event){
+                    /*let id = $(this).attr('id');
+                    console.log(id);
+                    let name = "";
+                    let parent = -1;
+                    
+                    for(let i = 0; i < contestGrid.length; i++){
+                        if(contestGrid[i].id == id){
+                            parent = contestGrid[i].parentId;
+                            name = contestGrid[i].name;
+                            break;
+                        }
+                    }
+                    
+                    for(let i = 0; i < contestGrid.length; i++){
+                        if(contestGrid[i].id == parent){
+                            contestGrid[i].name = name;
+                            break;
+                        }
+                    }
+                    
+                    $("#contestcontent").find('#'+parent).text(name);*/
+                });
+                
+                $("#editcontestcontent").on("click", "button", function(event){
+                    let id = $(this).attr('id');
+                    console.log(id);
+                    let name = "";
+                    let parent = -1;
+                    if(ALL_CONTEST_RESULTS.length >0){
+                        contestGrid = ALL_CONTEST_RESULTS[0].grid;
+
+                        for(let i = 0; i < contestGrid.length; i++){
+                            if(contestGrid[i].id == id){
+                                parent = contestGrid[i].parentId;
+                                name = contestGrid[i].name;
+                                break;
+                            }
+                        }
+                        
+                        let parenttmpname = parent;
+                         let parenttmp = parent;
+                        
+                        for(let i = 0; i < contestGrid.length; i++){
+                            if(contestGrid[i].id == parent){
+                                parenttmpname = contestGrid[i].name;
+                                parenttmp = contestGrid[i].parentId;
+                                contestGrid[i].name = name;
+                                break;
+                            }
+                        }
+
+                        $("#editcontestcontent").find('#'+parent).text(name);
+                        
+                        let exit = 1;
+                        
+                        if(parenttmpname != name){
+                            while(exit > 0){        
+                                exit  = 0;
+                                for(let i = 0; i < contestGrid.length; i++){
+                                    if(contestGrid[i].id == parenttmp){
+
+                                        if(contestGrid[i].name ==  parenttmpname){
+                                            contestGrid[i].name = "";
+                                            $("#editcontestcontent").find('#'+parenttmp).text("");
+                                            parenttmp = contestGrid[i].parentId;
+
+                                            exit = 1;
+                                        } 
+
+                                        break;
+                                    }
+                                }      
+
+                            } 
+                        }
+
+                        
+
+                    }
+
+                });                
                 
                 $("#editcompetitionlist").on("click", "a", function(event){
                     let id = $(this).attr('id');
@@ -2305,14 +2496,24 @@
                             num= num/2;
                             counter++;
                         }
-
+                        
+                        let idStart = Math.ceil((Math.pow(2, counter+2)-1)/2); 
+                        let idParent = Math.pow(2, counter+2);
+                        
                         if(counter>0 ){
                             counter--;
                         }
 
                          $('#contestcontent').css('height',(9*counter+10)*30+'px');
-
-                        generateContest(usersHighlited, 5, 8*counter+10,1, 8*counter+10);
+                        
+                        
+                        contestGrid = [];
+                        gridInfo = [];
+                        gridInfo.push({membersnumber:usersHighlited, counter: counter, idStart: idStart, idParent: idParent});
+                        
+                        generateContest(usersHighlited, 5, 8*counter+10,1, 8*counter+10,idStart, idParent);
+                        
+                        $('#contestcreatebtn').show();
                     }
                     
                 });                    
@@ -2699,6 +2900,27 @@
                     }
                 }  
             }      
+
+                    if(ALL_CONTEST_RESULTS.length > 0){
+                    
+                       let counter = ALL_CONTEST_RESULTS[0].gridInfo.counter;
+                        
+                       $('#championcupcontent').css('height',(9*counter+10)*30+'px');    
+                       showContest(ALL_CONTEST_RESULTS[0].gridInfo.membersnumber,5,8*counter+10,1,8*counter+10, ALL_CONTEST_RESULTS[0].gridInfo.idStart, ALL_CONTEST_RESULTS[0].gridInfo.idParent,0);
+                       
+                    }
+                    
+                    
+            function updateEditContestTables(i){
+                    if(ALL_CONTEST_RESULTS[i]){
+                    
+                       let counter = ALL_CONTEST_RESULTS[i].gridInfo.counter;
+                        
+                       $('#editcontestcontent').css('height',(9*counter+10)*30+'px');    
+                       showEditContest(ALL_CONTEST_RESULTS[i].gridInfo.membersnumber,5,8*counter+10,1,8*counter+10, ALL_CONTEST_RESULTS[i].gridInfo.idStart, ALL_CONTEST_RESULTS[i].gridInfo.idParent,0);
+                       
+                    }
+            }
             
             function updateCompetition(competition){   
                 for(let i = 0, length = ALL_COMPETITION_RESULTS.length; i < length; i++){
@@ -3754,14 +3976,17 @@
 
             }
             
-            function generateContest(num,k,r,s,space){
+            function generateContest(num,k,r,s,space, id, parent){
                 console.log(num+ " "+k+" "+r);
                 
                 let width = 120;
                 let height = 30;
                 let fontsize = 11;
+                let name = "";
                 
-                $("#contestcontent").append('<button id="but" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r)*15)+Number(0))+'px; left: '+(k*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary"></button>');
+                $("#contestcontent").append('<button id="'+id+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r)*15)+Number(0))+'px; left: '+(k*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary"></button>');
+                
+                contestGrid.push({name: name, id: id, parentId: parent});
                 
                 if(num == 1){
                     /*$("#contestcontent").append('<p style="position:absolute; top: '+Number(Number((r)*15)+Number(0))+'px; left: '+k*130+'px; z-index: 1">bababa</p>');*/
@@ -3772,23 +3997,147 @@
                     
                     
                     if(a == 1){
+                        name = contestMembers.splice(0,1)[0];
                         
-                        $("#contestcontent").append('<button id="but" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r-space/2)
-                        *15)+Number(0))+'px; left: '+((k-1)*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+contestMembers.splice(0,1)[0]+'</button>');
+                        
+                        $("#contestcontent").append('<button id="'+(id-Math.ceil(Math.abs(id-parent)/2))+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r-space/2)
+                        *15)+Number(0))+'px; left: '+((k-1)*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');
+                        
+                        contestGrid.push({name: name, id: (id-Math.ceil(Math.abs(id-parent)/2)), parentId: id});
                     
                     } else{
-                        generateContest(a,k-1,r-space/2,-1,space/2);
+                        generateContest(a,k-1,r-space/2,-1,space/2,(id-Math.ceil(Math.abs(id-parent)/2)), id);
                     }
                     
                     if(b == 1){
-                        $("#contestcontent").append('<button id="but" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r+space/2)*15)+Number(0))+'px; left: '+((k-1)*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+contestMembers.splice(0,1)[0]+'</button>');
+                        
+                        name = contestMembers.splice(0,1)[0];
+                        
+                        $("#contestcontent").append('<button id="'+(id+Math.floor(Math.abs(id-parent)/2))+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r+space/2)*15)+Number(0))+'px; left: '+((k-1)*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');
+                        
+                        contestGrid.push({name: name, id: (id+Math.floor(Math.abs(id-parent)/2)), parentId: id});
+                        
                     } else{
-                        generateContest(b,k-1,r+space/2,1,space/2);
+                        generateContest(b,k-1,r+space/2,1,space/2,(id+Math.floor(Math.abs(id-parent)/2)), id);
                     }     
                     
                     return;
                     
                 }
+            }
+            
+            function showContest(num,k,r,s,space, id, parent,i){
+                console.log("SHOW CONTEST "+num);
+                
+                let width = 120;
+                let height = 30;
+                let fontsize = 11;
+                let name = "";
+                
+                name = findMemberNameInContest(i, id);
+                
+                $("#championcupgrid").append('<button id="'+id+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r)*15)+Number(0))+'px; left: '+(k*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');
+                
+                //contestGrid.push({name: name, id: id, parentId: parent});
+                
+                if(num == 1){
+                    /*$("#contestcontent").append('<p style="position:absolute; top: '+Number(Number((r)*15)+Number(0))+'px; left: '+k*130+'px; z-index: 1">bababa</p>');*/
+                    return;
+                } else{
+                    let a = Math.floor(num/2);
+                    let b = num - a;
+                    
+                    
+                    if(a == 1){
+                        name = findMemberNameInContest(i, (id-Math.ceil(Math.abs(id-parent)/2)));
+                        console.log(name);
+                        
+                        $("#championcupgrid").append('<button id="'+(id-Math.ceil(Math.abs(id-parent)/2))+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r-space/2)
+                        *15)+Number(0))+'px; left: '+((k-1)*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');
+                        
+                        //contestGrid.push({name: name, id: (id-Math.ceil(Math.abs(id-parent)/2)), parentId: id});
+                    
+                    } else{
+                        showContest(a,k-1,r-space/2,-1,space/2,(id-Math.ceil(Math.abs(id-parent)/2)), id,i);
+                    }
+                    
+                    if(b == 1){
+                        console.log(name);
+                        name = findMemberNameInContest(i, (id+Math.floor(Math.abs(id-parent)/2)));
+                        
+                        $("#championcupgrid").append('<button id="'+(id+Math.floor(Math.abs(id-parent)/2))+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r+space/2)*15)+Number(0))+'px; left: '+((k-1)*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');
+                        
+                       // contestGrid.push({name: name, id: (id+Math.floor(Math.abs(id-parent)/2)), parentId: id});
+                        
+                    } else{
+                        showContest(b,k-1,r+space/2,1,space/2,(id+Math.floor(Math.abs(id-parent)/2)), id,i);
+                    }     
+                    
+                    return;
+                    
+                }
+            }    
+            
+            function showEditContest(num,k,r,s,space, id, parent,i){
+                console.log("SHOW Edit CONTEST "+num);
+                
+                let width = 120;
+                let height = 30;
+                let fontsize = 11;
+                let name = "";
+                
+                name = findMemberNameInContest(i, id);
+                
+                $("#editcontestcontent").append('<button id="'+id+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r)*15)+Number(0))+'px; left: '+(k*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');
+                
+                //contestGrid.push({name: name, id: id, parentId: parent});
+                
+                if(num == 1){
+                    /*$("#contestcontent").append('<p style="position:absolute; top: '+Number(Number((r)*15)+Number(0))+'px; left: '+k*130+'px; z-index: 1">bababa</p>');*/
+                    return;
+                } else{
+                    let a = Math.floor(num/2);
+                    let b = num - a;
+                    
+                    
+                    if(a == 1){
+                        name = findMemberNameInContest(i, (id-Math.ceil(Math.abs(id-parent)/2)));
+                        console.log(name);
+                        
+                        $("#editcontestcontent").append('<button id="'+(id-Math.ceil(Math.abs(id-parent)/2))+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r-space/2)
+                        *15)+Number(0))+'px; left: '+((k-1)*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');
+                        
+                        //contestGrid.push({name: name, id: (id-Math.ceil(Math.abs(id-parent)/2)), parentId: id});
+                    
+                    } else{
+                        showEditContest(a,k-1,r-space/2,-1,space/2,(id-Math.ceil(Math.abs(id-parent)/2)), id,i);
+                    }
+                    
+                    if(b == 1){
+                        console.log(name);
+                        name = findMemberNameInContest(i, (id+Math.floor(Math.abs(id-parent)/2)));
+                        
+                        $("#editcontestcontent").append('<button id="'+(id+Math.floor(Math.abs(id-parent)/2))+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r+space/2)*15)+Number(0))+'px; left: '+((k-1)*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');
+                        
+                       // contestGrid.push({name: name, id: (id+Math.floor(Math.abs(id-parent)/2)), parentId: id});
+                        
+                    } else{
+                        showEditContest(b,k-1,r+space/2,1,space/2,(id+Math.floor(Math.abs(id-parent)/2)), id,i);
+                    }     
+                    
+                    return;
+                    
+                }
+            }            
+            
+            function findMemberNameInContest(i, id){
+                
+                for(let k = 0; k < ALL_CONTEST_RESULTS[i].grid.length; k++){
+                    if(ALL_CONTEST_RESULTS[i].grid[k].id == id){
+                        return ALL_CONTEST_RESULTS[i].grid[k].name;
+                    }
+                }
+                return "";
             }
             
             function updateCompetitionList(year){

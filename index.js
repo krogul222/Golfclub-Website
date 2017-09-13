@@ -1,9 +1,9 @@
 var mongojs = require('mongojs');
 var express = require('express');
-var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition']);
-//var db = mongojs('localhost:27017/golf', ['account','event','competition']);      // connect to database
+var db = mongojs('mongodb://golf:nexperia@ds123193.mlab.com:23193/nexperiagolfsociety', ['account', 'event','competition','contest']);
+//var db = mongojs('localhost:27017/golf', ['account','event','competition','contest']);      // connect to database
 
-//db.account.remove();
+//db.contest.remove();
 /*
 db.account.insert({username:"johnhart", name: "John Hart", password: "johnhart", email: "johnymike@hotmail.com", phone: "07930980836", committea: "true", position: "President", handicapExact: "14.2", account:"member", admin: "true", id:"1"});
 
@@ -113,6 +113,11 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
                     socket.emit('competitionresultslistingData',res);   // sent all members data to client
                 });
                 break;     
+            case "contestlisting":
+                db.contest.find({}, function(err, res){
+                    socket.emit('contestlistingData',res);   // sent all members data to client
+                });
+                break;     
                 
         }
     });
@@ -132,6 +137,21 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
         });
     });
     
+
+    socket.on('addChampionCup', function(data){      // member data was sent with request to add member to database 
+        let id = Math.floor(Math.random()*1000000000000);  
+        data.id = id;
+        db.contest.insert(data);
+        
+        socket.emit('contestAdded',data);    // sent response to client
+    });    
+    
+    socket.on('editContest', function(data){      // member data was sent with request to add member to database   
+        
+        db.contest.update({id: data.id},{$set:{grid: data.grid}});
+        
+        socket.emit('contestEdited',data);    // sent response to client
+    });    
     
     socket.on('addCompetitionResult', function(data){     
         
