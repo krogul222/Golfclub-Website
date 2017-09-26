@@ -4225,6 +4225,8 @@
                         showContest(a,k-1,r-space/2,-1,space/2,(id-Math.ceil(Math.abs(id-parent)/2)), id,i);
                     }
                     
+                        $("#championcupgrid").append('<svg width="250" height="250" style="position:absolute;top: '+Number(Number((r-space/2)*15)+Number(height/2))+'px; left: '+Number((k-1)*145+Number(width/2))+'px;"><line x1="0" y1="0" x2="'+Number(145)+'" y2="'+Number(Number((space/2)*15)+Number(0))+'"  stroke="black"/></svg>');
+                    
                     if(b == 1){
                         console.log(name);
                         name = findMemberNameInContest(i, (id+Math.floor(Math.abs(id-parent)/2)));
@@ -4236,6 +4238,8 @@
                     } else{
                         showContest(b,k-1,r+space/2,1,space/2,(id+Math.floor(Math.abs(id-parent)/2)), id,i);
                     }     
+                    
+                        $("#championcupgrid").append('<svg width="250" height="250" style="position:absolute;top: '+Number(Number((r+space/2)*15)+Number(height/2)-Number(Number((space/2)*15)+Number(0)))+'px; left: '+Number((k-1)*145+Number(width/2))+'px;"><line x1="0" y1="'+Number(Number((space/2)*15)+Number(0))+'" x2="'+Number(145)+'" y2="0"  stroke="black"/></svg>');
                     
                     return;
                     
@@ -4277,6 +4281,8 @@
                         showEditContest(a,k-1,r-space/2,-1,space/2,(id-Math.ceil(Math.abs(id-parent)/2)), id,i);
                     }
                     
+                        $("#editcontestcontent").append('<svg width="250" height="250" style="position:absolute;top: '+Number(Number((r-space/2)*15)+Number(height/2))+'px; left: '+Number((k-1)*145+Number(width/2))+'px;z-index: -1"><line x1="0" y1="0" x2="'+Number(145)+'" y2="'+Number(Number((space/2)*15)+Number(0))+'"  stroke="black"/></svg>');
+                    
                     if(b == 1){
                         console.log(name);
                         name = findMemberNameInContest(i, (id+Math.floor(Math.abs(id-parent)/2)));
@@ -4288,6 +4294,8 @@
                     } else{
                         showEditContest(b,k-1,r+space/2,1,space/2,(id+Math.floor(Math.abs(id-parent)/2)), id,i);
                     }     
+                    
+                        $("#editcontestcontent").append('<svg width="250" height="250" style="position:absolute;top: '+Number(Number((r+space/2)*15)+Number(height/2)-Number(Number((space/2)*15)+Number(0)))+'px; left: '+Number((k-1)*145+Number(width/2))+'px; z-index: -1"><line x1="0" y1="'+Number(Number((space/2)*15)+Number(0))+'" x2="'+Number(145)+'" y2="0"  stroke="black"/></svg>');
                     
                     return;
                     
