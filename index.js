@@ -214,6 +214,12 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
         socket.emit('eventDeleted',data);  // sent response to client
     });     
     
+    socket.on('deleteContest', function(data){   // request to delete specific event was sent
+        console.log("delete Contest");
+        db.contest.remove({id: data.id}); 
+        socket.emit('contestDeleted',data);  // sent response to client
+    });     
+    
     socket.on('editCompetition', function(data){     
          db.competition.update({id: data.id},{$set:{eventname: data.eventname, competitionname: data.competitionname, venue: data.venue, day: data.day, month: data.month, year: data.year, notes: data.notes, firsthole: data.firsthole, firstwinner: data.firstwinner, secondhole: data.secondhole, secondwinner: data.secondwinner}}, { "multi" : true });  
          socket.emit('competitionEdited',data);  // sent response to client with the same data

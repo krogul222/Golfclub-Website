@@ -721,12 +721,21 @@
                             <div class="well  text-center" >  
                                 <h1>Edit contest</h1>     
                             </div>
-                                
-                           <button id="editcontestbtn" type="button" class="btn btn-primary btn-block" style="margin-top:20px;margin-bottom:20px;">
+                            
+                            <button id="editdeletecontestbtn" type="button" class="btn btn-danger btn-block" style="margin-top:20px;margin-bottom:20px;">
+                                        Delete Contest
+                            </button>                            
+                            
+                            <div id = "editcontestcontent" style="position:relative">
+                            </div>
+                            
+                          <button id="editcontestbtn" type="button" class="btn btn-primary btn-block" style="margin-top:20px;margin-bottom:20px;">
                                         Apply Changes
                             </button>
                             
-                            <div id = "editcontestcontent" style="position:relative">
+                            <div class = "text-center well">
+                                <div id="editcontestlist">
+                                </div>
                             </div>
                             
                             
@@ -1536,6 +1545,8 @@
             let competitionSecondHoleSelected = false;
             let competitionFirstWinnerSelected = false;
             let competitionSecondWinnerSelected = false;
+            
+            let editContestIndex = 0;
             let contestMembers =[];
             let contestGrid = [];
             let gridInfo = [];
@@ -1634,9 +1645,54 @@
             });            
             
             socket.on('contestEdited', function(data){
-                socket.emit('dataRequest', "contestlisting");
+                //socket.emit('dataRequest', "contestlisting");
+                
+                for(let i = 0; i < ALL_CONTEST_RESULTS.length ; i++){
+                    if(  data.id == ALL_CONTEST_RESULTS[i].id) {
+                        ALL_CONTEST_RESULTS[i].grid = data.grid;
+                    }
+                }
+                
+                if(ALL_CONTEST_RESULTS[0]){
+                    updateEditContestTables(0);
+                    updateContestGrid(ALL_CONTEST_RESULTS[0].id);
+                    updateContestList(0);
+                    updateEditContestList(0);
+                } else{
+                    $("#editcontestlist").empty();
+                    $("#editcontestcontent").empty();
+                    $("#championcuplist").empty();
+                    $("#championcupgrid").empty();
+                }
+
+                
                 bootbox.alert({message: "Champion Cup has been edited.", backdrop: true});
-            });               
+            });        
+            
+            socket.on('contestDeleted', function(data){
+                //socket.emit('dataRequest', "contestlisting");
+                
+                for(let i = 0; i < ALL_CONTEST_RESULTS.length ; i++){
+                    if(  data.id == ALL_CONTEST_RESULTS[i].id) {
+                        ALL_CONTEST_RESULTS.splice(i,1);
+                        console.log("Deleted contest.");
+                    }
+                }
+        
+                if(ALL_CONTEST_RESULTS[0]){
+                    updateEditContestTables(0);
+                    updateContestGrid(ALL_CONTEST_RESULTS[0].id);
+                    updateContestList(0);
+                    updateEditContestList(0);
+                } else{
+                    $("#editcontestlist").empty();
+                    $("#editcontestcontent").empty();
+                    $("#championcuplist").empty();
+                    $("#championcupgrid").empty();
+                }
+                
+                bootbox.alert({message: "Champion Cup has been deleted.", backdrop: true});
+            });             
             
             socket.on('eventEdited', function(data){
                 updateavent(data);
@@ -1970,9 +2026,17 @@
                        
                     }
                     
-                    updateEditContestTables(0);
-                    updateContestGrid(ALL_CONTEST_RESULTS[0].id);
-                    updateContestList(0);
+                    if(ALL_CONTEST_RESULTS[0]){
+                        updateEditContestTables(0);
+                        updateContestGrid(ALL_CONTEST_RESULTS[0].id);
+                        updateContestList(0);
+                        updateEditContestList(0);
+                    } else{
+                        $("#editcontestlist").empty();
+                        $("#editcontestcontent").empty();
+                        $("#championcuplist").empty();
+                        $("#championcupgrid").empty();
+                    }
                 });
             });
             
@@ -2160,8 +2224,23 @@
                 
                 $("#editcontestbtn").on("click", function(event){
                     
-                    socket.emit('editContest',ALL_CONTEST_RESULTS[0]);
+                    if(ALL_CONTEST_RESULTS[editContestIndex]){
+                        socket.emit('editContest',ALL_CONTEST_RESULTS[editContestIndex]);
+                    }
+                    
                 });
+                
+                $("#editdeletecontestbtn").on("click", function(event){
+                    
+                    bootbox.confirm("Are you sure to delete contest '"+ALL_CONTEST_RESULTS[editContestIndex].name+"' ?" , function(result){
+                        if(result){
+                            if(ALL_CONTEST_RESULTS[editContestIndex]){
+                                socket.emit('deleteContest', ALL_CONTEST_RESULTS[editContestIndex]); 
+                            }
+                        }
+                    });                     
+                });
+                                
                 
                 $("#editcompetitionmemberresultbtn").on("click", function(event){
                     if(checkEditMemberCompetitionResultFormValidation()){
@@ -2337,6 +2416,13 @@
                     //activeCompetition = id;
                 });
                 
+                $("#editcontestlist").on("click", "a", function(event){
+                    let id = $(this).attr('id');
+                    
+                    updateEditContestGrid(id);
+                    //activeCompetition = id;
+                });
+                
                 $("#contestcontent").on("click", "button", function(event){
                     /*let id = $(this).attr('id');
                     console.log(id);
@@ -2367,7 +2453,7 @@
                     let name = "";
                     let parent = -1;
                     if(ALL_CONTEST_RESULTS.length >0){
-                        contestGrid = ALL_CONTEST_RESULTS[0].grid;
+                        contestGrid = ALL_CONTEST_RESULTS[editContestIndex].grid;
 
                         for(let i = 0; i < contestGrid.length; i++){
                             if(contestGrid[i].id == id){
@@ -2930,11 +3016,29 @@
                             break;
                         }
                     }
-            }              
+            }      
+            
+            function updateEditContestGrid(id){
+                    $("#editcontestcontent").empty();
+                    
+                    for(let i = 0, length = ALL_CONTEST_RESULTS.length; i < length; i++){
+                        if(ALL_CONTEST_RESULTS[i].id == id){
+                            editContestIndex = i;
+                            let counter = ALL_CONTEST_RESULTS[i].gridInfo.counter;
+                        
+                           // $('#championcupcontent').css('min-height',(12*counter+10)*30+'px');    
+                            $('#editcontestcontent').css('min-height',(9*counter+10)*30+'px'); 
+                            showEditContest(ALL_CONTEST_RESULTS[i].gridInfo.membersnumber,5,8*counter+10,1,8*counter+10, ALL_CONTEST_RESULTS[i].gridInfo.idStart, ALL_CONTEST_RESULTS[i].gridInfo.idParent,i);
+                            break;
+                        }
+                    }
+            }     
                     
             function updateEditContestTables(i){
+                    $('#editcontestcontent').empty();
+                
                     if(ALL_CONTEST_RESULTS[i]){
-                    
+                        editContestIndex = i;
                        let counter = ALL_CONTEST_RESULTS[i].gridInfo.counter;
                         
                        $('#editcontestcontent').css('min-height',(9*counter+10)*30+'px');    
@@ -3825,6 +3929,19 @@
                 for(let i = 0, length = ALL_CONTEST_RESULTS.length; i < length; i++){
                     
                     $('#championcuplist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+ALL_CONTEST_RESULTS[i]["id"]+'" >'+ALL_CONTEST_RESULTS[i]["name"]+'</a>');
+                    
+                }
+            }
+                
+            }
+            
+            function updateEditContestList(idx){
+            $('#editcontestlist').empty();
+                
+            if(idx > -1){
+                for(let i = 0, length = ALL_CONTEST_RESULTS.length; i < length; i++){
+                    
+                    $('#editcontestlist').append('<a class = "notop list-group-item text-center list-group-item-info" href="javascript:void(0)" id="'+ALL_CONTEST_RESULTS[i]["id"]+'" >'+ALL_CONTEST_RESULTS[i]["name"]+'</a>');
                     
                 }
             }
