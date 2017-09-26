@@ -1562,6 +1562,18 @@
             
             socket.on('contestAdded', function(data){
                 ALL_CONTEST_RESULTS.push(data);
+
+                if(ALL_CONTEST_RESULTS[0]){
+                    updateEditContestTables(0);
+                    updateContestGrid(ALL_CONTEST_RESULTS[0].id);
+                    updateContestList(0);
+                    updateEditContestList(0);
+                } else{
+                    $("#editcontestlist").empty();
+                    $("#editcontestcontent").empty();
+                    $("#championcuplist").empty();
+                    $("#championcupgrid").empty();
+                }                
                 
                 bootbox.alert({message: "New contest has been added.", backdrop: true});
             });
