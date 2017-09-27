@@ -1547,6 +1547,7 @@
             let competitionSecondWinnerSelected = false;
             let activeContestIndex = 0;
             let contestThirdPlace = [];
+            let contestEditThirdPlace = [];
             
             let editContestIndex = 0;
             let contestMembers =[];
@@ -2467,60 +2468,80 @@
                 $("#editcontestcontent").on("click", "button", function(event){
                     let id = $(this).attr('id');
                     console.log(id);
-                    let name = "";
-                    let parent = -1;
-                    if(ALL_CONTEST_RESULTS.length >0){
-                        contestGrid = ALL_CONTEST_RESULTS[editContestIndex].grid;
+                    
+                    if(!(id == "thirdplace1" || id == "thirdplace2")){
 
-                        for(let i = 0; i < contestGrid.length; i++){
-                            if(contestGrid[i].id == id){
-                                parent = contestGrid[i].parentId;
-                                name = contestGrid[i].name;
-                                break;
+                        let name = "";
+                        let parent = -1;
+                        if(ALL_CONTEST_RESULTS.length >0){
+                            contestGrid = ALL_CONTEST_RESULTS[editContestIndex].grid;
+
+                            for(let i = 0; i < contestGrid.length; i++){
+                                if(contestGrid[i].id == id){
+                                    parent = contestGrid[i].parentId;
+                                    name = contestGrid[i].name;
+                                    break;
+                                }
                             }
-                        }
-                        
-                        let parenttmpname = parent;
-                         let parenttmp = parent;
-                        
-                        for(let i = 0; i < contestGrid.length; i++){
-                            if(contestGrid[i].id == parent){
-                                parenttmpname = contestGrid[i].name;
-                                parenttmp = contestGrid[i].parentId;
-                                contestGrid[i].name = name;
-                                break;
+
+                            let parenttmpname = parent;
+                             let parenttmp = parent;
+
+                            for(let i = 0; i < contestGrid.length; i++){
+                                if(contestGrid[i].id == parent){
+                                    parenttmpname = contestGrid[i].name;
+                                    parenttmp = contestGrid[i].parentId;
+                                    contestGrid[i].name = name;
+                                    break;
+                                }
                             }
+
+                            $("#editcontestcontent").find('#'+parent).text(name);
+
+                            let exit = 1;
+
+                            if(parenttmpname != name){
+                                while(exit > 0){        
+                                    exit  = 0;
+                                    for(let i = 0; i < contestGrid.length; i++){
+                                        if(contestGrid[i].id == parenttmp){
+
+                                            if(contestGrid[i].name ==  parenttmpname){
+                                                contestGrid[i].name = "";
+                                                $("#editcontestcontent").find('#'+parenttmp).text("");
+                                                parenttmp = contestGrid[i].parentId;
+
+                                                exit = 1;
+                                            } 
+
+                                            break;
+                                        }
+                                    }      
+
+                                } 
+                            }
+
+
+
                         }
-
-                        $("#editcontestcontent").find('#'+parent).text(name);
                         
-                        let exit = 1;
-                        
-                        if(parenttmpname != name){
-                            while(exit > 0){        
-                                exit  = 0;
-                                for(let i = 0; i < contestGrid.length; i++){
-                                    if(contestGrid[i].id == parenttmp){
+                        contestEditThirdPlace.length = 0;    
+                    
+                        updateEditContestGrid(editContestIndex);
+                        updateEditContestTables(editContestIndex);
 
-                                        if(contestGrid[i].name ==  parenttmpname){
-                                            contestGrid[i].name = "";
-                                            $("#editcontestcontent").find('#'+parenttmp).text("");
-                                            parenttmp = contestGrid[i].parentId;
-
-                                            exit = 1;
-                                        } 
-
-                                        break;
-                                    }
-                                }      
-
-                            } 
-                        }
-
-                        
-
+                        showEditThirdPlace();
                     }
+   
+                    
 
+                    
+                    if(id == "thirdplace1" || id == "thirdplace2"){
+                         let name = $("#editcontestcontent").find('#'+id).text();
+                         $("#editcontestcontent").find('#thirdplace').text(name);
+                         ALL_CONTEST_RESULTS[editContestIndex].third = name;
+                    }
+                    
                 });                
                 
                 $("#editcompetitionlist").on("click", "a", function(event){
@@ -3048,8 +3069,10 @@
                             let counter = ALL_CONTEST_RESULTS[i].gridInfo.counter;
                         
                            // $('#championcupcontent').css('min-height',(12*counter+10)*30+'px');    
-                            $('#editcontestcontent').css('min-height',(9*counter+10)*30+'px'); 
-                            showEditContest(ALL_CONTEST_RESULTS[i].gridInfo.membersnumber,5,8*counter+10,1,8*counter+10, ALL_CONTEST_RESULTS[i].gridInfo.idStart, ALL_CONTEST_RESULTS[i].gridInfo.idParent,i);
+                            $('#editcontestcontent').css('min-height',(9*counter+15)*30+'px'); 
+                            contestEditThirdPlace.length = 0;
+                            showEditContest(ALL_CONTEST_RESULTS[i].gridInfo.membersnumber,5,8*counter+10,1,8*counter+10, ALL_CONTEST_RESULTS[i].gridInfo.idStart, ALL_CONTEST_RESULTS[i].gridInfo.idParent,i, 0);
+                            showEditThirdPlace();
                             break;
                         }
                     }
@@ -3062,9 +3085,10 @@
                         editContestIndex = i;
                        let counter = ALL_CONTEST_RESULTS[i].gridInfo.counter;
                         
-                       $('#editcontestcontent').css('min-height',(9*counter+10)*30+'px');    
-                       showEditContest(ALL_CONTEST_RESULTS[i].gridInfo.membersnumber,5,8*counter+10,1,8*counter+10, ALL_CONTEST_RESULTS[i].gridInfo.idStart, ALL_CONTEST_RESULTS[i].gridInfo.idParent,0);
-                       
+                       $('#editcontestcontent').css('min-height',(9*counter+15)*30+'px');
+                        contestEditThirdPlace.length = 0;
+                       showEditContest(ALL_CONTEST_RESULTS[i].gridInfo.membersnumber,5,8*counter+10,1,8*counter+10, ALL_CONTEST_RESULTS[i].gridInfo.idStart, ALL_CONTEST_RESULTS[i].gridInfo.idParent,0,0);
+                       showEditThirdPlace();
                     }
             }
             
@@ -4182,6 +4206,8 @@
                         generateContest(a,k-1,r-space/2,-1,space/2,(id-Math.ceil(Math.abs(id-parent)/2)), id);
                     }
                     
+                        $("#contestcontent").append('<svg width="250" height="250" style="position:absolute;top: '+Number(Number((r-space/2)*15)+Number(height/2))+'px; left: '+Number((k-1)*145+Number(width/2))+'px;"><line x1="0" y1="0" x2="'+Number(145)+'" y2="'+Number(Number((space/2)*15)+Number(0))+'"  stroke="black"/></svg>');
+                    
                     if(b == 1){
                         
                         name = contestMembers.splice(0,1)[0];
@@ -4193,6 +4219,8 @@
                     } else{
                         generateContest(b,k-1,r+space/2,1,space/2,(id+Math.floor(Math.abs(id-parent)/2)), id);
                     }     
+                    
+                    $("#contestcontent").append('<svg width="250" height="250" style="position:absolute;top: '+Number(Number((r+space/2)*15)+Number(height/2)-Number(Number((space/2)*15)+Number(0)))+'px; left: '+Number((k-1)*145+Number(width/2))+'px;"><line x1="0" y1="'+Number(Number((space/2)*15)+Number(0))+'" x2="'+Number(145)+'" y2="0"  stroke="black"/></svg>');
                     
                     return;
                     
@@ -4340,13 +4368,109 @@
                         
                     }
                     
-                    $("#championcupgrid").append('<button id="thirdplace" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+2*Number(Number((8*counter+12)*15)+Number(0))+'px; left: '+(5*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+""+'</button>');
+                    let third = "";
+                    if(ALL_CONTEST_RESULTS[activeContestIndex].third){
+                        third = ALL_CONTEST_RESULTS[activeContestIndex].third;
+                    }
+                    
+                    
+                    $("#championcupgrid").append('<button id="thirdplace" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+2*Number(Number((8*counter+12)*15)+Number(0))+'px; left: '+(5*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+third+'</button>');
 
                 
             }
         }
             
-            function showEditContest(num,k,r,s,space, id, parent,i){
+        function showEditThirdPlace(){
+                
+                let width = 120;
+                let height = 30;
+                let fontsize = 11;
+                
+                if(contestEditThirdPlace.length > 0){
+                    let arr1 = [];
+                    let arr2 = [];
+                    console.log("------");
+                    for(let j = 0; j < contestEditThirdPlace.length; j++){
+                        
+                        if(ALL_CONTEST_RESULTS.length >0){
+                                let contestGrid = ALL_CONTEST_RESULTS[editContestIndex].grid;
+                                let parent = "";
+                                let name = "";
+                                for(let i = 0; i < contestGrid.length; i++){
+                                    if(contestGrid[i].id == contestEditThirdPlace[j]){
+                                        console.log(contestGrid[i].name);
+                                        parent = contestGrid[i].parentId;
+                                        name = contestGrid[i].name;
+                                        arr1.push(contestGrid[i].name);
+                                        break;
+                                    }
+                                }
+
+                                let parenttmpname = parent;
+                                 let parenttmp = parent;
+
+                                for(let i = 0; i < contestGrid.length; i++){
+                                    if(contestGrid[i].id == parent){
+                                        arr2.push(contestGrid[i].name);
+                                        //contestGrid[i].name = name;
+                                        break;
+                                    }
+                                }
+
+                        }
+                    }
+                    
+                    let arrThirdPlace = [];
+                    
+                    for( let i = 0; i < arr1.length ; i++){
+                        if(arr2[i] !== "" && arr2[i]){
+                            if(arr1[i] !== arr2[i]){
+                                arrThirdPlace.push(arr1[i]);
+                            }
+                        }
+                    }
+                    
+                    
+                    let counter = ALL_CONTEST_RESULTS[editContestIndex].gridInfo.counter;
+
+                 //   showContest(ALL_CONTEST_RESULTS[i].gridInfo.membersnumber,5,8*counter+10,1,8*counter+10, ALL_CONTEST_RESULTS[i].gridInfo.idStart, ALL_CONTEST_RESULTS[i].gridInfo.idParent,i, 0)
+                    
+                    let space = 2;
+                    
+                    console.log("POLFINALY");
+                    for(let i = 0; i < arrThirdPlace.length; i++){
+                        console.log(arrThirdPlace[i]);
+                        
+                         $("#editcontestcontent").append('<button id="thirdplace'+Number(i+1)+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+2*Number(Number((8*counter+12+space/2 - space*i)*15)+Number(0))+'px; left: '+(4*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+arrThirdPlace[i]+'</button>');
+                        
+                        $("#editcontestcontent").append('<svg width="250" height="250" style="position:absolute;top: '+Number(2*Number((8*counter+12+space/2 - space*i)*15)+Number(height/2)-2*Number(Number((space/2)*15)+Number(0))*(1-i))+'px; left: '+Number((4)*145+Number(width/2))+'px;"><line x1="0" y1="'+2*Number(Number((space/2)*15)+Number(0))*(1-i)+'" x2="'+Number(145)+'" y2="'+2*Number(Number((space/2)*15)+Number(0))*(i)+'"  stroke="black"/></svg>');
+                        
+                    }
+                    let third = "";
+                    if(ALL_CONTEST_RESULTS[editContestIndex].third){
+                        third = ALL_CONTEST_RESULTS[editContestIndex].third;
+                    }
+                    
+                    let flag = false;
+                    
+                    for(let i = 0; i < arrThirdPlace.length; i++){
+                        if(third == arrThirdPlace[i]){
+                            flag= true;
+                        }
+                    }
+                    
+                    if(flag == false){
+                        third = "";
+                        ALL_CONTEST_RESULTS[editContestIndex].third = "";
+                    }
+                    
+                    $("#editcontestcontent").append('<button id="thirdplace" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+2*Number(Number((8*counter+12)*15)+Number(0))+'px; left: '+(5*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+third+'</button>');
+
+                
+            }
+        }
+            
+            function showEditContest(num,k,r,s,space, id, parent,i, depth){
                 console.log("SHOW Edit CONTEST "+num);
                 
                 let width = 120;
@@ -4359,6 +4483,11 @@
                 $("#editcontestcontent").append('<button id="'+id+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r)*15)+Number(0))+'px; left: '+(k*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');
                 
                 //contestGrid.push({name: name, id: id, parentId: parent});
+                
+                if(depth == 2){
+                    contestEditThirdPlace.push(id);
+                }
+                
                 
                 if(num == 1){
                     /*$("#contestcontent").append('<p style="position:absolute; top: '+Number(Number((r)*15)+Number(0))+'px; left: '+k*130+'px; z-index: 1">bababa</p>');*/
@@ -4377,8 +4506,12 @@
                         
                         //contestGrid.push({name: name, id: (id-Math.ceil(Math.abs(id-parent)/2)), parentId: id});
                     
+                        if(depth == 1){
+                            contestEditThirdPlace.push((id-Math.ceil(Math.abs(id-parent)/2)));
+                        }
+                        
                     } else{
-                        showEditContest(a,k-1,r-space/2,-1,space/2,(id-Math.ceil(Math.abs(id-parent)/2)), id,i);
+                        showEditContest(a,k-1,r-space/2,-1,space/2,(id-Math.ceil(Math.abs(id-parent)/2)), id,i,Number(Number(depth)+1));
                     }
                     
                         $("#editcontestcontent").append('<svg width="250" height="250" style="position:absolute;top: '+Number(Number((r-space/2)*15)+Number(height/2))+'px; left: '+Number((k-1)*145+Number(width/2))+'px;z-index: -1"><line x1="0" y1="0" x2="'+Number(145)+'" y2="'+Number(Number((space/2)*15)+Number(0))+'"  stroke="black"/></svg>');
@@ -4389,10 +4522,14 @@
                         
                         $("#editcontestcontent").append('<button id="'+(id+Math.floor(Math.abs(id-parent)/2))+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r+space/2)*15)+Number(0))+'px; left: '+((k-1)*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');
                         
+                        if(depth == 1){
+                            contestEditThirdPlace.push((id+Math.floor(Math.abs(id-parent)/2)));
+                        }                    
+                        
                        // contestGrid.push({name: name, id: (id+Math.floor(Math.abs(id-parent)/2)), parentId: id});
                         
                     } else{
-                        showEditContest(b,k-1,r+space/2,1,space/2,(id+Math.floor(Math.abs(id-parent)/2)), id,i);
+                        showEditContest(b,k-1,r+space/2,1,space/2,(id+Math.floor(Math.abs(id-parent)/2)), id,i, Number(Number(depth)+1));
                     }     
                     
                         $("#editcontestcontent").append('<svg width="250" height="250" style="position:absolute;top: '+Number(Number((r+space/2)*15)+Number(height/2)-Number(Number((space/2)*15)+Number(0)))+'px; left: '+Number((k-1)*145+Number(width/2))+'px; z-index: -1"><line x1="0" y1="'+Number(Number((space/2)*15)+Number(0))+'" x2="'+Number(145)+'" y2="0"  stroke="black"/></svg>');

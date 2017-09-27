@@ -148,7 +148,7 @@ io.sockets.on('connection', function(socket){   // runs if client connected to t
     
     socket.on('editContest', function(data){      // member data was sent with request to add member to database   
         
-        db.contest.update({id: data.id},{$set:{grid: data.grid}});
+        db.contest.update({id: data.id},{$set:{grid: data.grid, third: data.third}});
         
         socket.emit('contestEdited',data);    // sent response to client
     });    
