@@ -3052,16 +3052,18 @@
                             $('#championcupgrid').css('min-height',(9*counter+15)*30+'px'); 
                             contestThirdPlace.length = 0; 
                             
+                            let width = 120;
+                            let height = 30;
                             
-                             $("#championcupgrid").append('<p id="cont1" style="position:absolute; top: '+0+'px; left: '+(4*145)+'px; z-index: 1; font-size:'+20+'px;display:none">'+'Final'+'</button>');
+                             $("#championcupgrid").append('<button id="cont1" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+0+'px; left: '+(4*145)+'px; z-index: 1; font-size:'+15+'px;display:none" class="btn btn-success">'+'Final'+'</button>');
                             
-                            $("#championcupgrid").append('<p id="cont2" style="position:absolute; top: '+0+'px; left: '+(3*145)+'px; z-index: 1; font-size:'+20+'px;display:none">'+'Semifinals'+'</button>');
+                            $("#championcupgrid").append('<button id="cont2" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+0+'px; left: '+(3*145)+'px; z-index: 1; font-size:'+15+'px;display:none" class="btn btn-success">'+'Semifinals'+'</button>');
                             
-                            $("#championcupgrid").append('<p id="cont3" style="position:absolute; top: '+0+'px; left: '+(2*145)+'px; z-index: 1; font-size:'+20+'px;display:none">'+'Quarterfinals'+'</button>');
+                            $("#championcupgrid").append('<button id="cont3" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+0+'px; left: '+(2*145)+'px; z-index: 1; font-size:'+15+'px;display:none" class="btn btn-success">'+'Quarterfinals'+'</button>');
                             
-                            $("#championcupgrid").append('<p id="cont4" style="position:absolute; top: '+0+'px; left: '+(1*145)+'px; z-index: 1; font-size:'+20+'px;display:none">'+'Round 2'+'</button>');
+                            $("#championcupgrid").append('<button id="cont4" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+0+'px; left: '+(1*145)+'px; z-index: 1; font-size:'+15+'px;display:none" class="btn btn-success">'+'Round 2'+'</button>');
                             
-                            $("#championcupgrid").append('<p id="cont5" style="position:absolute; top: '+0+'px; left: '+(0*145)+'px; z-index: 1; font-size:'+20+'px;display:none">'+'Round 1'+'</button>');
+                            $("#championcupgrid").append('<button id="cont5" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+0+'px; left: '+(0*145)+'px; z-index: 1; font-size:'+15+'px;display:none" class="btn btn-success">'+'Round 1'+'</button>');
                             
                             let depth = showContest(ALL_CONTEST_RESULTS[i].gridInfo.membersnumber,5,8*counter+10,1,8*counter+10, ALL_CONTEST_RESULTS[i].gridInfo.idStart, ALL_CONTEST_RESULTS[i].gridInfo.idParent,i, 0);
                             
