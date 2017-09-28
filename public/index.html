@@ -2469,7 +2469,7 @@
                     let id = $(this).attr('id');
                     console.log(id);
                     
-                    if(!(id == "thirdplace1" || id == "thirdplace2")){
+                    if(!(id == "editthirdplace1" || id == "editthirdplace2")){
 
                         let name = "";
                         let parent = -1;
@@ -2536,7 +2536,7 @@
                     
 
                     
-                    if(id == "thirdplace1" || id == "thirdplace2"){
+                    if(id == "editthirdplace1" || id == "editthirdplace2"){
                          let name = $("#editcontestcontent").find('#'+id).text();
                          $("#editcontestcontent").find('#thirdplace').text(name);
                          ALL_CONTEST_RESULTS[editContestIndex].third = name;
@@ -4441,7 +4441,7 @@
                     for(let i = 0; i < arrThirdPlace.length; i++){
                         console.log(arrThirdPlace[i]);
                         
-                         $("#editcontestcontent").append('<button id="thirdplace'+Number(i+1)+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+2*Number(Number((8*counter+12+space/2 - space*i)*15)+Number(0))+'px; left: '+(4*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+arrThirdPlace[i]+'</button>');
+                         $("#editcontestcontent").append('<button id="editthirdplace'+Number(i+1)+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+2*Number(Number((8*counter+12+space/2 - space*i)*15)+Number(0))+'px; left: '+(4*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+arrThirdPlace[i]+'</button>');
                         
                         $("#editcontestcontent").append('<svg width="250" height="250" style="position:absolute;top: '+Number(2*Number((8*counter+12+space/2 - space*i)*15)+Number(height/2)-2*Number(Number((space/2)*15)+Number(0))*(1-i))+'px; left: '+Number((4)*145+Number(width/2))+'px;"><line x1="0" y1="'+2*Number(Number((space/2)*15)+Number(0))*(1-i)+'" x2="'+Number(145)+'" y2="'+2*Number(Number((space/2)*15)+Number(0))*(i)+'"  stroke="black"/></svg>');
                         
