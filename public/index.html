@@ -213,7 +213,7 @@
                             </li>
                             <li class="list-group-item" id = "championcup">
                                 <a class="notop" href="javascript:void(0)">
-                                    Champion Cup
+                                    Challenge Trophy
                                 </a>
                             </li>                            
                             <li class="list-group-item" id = "playeroftheyear">
@@ -432,8 +432,14 @@
                         
                         
                         
-                        <!-- Champion Cup panel definition begins -->
+                        <!-- Challenge Trophy panel definition begins -->
                         <div id="championcupcontent" style="display:none;">
+                            <div class="well  text-center" >
+                                <img class = "img-rounded" src="img/playeroftheyear.png" style="display:inline-block"  alt="" align="left" > 
+                                <h1 style="display:inline-block">Challenge Trophy</h1>
+                                <img class = "img-rounded" style="display:inline-block" src="img/playeroftheyear.png" alt=""  align="right" >
+                            </div>
+                            
                             <div id="championcupgrid">
                             </div>
                             
@@ -442,7 +448,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Champion Cup panel definition ends -->
+                        <!-- Challenge Trophy panel definition ends -->
                         
                         
                         <!-- Hall of Fame panel definition begins -->
@@ -719,11 +725,11 @@
                         <!-- Edit contest panel definition begins -->
                         <div id="editcontest" style="display:none">
                             <div class="well  text-center" >  
-                                <h1>Edit contest</h1>     
+                                <h1>Challenge Trophy</h1>     
                             </div>
                             
                             <button id="editdeletecontestbtn" type="button" class="btn btn-danger btn-block" style="margin-top:20px;margin-bottom:20px;">
-                                        Delete Contest
+                                        Delete Challenge Trophy
                             </button>                            
                             
                             <div id = "editcontestcontent" style="position:relative">
@@ -746,7 +752,7 @@
                         <!-- Add contest panel definition begins -->
                         <div id="addcontest" style="display:none">
                             <div class="well  text-center" >  
-                                <h1>Add contest</h1>     
+                                <h1>Add Challenge Trophy</h1>     
                             </div>
                             
                             <div class="list-group" id = "contestmemberslist">
@@ -757,12 +763,12 @@
                             </button>
                             
                              <label for="contestName" style="margin-top:20px">
-                                        Champion Cup Name:
+                                        Challenge Trophy Name:
                              </label>
                              <input type="text" class="form-control" id="contestName" placeholder="" required>
                             
                             <button id="contestcreatebtn" type="button" class="btn btn-primary btn-block" style="display:none; margin-top:20px;margin-bottom:20px;">
-                                        Create Champion Cup
+                                        Create Challenge Trophy
                             </button>
     
                             <div id = "contestcontent" style="position:relative">
@@ -1681,7 +1687,7 @@
                 }
 
                 
-                bootbox.alert({message: "Champion Cup has been edited.", backdrop: true});
+                bootbox.alert({message: "Challenge Trophy has been edited.", backdrop: true});
             });        
             
             socket.on('contestDeleted', function(data){
@@ -1706,7 +1712,7 @@
                     $("#championcupgrid").empty();
                 }
                 
-                bootbox.alert({message: "Champion Cup has been deleted.", backdrop: true});
+                bootbox.alert({message: "CChallenge Trophy has been deleted.", backdrop: true});
             });             
             
             socket.on('eventEdited', function(data){
@@ -2438,6 +2444,7 @@
                     let id = $(this).attr('id');
                     
                     updateEditContestGrid(id);
+                    //(id);
                     //activeCompetition = id;
                 });
                 
@@ -2527,9 +2534,9 @@
                         
                         contestEditThirdPlace.length = 0;    
                     
-                        updateEditContestGrid(editContestIndex);
+                        //
                         updateEditContestTables(editContestIndex);
-
+                        updateEditContestGrid(ALL_CONTEST_RESULTS[editContestIndex].id);
                         showEditThirdPlace();
                     }
    
@@ -3055,15 +3062,17 @@
                             let width = 120;
                             let height = 30;
                             
-                             $("#championcupgrid").append('<button id="cont1" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+0+'px; left: '+(4*145)+'px; z-index: 1; font-size:'+15+'px;display:none" class="btn btn-success">'+'Final'+'</button>');
+                            let offset = 120;
                             
-                            $("#championcupgrid").append('<button id="cont2" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+0+'px; left: '+(3*145)+'px; z-index: 1; font-size:'+15+'px;display:none" class="btn btn-success">'+'Semifinals'+'</button>');
+                             $("#championcupgrid").append('<button id="cont1" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+offset+'px; left: '+(4*145)+'px; z-index: 1; font-size:'+15+'px;display:none" class="btn btn-success">'+'Final'+'</button>');
                             
-                            $("#championcupgrid").append('<button id="cont3" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+0+'px; left: '+(2*145)+'px; z-index: 1; font-size:'+15+'px;display:none" class="btn btn-success">'+'Quarterfinals'+'</button>');
+                            $("#championcupgrid").append('<button id="cont2" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+offset+'px; left: '+(3*145)+'px; z-index: 1; font-size:'+15+'px;display:none" class="btn btn-success">'+'Semifinals'+'</button>');
                             
-                            $("#championcupgrid").append('<button id="cont4" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+0+'px; left: '+(1*145)+'px; z-index: 1; font-size:'+15+'px;display:none" class="btn btn-success">'+'Round 2'+'</button>');
+                            $("#championcupgrid").append('<button id="cont3" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+offset+'px; left: '+(2*145)+'px; z-index: 1; font-size:'+15+'px;display:none" class="btn btn-success">'+'Quarterfinals'+'</button>');
                             
-                            $("#championcupgrid").append('<button id="cont5" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+0+'px; left: '+(0*145)+'px; z-index: 1; font-size:'+15+'px;display:none" class="btn btn-success">'+'Round 1'+'</button>');
+                            $("#championcupgrid").append('<button id="cont4" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+offset+'px; left: '+(1*145)+'px; z-index: 1; font-size:'+15+'px;display:none" class="btn btn-success">'+'Round 2'+'</button>');
+                            
+                            $("#championcupgrid").append('<button id="cont5" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+offset+'px; left: '+(0*145)+'px; z-index: 1; font-size:'+15+'px;display:none" class="btn btn-success">'+'Round 1'+'</button>');
                             
                             let depth = showContest(ALL_CONTEST_RESULTS[i].gridInfo.membersnumber,5,8*counter+10,1,8*counter+10, ALL_CONTEST_RESULTS[i].gridInfo.idStart, ALL_CONTEST_RESULTS[i].gridInfo.idParent,i, 0);
                             
@@ -4251,7 +4260,7 @@
             
             function showContest(num,k,r,s,space, id, parent,i, depth){
                 console.log("SHOW CONTEST "+num);
-        
+                let offset = 120;
                 let width = 120;
                 let height = 30;
                 let fontsize = 11;
@@ -4266,7 +4275,7 @@
                 let result1 = depthtmp;
                 let result2 = depthtmp;
                 
-                $("#championcupgrid").append('<button id="'+id+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r)*15)+Number(0))+'px; left: '+(k*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');
+                $("#championcupgrid").append('<button id="'+id+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r)*15)+Number(offset))+'px; left: '+(k*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');
                 
                 /*$("#championcupgrid").append('<button id="'+id+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r)*15)+Number(0))+'px; left: '+(k*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');*/
                 
@@ -4289,7 +4298,7 @@
                         } 
                         
                         $("#championcupgrid").append('<button id="'+(id-Math.ceil(Math.abs(id-parent)/2))+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r-space/2)
-                        *15)+Number(0))+'px; left: '+((k-1)*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');
+                        *15)+Number(offset))+'px; left: '+((k-1)*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');
                         
 
                                        
@@ -4300,7 +4309,7 @@
                         result1 =showContest(a,k-1,r-space/2,-1,space/2,(id-Math.ceil(Math.abs(id-parent)/2)), id,i, depthtmp);
                     }
                     
-                        $("#championcupgrid").append('<svg width="250" height="250" style="position:absolute;top: '+Number(Number((r-space/2)*15)+Number(height/2))+'px; left: '+Number((k-1)*145+Number(width/2))+'px;"><line x1="0" y1="0" x2="'+Number(145)+'" y2="'+Number(Number((space/2)*15)+Number(0))+'"  stroke="black"/></svg>');
+                        $("#championcupgrid").append('<svg width="250" height="250" style="position:absolute;top: '+Number(Number((r-space/2)*15)+Number(height/2+offset))+'px; left: '+Number((k-1)*145+Number(width/2))+'px;"><line x1="0" y1="0" x2="'+Number(145)+'" y2="'+Number(Number((space/2)*15)+Number(0))+'"  stroke="black"/></svg>');
                     
                     if(b == 1){
                         console.log(name);
@@ -4309,7 +4318,7 @@
                             contestThirdPlace.push((id+Math.floor(Math.abs(id-parent)/2)));
                         } 
                         
-                        $("#championcupgrid").append('<button id="'+(id+Math.floor(Math.abs(id-parent)/2))+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r+space/2)*15)+Number(0))+'px; left: '+((k-1)*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');
+                        $("#championcupgrid").append('<button id="'+(id+Math.floor(Math.abs(id-parent)/2))+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r+space/2)*15)+Number(offset))+'px; left: '+((k-1)*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');
                         
                     
                         
@@ -4319,7 +4328,7 @@
                         result2 = showContest(b,k-1,r+space/2,1,space/2,(id+Math.floor(Math.abs(id-parent)/2)), id,i, depthtmp);
                     }     
                     
-                        $("#championcupgrid").append('<svg width="250" height="250" style="position:absolute;top: '+Number(Number((r+space/2)*15)+Number(height/2)-Number(Number((space/2)*15)+Number(0)))+'px; left: '+Number((k-1)*145+Number(width/2))+'px;"><line x1="0" y1="'+Number(Number((space/2)*15)+Number(0))+'" x2="'+Number(145)+'" y2="0"  stroke="black"/></svg>');
+                        $("#championcupgrid").append('<svg width="250" height="250" style="position:absolute;top: '+Number(Number((r+space/2)*15)+Number(height/2+offset)-Number(Number((space/2)*15)+Number(0)))+'px; left: '+Number((k-1)*145+Number(width/2))+'px;"><line x1="0" y1="'+Number(Number((space/2)*15)+Number(0))+'" x2="'+Number(145)+'" y2="0"  stroke="black"/></svg>');
                     
                     
                     if(result1 > result2 )
@@ -4335,6 +4344,7 @@
                 let width = 120;
                 let height = 30;
                 let fontsize = 11;
+                let offset = 120;
                 
                 if(contestThirdPlace.length > 0){
                     let arr1 = [];
@@ -4391,9 +4401,9 @@
                     for(let i = 0; i < arrThirdPlace.length; i++){
                         console.log(arrThirdPlace[i]);
                         
-                         $("#championcupgrid").append('<button id="thirdplace'+i+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+2*Number(Number((8*counter+12+space/2 - space*i)*15)+Number(0))+'px; left: '+(4*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+arrThirdPlace[i]+'</button>');
+                         $("#championcupgrid").append('<button id="thirdplace'+i+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+2*Number(Number((8*counter+12+space/2 - space*i)*15)+Number(offset/2))+'px; left: '+(4*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+arrThirdPlace[i]+'</button>');
                         
-                        $("#championcupgrid").append('<svg width="250" height="250" style="position:absolute;top: '+Number(2*Number((8*counter+12+space/2 - space*i)*15)+Number(height/2)-2*Number(Number((space/2)*15)+Number(0))*(1-i))+'px; left: '+Number((4)*145+Number(width/2))+'px;"><line x1="0" y1="'+2*Number(Number((space/2)*15)+Number(0))*(1-i)+'" x2="'+Number(145)+'" y2="'+2*Number(Number((space/2)*15)+Number(0))*(i)+'"  stroke="black"/></svg>');
+                        $("#championcupgrid").append('<svg width="250" height="250" style="position:absolute;top: '+Number(2*Number((8*counter+12+space/2 - space*i)*15)+Number(height/2+offset)-2*Number(Number((space/2)*15)+Number(0))*(1-i))+'px; left: '+Number((4)*145+Number(width/2))+'px;"><line x1="0" y1="'+2*Number(Number((space/2)*15)+Number(0))*(1-i)+'" x2="'+Number(145)+'" y2="'+2*Number(Number((space/2)*15)+Number(0))*(i)+'"  stroke="black"/></svg>');
                         
                     }
                     
@@ -4402,8 +4412,9 @@
                         third = ALL_CONTEST_RESULTS[activeContestIndex].third;
                     }
                     
+                    $("#championcupgrid").append('<button id="info" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+2*Number(Number((8*counter+12)*15)+offset/2-height)+'px; left: '+(5*145)+'px; z-index: 1; font-size:'+15+'px" class="btn btn-success">'+'Third Place'+'</button>');
                     
-                    $("#championcupgrid").append('<button id="thirdplace" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+2*Number(Number((8*counter+12)*15)+Number(0))+'px; left: '+(5*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+third+'</button>');
+                    $("#championcupgrid").append('<button id="thirdplace" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+2*Number(Number((8*counter+12)*15)+Number(offset/2))+'px; left: '+(5*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+third+'</button>');
 
                 
             }
