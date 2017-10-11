@@ -18,13 +18,69 @@
             <div class='navbar navbar-default navbar-static-top'>
                 <div class="container">
                     <!-- Logo begins -->
-                    <a href='#' class='navbar-brand'>
-                        <text style="color:rgb(44,164,176)">
-                            Ne</text><text style="color:red">x</text><text style="color:rgb(44,164,176)">peria DMAN Golf Society
-                        </text>
-                    </a>
+                    <div class = "row hidden-md hidden-lg hidden-xl text-center">
+                        <a href='#' class='navbar-brand'>
+                            <text style="color:rgb(44,164,176)">
+                                Ne</text><text style="color:red">x</text><text style="color:rgb(44,164,176)">peria DMAN Golf Society
+                            </text>
+                        </a>
+                    </div>
+                    <div class = "hidden-sm hidden-xs">
+                        <a href='#' class='navbar-brand'>
+                            <text style="color:rgb(44,164,176)">
+                                Ne</text><text style="color:red">x</text><text style="color:rgb(44,164,176)">peria DMAN Golf Society
+                            </text>
+                        </a>
+                    </div>
                     <!-- Logo ends -->
                     <ul class="nav nav-pills navbar-right"> 
+                        <li class = "hidden-md hidden-lg hidden-xl">
+                            <a href="#"  data-toggle="dropdown">Menu<span class="caret"></span></a>
+                            <ul id="glofmenu-sm" class="dropdown-menu">
+                            <!-- Menu with general access begins -->
+                                <li class="list-group-item" id="membershiplisting">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Membership
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id="committee">
+                                    <a class="notop" href="javascript:void(0)">
+                                        The Committee
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id="societyeventslisting">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Society Events
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id = "competitionresults">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Scoreboard
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id = "championcup">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Challenge Trophy
+                                    </a>
+                                </li>                            
+                                <li class="list-group-item" id = "playeroftheyear">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Player of the Year
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id = "rollofhonour">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Roll of Honour
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id = "halloffame">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Hall of Fame
+                                    </a>
+                                </li>
+                            <!-- Menu with general access ends -->
+                            </ul>
+                        </li>
                         <!-- Log in menu begins -->
                         <li id="login-menu">
                             <a href="#"  data-toggle="dropdown">Log in<span class="caret"></span></a>
@@ -107,7 +163,7 @@
                             </ul>
                         </li>
                         <!-- Logged user menu ends -->
-                        <li>
+                        <li style="display:inline-block">
                             <a href="#contact">
                                 Contact
                             </a>
@@ -119,7 +175,7 @@
 
         <!-- Carousel begins -->
             <!-- Header Carousel, looped photos at top of the screen -->
-            <header id="myCarousel" class="carousel slide" data-interval="10000" data-ride="carousel">
+            <header id="myCarousel" class="carousel slide hidden-xs" data-interval="10000" data-ride="carousel">
                 
                 <!-- Indicators , carousel skeleton-->
                 <ol class="carousel-indicators">
@@ -188,7 +244,7 @@
             
             <div class="container ">
                 <div class="row" style="margin-top: 50px">
-                    <div  class="col-md-3 text-center" style="float:left">
+                    <div  class="col-md-3 text-center hidden-sm hidden-xs" style="float:left">
                         <ul class="list-group well" id="glofmenu">
                             <!-- Menu with general access begins -->
                             <li class="list-group-item" id="membershiplisting">
@@ -234,7 +290,7 @@
                         <!-- Menu with general access ends -->
                         </ul>
                         
-                        <ul class="list-group well" id="adminpanel" style="display:none">
+                        <ul class="list-group well .hidden-sm-down" id="adminpanel" style="display:none">
                         <!-- Menu with ADMIN access begins -->
                             <li class="list-group-item" id="addmemberLink">
                                 <a class="notop" href="javascript:void(0)">
@@ -288,13 +344,16 @@
                     
                     <!-- committee list panel definition begins -->
                     <div class="col-md-9" >
-                        <div id="welcome" class="text-center">
-                            <div class="text-center well">
-                                <h1>Welcome to Nexperia Golf Society Home Page!</h1>
+                            <div id="welcome-sm" class = "text-center hidden-md hidden-lg hidden-xl well">
+                                <h3>Welcome to Nexperia Golf Society Home Page!</h3>
                             </div>
-                             <img class = "img-rounded" src="img/committee.png" alt=""  align="center">
-                        </div>
-                        
+                            <div id="welcome" class="text-center hidden-sm hidden-xs">
+                                <div class="text-center well">
+                                    <h1>Welcome to Nexperia Golf Society Home Page!</h1>
+                                </div>
+                                 <img class = "img-rounded" src="img/committee.png" alt=""  align="center">
+                            </div>
+
                         <div id="committeecontent" style="display:none">
                             <div class="well  text-center" >  
                                 <img class = "img-rounded" src="img/committee2.png" style="display:inline-block"  alt="" align="left"> 
@@ -321,10 +380,13 @@
                         <!-- Members list panel definition begins -->
                         <div id="membershiplistingcontent" style="display:none">
                             <div class="well  text-center" >
-                                <div>
+                                <div class = "hidden-sm hidden-xs">
                                     <img class = "img-rounded" src="img/membershiplisting.png" style="display:inline-block"  alt="" align="left"> 
                                     <h1 style="display:inline-block">Membership Listing</h1>
                                     <img class = "img-rounded" style="display:inline-block" src="img/membershiplisting.png" alt=""  align="right">
+                                </div>
+                                <div class = "hidden-md hidden-lg hidden-xl">
+                                    <h3 style="display:inline-block">Membership Listing</h3>
                                 </div>
                             </div>
 
@@ -1329,6 +1391,51 @@
                      $("#societyeventscontent").show();
                 });
                 
+                //small devices
+                
+                $("#glofmenu-sm").on("click", "#committee", function(event){;  // show committee 
+                     hideAll();
+                     $("#committeecontent").show();
+                });
+                
+                $("#glofmenu-sm").on("click", "#competitionresults", function(event){;  // show committee 
+                     hideAll();
+                     $("#competitionresultscontent").show();
+                });
+
+                $("#glofmenu-sm").on("click", "#playeroftheyear", function(event){;  // show committee 
+                     hideAll();
+                     $("#playeroftheyearcontent").show();
+                });             
+                
+                $("#glofmenu-sm").on("click", "#rollofhonour", function(event){;  // show committee 
+                     hideAll();
+                     $("#rollofhonourcontent").show();
+                });      
+                
+                $("#glofmenu-sm").on("click", "#halloffame", function(event){;  // show committee 
+                     hideAll();
+                     $("#halloffamecontent").show();
+                });
+                
+                $("#glofmenu-sm").on("click", "#championcup", function(event){;  // show committee 
+                     hideAll();
+                     $("#championcupcontent").show();
+                });
+                
+                $("#glofmenu-sm").on("click", "#membershiplisting", function(event){   // show members list
+                    hideAll();
+                    $("#membershiplistingcontent").show();
+                    for(let i = 0, length = MEMBERS.length; i < length; i++){
+                        console.log(MEMBERS[i]);
+                    }   
+                });  
+                
+                $("#glofmenu-sm").on("click", "#societyeventslisting", function(event){;  // show society events 
+                     hideAll();
+                     $("#societyeventscontent").show();
+                });
+                
                 //Logged user links (from top menu):
                 
                 $("#accountsettingsLink").on("click", function(event){ // show logged user account settings  
@@ -1484,6 +1591,7 @@
                 
                 function hideAll(){     // hide all panels and clear secure data
                     $("#welcome").hide();
+                    $("#welcome-sm").hide();
                     $("#committeecontent").hide();
                     $("#membershiplistingcontent").hide();
                     $("#accountsettings").hide();
