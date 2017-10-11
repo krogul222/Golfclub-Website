@@ -81,6 +81,59 @@
                             <!-- Menu with general access ends -->
                             </ul>
                         </li>
+                        <li class = "hidden-md hidden-lg hidden-xl" id="adminpanel-sm"   style="display:none">
+                            <a href="#"  data-toggle="dropdown">Admin Panel<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                            <!-- Menu with ADMIN access begins -->
+                                <li class="list-group-item" id="addmemberLink">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Add Member
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id="editmembersLink">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Edit Members
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id="editcommitteeLink">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Edit Committee
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id="createsocietyeventLink">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Add Society Event
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id="editsocietyeventsLink">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Edit Society Events
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id="addcompetitionresultsLink">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Add Scoreboard Result
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id="editcompetitionresultsLink">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Edit Scoreboard Results
+                                    </a>
+                                </li>
+
+                                <li class="list-group-item" id="addcontestLink" style="display:true">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Add Contest
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id="editcontestLink" style="display:true">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Edit Contest
+                                    </a>
+                                </li>
+                            <!-- Menu with ADMIN access ends -->
+                            </ul>      
+                        </li>
                         <!-- Log in menu begins -->
                         <li id="login-menu">
                             <a href="#"  data-toggle="dropdown">Log in<span class="caret"></span></a>
@@ -290,7 +343,7 @@
                         <!-- Menu with general access ends -->
                         </ul>
                         
-                        <ul class="list-group well .hidden-sm-down" id="adminpanel" style="display:none">
+                        <ul class="list-group well hidden-sm hidden-xs" id="adminpanel" style="display:none">
                         <!-- Menu with ADMIN access begins -->
                             <li class="list-group-item" id="addmemberLink">
                                 <a class="notop" href="javascript:void(0)">
@@ -356,9 +409,15 @@
 
                         <div id="committeecontent" style="display:none">
                             <div class="well  text-center" >  
-                                <img class = "img-rounded" src="img/committee2.png" style="display:inline-block"  alt="" align="left"> 
-                                <h1 style="display:inline-block">The Committee</h1> 
-                                <img class = "img-rounded" style="display:inline-block" src="img/committee2.png" alt=""  align="right">
+                                
+                                <div class = "text-center hidden-md hidden-lg hidden-xl well">
+                                    <h3>The Committee</h3>
+                                </div>
+                                <div class="text-center hidden-sm hidden-xs">
+                                    <img class = "img-rounded" src="img/committee2.png" style="display:inline-block"  alt="" align="left"> 
+                                    <h1 style="display:inline-block">The Committee</h1> 
+                                    <img class = "img-rounded" style="display:inline-block" src="img/committee2.png" alt=""  align="right">
+                                </div>
                             </div>
                                 
                             <table id="committeetable" class="table table-hover">
@@ -410,9 +469,15 @@
                         <!-- Society events panel definition begins -->
                         <div id="societyeventscontent" style="display:none">
                             <div class="well  text-center" >
-                                    <img class = "img-rounded" src="img/societyevents.png" style="display:inline-block;vertical-align: middle" alt="" align="left"> 
-                                    <h1 style="display:inline-block">Society events</h1>
-                                    <img class = "img-rounded" style="display:inline-block;vertical-align: middle" src="img/societyevents.png" alt=""  align="right" >
+                                
+                                    <div class = "hidden-md hidden-lg hidden-xl">
+                                        <h3 style="display:inline-block">Society events</h3>
+                                    </div>
+                                    <div class = "hidden-sm hidden-xs">
+                                        <img class = "img-rounded" src="img/societyevents.png" style="display:inline-block;vertical-align: middle" alt="" align="left"> 
+                                        <h1 style="display:inline-block">Society events</h1>
+                                        <img class = "img-rounded" style="display:inline-block;vertical-align: middle" src="img/societyevents.png" alt=""  align="right" >
+                                </div>
                             </div>
 
                             <table id = "societyeventstable" class=  "table table-hover">
@@ -439,9 +504,14 @@
                         <div id="competitionresultscontent" style="display:none">
                             <div class="well  text-center" >
                                 <div>
-                                    <img class = "img-rounded" src="img/competitionresultslisting.png" style="display:inline-block" alt="" align="left"> 
-                                    <h1 style="display:inline-block">Scoreboard</h1>
-                                    <img class = "img-rounded" style="display:inline-block" src="img/competitionresultslisting.png" alt="" align="right">
+                                    <div class = "hidden-md hidden-lg hidden-xl">
+                                        <h3 style="display:inline-block">Scoreboard</h3>
+                                    </div>
+                                    <div class = "hidden-sm hidden-xs">
+                                        <img class = "img-rounded" src="img/competitionresultslisting.png" style="display:inline-block" alt="" align="left"> 
+                                        <h1 style="display:inline-block">Scoreboard</h1>
+                                        <img class = "img-rounded" style="display:inline-block" src="img/competitionresultslisting.png" alt="" align="right">
+                                    </div>
                                 </div>
                             </div>
 
@@ -497,9 +567,14 @@
                         <!-- Challenge Trophy panel definition begins -->
                         <div id="championcupcontent" style="display:none;">
                             <div class="well  text-center" >
-                                <img class = "img-rounded" src="img/playeroftheyear.png" style="display:inline-block"  alt="" align="left" > 
-                                <h1 style="display:inline-block">Challenge Trophy</h1>
-                                <img class = "img-rounded" style="display:inline-block" src="img/playeroftheyear.png" alt=""  align="right" >
+                                <div class = "hidden-md hidden-lg hidden-xl">
+                                    <h3 style="display:inline-block">Challenge Trophy</h3>
+                                </div>
+                                <div class = "hidden-sm hidden-xs">
+                                    <img class = "img-rounded" src="img/playeroftheyear.png" style="display:inline-block"  alt="" align="left" > 
+                                    <h1 style="display:inline-block">Challenge Trophy</h1>
+                                    <img class = "img-rounded" style="display:inline-block" src="img/playeroftheyear.png" alt=""  align="right" >
+                                </div>
                             </div>
                             
                             <div id="championcupgrid">
@@ -516,9 +591,14 @@
                         <!-- Hall of Fame panel definition begins -->
                         <div id="halloffamecontent" style="display:none;">
                             <div class="well  text-center" >
-                                <img class = "img-rounded" src="img/playeroftheyear.png" style="display:inline-block"  alt="" align="left" > 
-                                <h1 style="display:inline-block">Hall of Fame</h1>
-                                <img class = "img-rounded" style="display:inline-block" src="img/playeroftheyear.png" alt=""  align="right" >
+                                <div class = "hidden-md hidden-lg hidden-xl">
+                                    <h3 style="display:inline-block">Hall of Fame</h3>
+                                </div>
+                                <div class = "hidden-sm hidden-xs">
+                                    <img class = "img-rounded" src="img/playeroftheyear.png" style="display:inline-block"  alt="" align="left" > 
+                                    <h1 style="display:inline-block">Hall of Fame</h1>
+                                    <img class = "img-rounded" style="display:inline-block" src="img/playeroftheyear.png" alt=""  align="right" >
+                                </div>
                             </div>
                             
                             <div class="text-center" align="center" style="position:relative;background-image:url(img/background2.png)">
@@ -536,9 +616,14 @@
                         <!-- Roll of Honour panel definition begins -->
                         <div id="rollofhonourcontent" style="display:none">
                             <div class="well  text-center" >
-                                <img class = "img-rounded" src="img/playeroftheyear.png" style="display:inline-block"  alt="" align="left" > 
-                                <h1 style="display:inline-block">Roll of Honour</h1>
-                                <img class = "img-rounded" style="display:inline-block" src="img/playeroftheyear.png" alt=""  align="right" >
+                                <div class = "hidden-md hidden-lg hidden-xl">
+                                    <h3 style="display:inline-block">Roll of Honour</h3>
+                                </div>
+                                <div class = "hidden-sm hidden-xs">
+                                    <img class = "img-rounded" src="img/playeroftheyear.png" style="display:inline-block"  alt="" align="left" > 
+                                    <h1 style="display:inline-block">Roll of Honour</h1>
+                                    <img class = "img-rounded" style="display:inline-block" src="img/playeroftheyear.png" alt=""  align="right" >
+                                </div>
                             </div>
             
                             <div class="text-center" align="center" style="position:relative;background-image:url(img/background1.png)">
@@ -659,9 +744,15 @@
                         <!-- Player of the Year panel definition begins -->
                         <div id="playeroftheyearcontent" style="display:none">
                             <div class="well  text-center" >
-                                <img class = "img-rounded" src="img/playeroftheyear.png" style="display:inline-block"  alt="" align="left" > 
-                                <h1 style="display:inline-block">Player of the Year</h1>
-                                <img class = "img-rounded" style="display:inline-block" src="img/playeroftheyear.png" alt=""  align="right" >
+                                
+                                <div class = "hidden-md hidden-lg hidden-xl">
+                                    <h3 style="display:inline-block">Player of the Year</h3>
+                                </div>
+                                <div class = "hidden-sm hidden-xs">
+                                    <img class = "img-rounded" src="img/playeroftheyear.png" style="display:inline-block"  alt="" align="left" > 
+                                    <h1 style="display:inline-block">Player of the Year</h1>
+                                    <img class = "img-rounded" style="display:inline-block" src="img/playeroftheyear.png" alt=""  align="right" >
+                                </div>
                             </div>
                             <div class = "score">
                                 <table id = "playeroftheyeartable" class=  "table table-hover">
@@ -2293,6 +2384,7 @@
                     
                    if(user["data"].admin === "true"){
                        $("#adminpanel").show();
+                       $("#adminpanel-sm").show();
                        
                             $("#addmemberLink").show();
                            $("#editmembersLink").show();
@@ -2304,6 +2396,7 @@
                    }  else{
                        if(user.loggedin){
                            $("#adminpanel").show();
+                           $("#adminpanel-sm").show();
                            
                            $("#addmemberLink").hide();
                            $("#editmembersLink").hide();
@@ -3108,6 +3201,7 @@
                     $("#login-menu").show();
                     $("#loggedin").hide();
                     $("#adminpanel").hide();
+                    $("#adminpanel-sm").hide();
                     $("#accountsettings").hide();
                     $("#userstats").hide();
                     $("#addmember").hide();
