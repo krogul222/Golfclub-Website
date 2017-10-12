@@ -38,7 +38,7 @@
                             <a href="#"  data-toggle="dropdown">Menu<span class="caret"></span></a>
                             <ul id="glofmenu-sm" class="dropdown-menu">
                             <!-- Menu with general access begins -->
-                                <li class="list-group-item" id="membershiplisting">
+                                <li class="list-group-item" id="membershiplisting-sm">
                                     <a class="notop" href="javascript:void(0)">
                                         Membership
                                     </a>
@@ -1488,37 +1488,37 @@
                 
                 //small devices
                 
-                $("#glofmenu-sm").on("click touchend", "#committee", function(event){;  // show committee 
+                $("#glofmenu-sm").on("click", "#committee", function(event){;  // show committee 
                      hideAll();
                      $("#committeecontent").show();
                 });
                 
-                $("#glofmenu-sm").on("click touchend", "#competitionresults", function(event){;  // show committee 
+                $("#glofmenu-sm").on("click", "#competitionresults", function(event){;  // show committee 
                      hideAll();
                      $("#competitionresultscontent").show();
                 });
 
-                $("#glofmenu-sm").on("click touchend", "#playeroftheyear", function(event){;  // show committee 
+                $("#glofmenu-sm").on("click", "#playeroftheyear", function(event){;  // show committee 
                      hideAll();
                      $("#playeroftheyearcontent").show();
                 });             
                 
-                $("#glofmenu-sm").on("click touchend", "#rollofhonour", function(event){;  // show committee 
+                $("#glofmenu-sm").on("click", "#rollofhonour", function(event){;  // show committee 
                      hideAll();
                      $("#rollofhonourcontent").show();
                 });      
                 
-                $("#glofmenu-sm").on("click touchend", "#halloffame", function(event){;  // show committee 
+                $("#glofmenu-sm").on("click", "#halloffame", function(event){;  // show committee 
                      hideAll();
                      $("#halloffamecontent").show();
                 });
                 
-                $("#glofmenu-sm").on("click touchend", "#championcup", function(event){;  // show committee 
+                $("#glofmenu-sm").on("click", "#championcup", function(event){;  // show committee 
                      hideAll();
                      $("#championcupcontent").show();
                 });
                 
-                $("#glofmenu-sm").on("click touchend", "#membershiplisting", function(event){   // show members list
+                $("#glofmenu-sm").on("click", "#membershiplisting", function(event){   // show members list
                     hideAll();
                     $("#membershiplistingcontent").show();
                     for(let i = 0, length = MEMBERS.length; i < length; i++){
@@ -1526,7 +1526,15 @@
                     }   
                 });  
                 
-                $("#glofmenu-sm").on("click touchend", "#societyeventslisting", function(event){;  // show society events 
+                $("#membershiplisting-sm").hover(function(event){   // show members list
+                    hideAll();
+                    $("#membershiplistingcontent").show();
+                    for(let i = 0, length = MEMBERS.length; i < length; i++){
+                        console.log(MEMBERS[i]);
+                    }   
+                });  
+                
+                $("#glofmenu-sm").on("click", "#societyeventslisting", function(event){;  // show society events 
                      hideAll();
                      $("#societyeventscontent").show();
                 });
