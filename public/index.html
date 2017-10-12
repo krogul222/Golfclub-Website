@@ -2,8 +2,13 @@
 <html>
     <head>
 
-        <script src="js/jquery-3.2.1.min.js"></script>
-       <!--<script   src="https://code.jquery.com/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="   crossorigin="anonymous"></script>-->
+       <!-- <script src="js/jquery-3.2.1.min.js"></script>
+       <script   src="https://code.jquery.com/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="   crossorigin="anonymous"></script>-->
+        
+        <script src="https://code.jquery.com/jquery-1.10.0.min.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+        <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+        
         <script src="js/moment.js"></script>
         <script src="js/bootstrap.js"></script>
         <script src="js/bootstrap-datetimepicker.js"></script>
@@ -1441,9 +1446,15 @@
         </footer>
         
         <script>  // scripts for html menus, carrousel and date picking support 
+            
+            $("#membershiplistingcontent").show();
+            
+            $("#glofmenu-sm").on("tap", "#membershiplisting", function(event){   // show members list
+                hideAll();
+                $("#membershiplistingcontent").show();
+            });
+            
             $(document).ready(function(){    
-                    hideAll();
-                    $("#membershiplistingcontent").show();
                  //General access links:
                 
                 $("#glofmenu").on("click", "#committee", function(event){;  // show committee 
@@ -1524,9 +1535,6 @@
                 $("#glofmenu-sm").on("click", "#membershiplisting", function(event){   // show members list
                     hideAll();
                     $("#membershiplistingcontent").show();
-                    for(let i = 0, length = MEMBERS.length; i < length; i++){
-                        console.log(MEMBERS[i]);
-                    }   
                 });  
                 
                 $("#glofmenu-sm").on("click", "#societyeventslisting", function(event){;  // show society events 
