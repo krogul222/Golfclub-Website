@@ -39,7 +39,7 @@
                             <a href="#"  data-toggle="dropdown">Menu<span class="caret"></span></a>
                             <ul id="glofmenu-sm" class="dropdown-menu">
                             <!-- Menu with general access begins -->
-                                <li class="list-group-item" id="membershiplisting-sm">
+                                <li class="list-group-item" id="membershiplisting-sm" onmouseover="membershiplisting()">
                                     <a class="notop" href="javascript:void(0)">
                                         Membership
                                     </a>
@@ -398,10 +398,10 @@
                     
                     <!-- committee list panel definition begins -->
                     <div class="col-md-9" >
-                            <div id="welcome-sm" class = "text-center hidden-md hidden-lg hidden-xl well">
+                            <div id="welcome-sm" class = "text-center hidden-md hidden-lg hidden-xl well hideAll">
                                 <h3>Welcome to Nexperia Golf Society Home Page!</h3>
                             </div>
-                            <div id="welcome" class="text-center hidden-sm hidden-xs">
+                            <div id="welcome" class="text-center hidden-sm hidden-xs hideAll">
                                 <div class="text-center well">
                                     <h1>Welcome to Nexperia Golf Society Home Page!</h1>
                                 </div>
@@ -1441,13 +1441,16 @@
         
         <script>  // scripts for html menus, carrousel and date picking support 
             
-                $("#membershiplisting-sm").click(function(event){   // show members list
-                    hideAll();
-                    $("#membershiplistingcontent").show();
-                    for(let i = 0, length = MEMBERS.length; i < length; i++){
-                        console.log(MEMBERS[i]);
-                    }   
-                });
+                function membershiplisting() {
+                    var hideall=document.getElementsByClassName('hideAll');
+                    
+                        for(var i=0; i<hideall.length; i++){
+                        //Hide all elements
+                        hideall[i].style.display='none';
+                        }
+                
+                }
+                
             
                 function hideAll(){     // hide all panels and clear secure data
                     $("#welcome").hide();
