@@ -211,3 +211,5 @@ margin: auto;
 .dropdown-backdrop {
   position: static;
 }
+
+.clickable { cursor: pointer; }

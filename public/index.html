@@ -34,8 +34,52 @@
                     </div>
                     <!-- Logo ends -->
                     <ul class="nav nav-pills navbar-right"> 
-                        <li class = "hidden-md hidden-lg hidden-xl" id="menu-sm">
-                            <a href="#" >Menu</a>
+                        <li class = "hidden-md hidden-lg hidden-xl">
+                            <a href="#"  data-toggle="dropdown">Menu<span class="caret"></span></a>
+                            <ul id="glofmenu-sm" class="dropdown-menu">
+                            <!-- Menu with general access begins -->
+                                <li class="list-group-item" id="membershiplisting">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Membership
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id="committee">
+                                    <a class="notop" href="javascript:void(0)">
+                                        The Committee
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id="societyeventslisting">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Society Events
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id = "competitionresults">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Scoreboard
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id = "championcup">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Challenge Trophy
+                                    </a>
+                                </li>                            
+                                <li class="list-group-item" id = "playeroftheyear">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Player of the Year
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id = "rollofhonour">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Roll of Honour
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id = "halloffame">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Hall of Fame
+                                    </a>
+                                </li>
+                            <!-- Menu with general access ends -->
+                            </ul>
                         </li>
                         <li class = "hidden-md hidden-lg hidden-xl" id="adminpanel-sm"   style="display:none">
                             <a href="#"  data-toggle="dropdown">Admin Panel<span class="caret"></span></a>
@@ -91,11 +135,7 @@
                             </ul>      
                         </li>
                         <!-- Log in menu begins -->
-                        <li id="login-menu" class = "hidden-lg hidden-xl hidden-md">
-                            <a href="#"  id = "loginmenu-sm" >Log in</a>
-                        </li>
-                        
-                        <li id="login-menu" class = "hidden-sm hidden-xs">
+                        <li id="login-menu">
                             <a href="#"  data-toggle="dropdown">Log in<span class="caret"></span></a>
                             <ul id="login-dp" class="dropdown-menu">
                                 <li>
@@ -357,81 +397,6 @@
                     
                     <!-- committee list panel definition begins -->
                     <div class="col-md-9" >
-                        
-                        <div style="display:none" id="glofmenu-sm">
-                        <ul class="list-group well" >
-                            <!-- Menu with general access begins -->
-                                <li class="list-group-item" id="membershiplisting">
-                                    <a class="notop" href="javascript:void(0)">
-                                        Membership
-                                    </a>
-                                </li>
-                                <li class="list-group-item" id="committee">
-                                    <a class="notop" href="javascript:void(0)">
-                                        The Committee
-                                    </a>
-                                </li>
-                                <li class="list-group-item" id="societyeventslisting">
-                                    <a class="notop" href="javascript:void(0)">
-                                        Society Events
-                                    </a>
-                                </li>
-                                <li class="list-group-item" id = "competitionresults">
-                                    <a class="notop" href="javascript:void(0)">
-                                        Scoreboard
-                                    </a>
-                                </li>
-                                <li class="list-group-item" id = "championcup">
-                                    <a class="notop" href="javascript:void(0)">
-                                        Challenge Trophy
-                                    </a>
-                                </li>                            
-                                <li class="list-group-item" id = "playeroftheyear">
-                                    <a class="notop" href="javascript:void(0)">
-                                        Player of the Year
-                                    </a>
-                                </li>
-                                <li class="list-group-item" id = "rollofhonour">
-                                    <a class="notop" href="javascript:void(0)">
-                                        Roll of Honour
-                                    </a>
-                                </li>
-                                <li class="list-group-item" id = "halloffame">
-                                    <a class="notop" href="javascript:void(0)">
-                                        Hall of Fame
-                                    </a>
-                                </li>
-                            <!-- Menu with general access ends -->
-                            </ul>
-                        </div>
-                        
-                        <div style="display:none" id="login-sm">
-                                            <form class="form" role="form" method="post" action="login" accept-charset="UTF-8" id="login-nav">
-                                                <div class="form-group">
-                                                    <label class="sr-only" for="loginUsername">
-                                                        Username
-                                                    </label>
-                                                    <input type="text" class="form-control" id="loginUsername" placeholder="Username" required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="sr-only" for="loginPassword">
-                                                        Password
-                                                    </label>
-                                                        <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
-                                                        <div class="help-block text-right">
-                                                            <a href="">
-                                                                 Forget the password ?
-                                                            </a>
-                                                        </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <button id="loginbtn" type="button" class="btn btn-primary btn-block">
-                                                        Sign in
-                                                    </button>
-                                                </div>
-                                            </form>
-                        </div>
-                        
                             <div id="welcome-sm" class = "text-center hidden-md hidden-lg hidden-xl well">
                                 <h3>Welcome to Nexperia Golf Society Home Page!</h3>
                             </div>
@@ -1523,37 +1488,37 @@
                 
                 //small devices
                 
-                $("#glofmenu-sm").on("click", "#committee", function(event){;  // show committee 
+                $("#glofmenu-sm").on("click touchend", "#committee", function(event){;  // show committee 
                      hideAll();
                      $("#committeecontent").show();
                 });
                 
-                $("#glofmenu-sm").on("click", "#competitionresults", function(event){;  // show committee 
+                $("#glofmenu-sm").on("click touchend", "#competitionresults", function(event){;  // show committee 
                      hideAll();
                      $("#competitionresultscontent").show();
                 });
 
-                $("#glofmenu-sm").on("click", "#playeroftheyear", function(event){;  // show committee 
+                $("#glofmenu-sm").on("click touchend", "#playeroftheyear", function(event){;  // show committee 
                      hideAll();
                      $("#playeroftheyearcontent").show();
                 });             
                 
-                $("#glofmenu-sm").on("click", "#rollofhonour", function(event){;  // show committee 
+                $("#glofmenu-sm").on("click touchend", "#rollofhonour", function(event){;  // show committee 
                      hideAll();
                      $("#rollofhonourcontent").show();
                 });      
                 
-                $("#glofmenu-sm").on("click", "#halloffame", function(event){;  // show committee 
+                $("#glofmenu-sm").on("click touchend", "#halloffame", function(event){;  // show committee 
                      hideAll();
                      $("#halloffamecontent").show();
                 });
                 
-                $("#glofmenu-sm").on("click", "#championcup", function(event){;  // show committee 
+                $("#glofmenu-sm").on("click touchend", "#championcup", function(event){;  // show committee 
                      hideAll();
                      $("#championcupcontent").show();
                 });
                 
-                $("#glofmenu-sm").on("click", "#membershiplisting", function(event){   // show members list
+                $("#glofmenu-sm").on("click touchend", "#membershiplisting", function(event){   // show members list
                     hideAll();
                     $("#membershiplistingcontent").show();
                     for(let i = 0, length = MEMBERS.length; i < length; i++){
@@ -1561,7 +1526,7 @@
                     }   
                 });  
                 
-                $("#glofmenu-sm").on("click", "#societyeventslisting", function(event){;  // show society events 
+                $("#glofmenu-sm").on("click touchend", "#societyeventslisting", function(event){;  // show society events 
                      hideAll();
                      $("#societyeventscontent").show();
                 });
@@ -1581,16 +1546,6 @@
                     hideAll();
                     $("#userstats").show();
                 });
-                
-                $("#menu-sm").on("click", function(event){    // show add member panel 
-                    hideAll();
-                    $("#glofmenu-sm").show();
-                });      
-
-                $("#loginmenu-sm").on("click", function(event){    // show add member panel 
-                    hideAll();
-                    $("#login-sm").show();
-                });   
                 
                 //Admin menu links:
                 
@@ -1730,8 +1685,6 @@
                 
                 
                 function hideAll(){     // hide all panels and clear secure data
-                    $("#glofmenu-sm").hide();
-                    $("#login-sm").hide();
                     $("#welcome").hide();
                     $("#welcome-sm").hide();
                     $("#committeecontent").hide();
