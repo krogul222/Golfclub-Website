@@ -39,7 +39,7 @@
                             <a href="#"  data-toggle="dropdown">Menu<span class="caret"></span></a>
                             <ul id="glofmenu-sm" class="dropdown-menu">
                             <!-- Menu with general access begins -->
-                                <li class="list-group-item" id="membershiplisting-sm" onmouseover = 'hideAll();'>
+                                <li class="list-group-item" id="membershiplisting-sm">
                                     <a class="notop" href="javascript:void(0)">
                                         Membership
                                     </a>
@@ -1441,20 +1441,13 @@
         
         <script>  // scripts for html menus, carrousel and date picking support 
             
-                function membershiplisting(){
+                $("#membershiplisting-sm").click(function(event){   // show members list
                     hideAll();
                     $("#membershiplistingcontent").show();
-                        for(let i = 0, length = MEMBERS.length; i < length; i++){
-                            console.log(MEMBERS[i]);
-                        }  
-                }
-               /* $("#membershiplisting-sm").onmouseover = function(){
-                        hideAll();
-                        $("#membershiplistingcontent").show();
-                        for(let i = 0, length = MEMBERS.length; i < length; i++){
-                            console.log(MEMBERS[i]);
-                        }  
-                };*/
+                    for(let i = 0, length = MEMBERS.length; i < length; i++){
+                        console.log(MEMBERS[i]);
+                    }   
+                });
             
                 function hideAll(){     // hide all panels and clear secure data
                     $("#welcome").hide();
