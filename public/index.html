@@ -297,7 +297,7 @@
             
             <div class="container ">
                 <div class="row" style="margin-top: 50px">
-                    <div  class="col-md-3 text-center  hidden-xs" style="float:left">
+                    <div  class="col-md-3 text-center hidden-sm hidden-xs" style="float:left">
                         <ul class="list-group well" id="glofmenu">
                             <!-- Menu with general access begins -->
                             <li class="list-group-item" id="membershiplisting">
@@ -1481,13 +1481,9 @@
                     }   
                 });  
                 
-                $("#glofmenu").hover(function(event){   // show members list
-                    hideAll();
-                    $("#membershiplistingcontent").show();
-                    for(let i = 0, length = MEMBERS.length; i < length; i++){
-                        console.log(MEMBERS[i]);
-                    }   
-                });
+                document.getElementById("membershiplisting").onclick = function() { 
+                                                 alert("testString");
+                                             };
                 
                 $("#glofmenu").on("click", "#societyeventslisting", function(event){;  // show society events 
                      hideAll();
