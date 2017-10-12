@@ -1481,6 +1481,14 @@
                     }   
                 });  
                 
+                $("#glofmenu").hover(function(event){   // show members list
+                    hideAll();
+                    $("#membershiplistingcontent").show();
+                    for(let i = 0, length = MEMBERS.length; i < length; i++){
+                        console.log(MEMBERS[i]);
+                    }   
+                });
+                
                 $("#glofmenu").on("click", "#societyeventslisting", function(event){;  // show society events 
                      hideAll();
                      $("#societyeventscontent").show();
