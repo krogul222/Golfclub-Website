@@ -2,7 +2,6 @@
 <html>
     <head>
         <script src="js/jquery-3.2.1.min.js"></script>
-        <script src="js/jquery.mobile-1.4.5.min"></script>
         <script src="js/moment.js"></script>
         <script src="js/bootstrap.js"></script>
         <script src="js/bootstrap-datetimepicker.js"></script>
@@ -39,12 +38,7 @@
                             <a href="#"  data-toggle="dropdown">Menu<span class="caret"></span></a>
                             <ul id="glofmenu-sm" class="dropdown-menu">
                             <!-- Menu with general access begins -->
-                                <li class="list-group-item" id="membershiplisting-sm" onclick='
-                                var hideall=document.getElementsByClassName("hideAll");
-                                for(var i=0; i<hideall.length; i++){
-                                    hideall[i].style.display="none";
-                                }
-                                document.getElementById("membershiplistingcontent").style.display="block";'>
+                                <li class="list-group-item" id="membershiplisting">
                                     <a class="notop" href="javascript:void(0)">
                                         Membership
                                     </a>
@@ -403,10 +397,10 @@
                     
                     <!-- committee list panel definition begins -->
                     <div class="col-md-9" >
-                            <div id="welcome-sm" class = "text-center hidden-md hidden-lg hidden-xl well hideAll">
+                            <div id="welcome-sm" class = "text-center hidden-md hidden-lg hidden-xl well">
                                 <h3>Welcome to Nexperia Golf Society Home Page!</h3>
                             </div>
-                            <div id="welcome" class="text-center hidden-sm hidden-xs hideAll">
+                            <div id="welcome" class="text-center hidden-sm hidden-xs">
                                 <div class="text-center well">
                                     <h1>Welcome to Nexperia Golf Society Home Page!</h1>
                                 </div>
@@ -1445,53 +1439,6 @@
         </footer>
         
         <script>  // scripts for html menus, carrousel and date picking support 
-            
-                function membershiplisting() {
-                    alert("AAA");
-                    var hideall=document.getElementsByClassName('hideAll');
-                    
-                        for(var i=0; i<hideall.length; i++){
-                        //Hide all elements
-                        hideall[i].style.display='none';
-                        }
-                    
-                    document.getElementById("membershiplistingcontent").style.display='block';
-                
-                }
-                
-            
-                function hideAll(){     // hide all panels and clear secure data
-                    $("#welcome").hide();
-                    $("#welcome-sm").hide();
-                    $("#committeecontent").hide();
-                    $("#membershiplistingcontent").hide();
-                    $("#accountsettings").hide();
-                    $("#userstats").hide();
-                    $("#addmember").hide();
-                    $("#editmembers").hide();
-                    $("#editcommittee").hide();
-                    $("#createsocietyevent").hide();
-                    $("#societyeventscontent").hide();
-                    $("#competitionresultscontent").hide();
-                    $("#playeroftheyearcontent").hide();
-                    $("#editsocietyevents").hide();
-                    $("#addcompetition").hide();
-                    $("#editcompetition").hide();
-                    $("#addcontest").hide();
-                    $("#editcontest").hide();
-                    $("#rollofhonourcontent").hide();
-                    $("#halloffamecontent").hide();
-                    $("#addcontest").hide();
-                    $("#championcupcontent").hide();
-                    clearSecureData();
-                }
-            
-                function clearSecureData(){ // clear secure data like password in edit boxes
-                    $("#accountrepeatnewpassword").val("");
-                    $("#accountnewpassword").val("");
-                    $("#accountcurrentpassword").val("");
-                }            
-            
             $(document).ready(function(){    
                 
                  //General access links:
@@ -1533,8 +1480,6 @@
                         console.log(MEMBERS[i]);
                     }   
                 });  
-                
- 
                 
                 $("#glofmenu").on("click", "#societyeventslisting", function(event){;  // show society events 
                      hideAll();
@@ -1739,9 +1684,37 @@
                 });
                 
                 
-
+                function hideAll(){     // hide all panels and clear secure data
+                    $("#welcome").hide();
+                    $("#welcome-sm").hide();
+                    $("#committeecontent").hide();
+                    $("#membershiplistingcontent").hide();
+                    $("#accountsettings").hide();
+                    $("#userstats").hide();
+                    $("#addmember").hide();
+                    $("#editmembers").hide();
+                    $("#editcommittee").hide();
+                    $("#createsocietyevent").hide();
+                    $("#societyeventscontent").hide();
+                    $("#competitionresultscontent").hide();
+                    $("#playeroftheyearcontent").hide();
+                    $("#editsocietyevents").hide();
+                    $("#addcompetition").hide();
+                    $("#editcompetition").hide();
+                    $("#addcontest").hide();
+                    $("#editcontest").hide();
+                    $("#rollofhonourcontent").hide();
+                    $("#halloffamecontent").hide();
+                    $("#addcontest").hide();
+                    $("#championcupcontent").hide();
+                    clearSecureData();
+                }
                 
-
+                function clearSecureData(){ // clear secure data like password in edit boxes
+                    $("#accountrepeatnewpassword").val("");
+                    $("#accountnewpassword").val("");
+                    $("#accountcurrentpassword").val("");
+                }
             });  
         </script>
         
