@@ -38,7 +38,7 @@
                             <a href="#"  data-toggle="dropdown">Menu<span class="caret"></span></a>
                             <ul id="glofmenu-sm" class="dropdown-menu">
                             <!-- Menu with general access begins -->
-                                <li class="list-group-item" id="membershiplisting-sm">
+                                <li class="list-group-item" id="membershiplisting">
                                     <a class="notop" href="javascript:void(0)">
                                         Membership
                                     </a>
@@ -1519,14 +1519,6 @@
                 });
                 
                 $("#glofmenu-sm").on("click", "#membershiplisting", function(event){   // show members list
-                    hideAll();
-                    $("#membershiplistingcontent").show();
-                    for(let i = 0, length = MEMBERS.length; i < length; i++){
-                        console.log(MEMBERS[i]);
-                    }   
-                });  
-                
-                $("#membershiplisting-sm").hover(function(event){   // show members list
                     hideAll();
                     $("#membershiplistingcontent").show();
                     for(let i = 0, length = MEMBERS.length; i < length; i++){
