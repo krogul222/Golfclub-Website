@@ -19,6 +19,27 @@
         <link rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.css">
         <link rel="stylesheet" type="text/css" href="css/bootstrap-arrow-buttons.css">
     </head>
+    
+    <script>
+            function printDiv(divId) {
+                    var content = document.getElementById(divId).innerHTML;
+                    var mywindow = window.open('', 'Print', 'height=600,width=800');
+
+                    mywindow.document.write('<!DOCTYPE html><html><head><title>Print</title>');
+                    mywindow.document.write('\<\s\c\r\i\p\t src="https://code.jquery.com/jquery-1.10.0.min.js">\<\/\s\c\r\i\p\t\>');
+                    mywindow.document.write('\<\s\c\r\i\p\t src="js/bootstrap.js">\<\/\s\c\r\i\p\t\>');
+                    mywindow.document.write('<link rel="stylesheet" type="text/css" href="css/bootstrap.css">');
+                    mywindow.document.write('</head><body >');
+                    mywindow.document.write(content);
+                    mywindow.document.write('</body></html>');
+
+                    mywindow.document.close();
+                    mywindow.focus()
+                    mywindow.print();
+                    mywindow.close();
+                   // return true;
+                }
+    </script>
     <body>
         <div id="wrap">
             <!-- Top menu bar begins -->
@@ -456,21 +477,27 @@
                                 </div>
                             </div>
 
-                            <table id="memberstable" class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Members Name</th>
-                                        <th>Handicap (Exact)</th>
-                                        <th>Handicap (Playing)</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr></tr>
-                                </tbody>
-                            </table>
+                            <div id="printableArea">
+                                <table id="memberstable" class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Members Name</th>
+                                            <th>Handicap (Exact)</th>
+                                            <th>Handicap (Playing)</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <input type="button" onclick="printDiv('printableArea')" value="Print" />
                         </div>
+                        
+                        
+                        
                         <!-- Members list panel definition ends -->
                         
                         <!-- Society events panel definition begins -->
@@ -1447,8 +1474,12 @@
         
         <script>  // scripts for html menus, carrousel and date picking support 
             
+
+            
             $(document).ready(function(){    
                  //General access links:
+                
+
                 
                 $("#glofmenu").on("click", "#committee", function(event){;  // show committee 
                      hideAll();
