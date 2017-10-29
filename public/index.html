@@ -78,7 +78,12 @@
                                 </li>
                                 <li class="list-group-item" id="societyeventslisting">
                                     <a class="notop" href="javascript:void(0)">
-                                        Society Events
+                                        Golf Society Days
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id="socialeventslisting">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Social Events
                                     </a>
                                 </li>
                                 <li class="list-group-item" id = "competitionresults">
@@ -130,12 +135,22 @@
                                 </li>
                                 <li class="list-group-item" id="createsocietyeventLink">
                                     <a class="notop" href="javascript:void(0)">
-                                        Add Society Event
+                                        Add Golf Society Days
                                     </a>
                                 </li>
                                 <li class="list-group-item" id="editsocietyeventsLink">
                                     <a class="notop" href="javascript:void(0)">
-                                        Edit Society Events
+                                        Edit Golf Society Days
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id="createsocialeventLink">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Add Social Events
+                                    </a>
+                                </li>
+                                <li class="list-group-item" id="editsocialeventsLink">
+                                    <a class="notop" href="javascript:void(0)">
+                                        Edit Social Events
                                     </a>
                                 </li>
                                 <li class="list-group-item" id="addcompetitionresultsLink">
@@ -340,7 +355,12 @@
                             </li>
                             <li class="list-group-item" id="societyeventslisting">
                                 <a class="notop" href="javascript:void(0)">
-                                    Society Events
+                                    Golf Society Days
+                                </a>
+                            </li>
+                            <li class="list-group-item" id="socialeventslisting">
+                                <a class="notop" href="javascript:void(0)">
+                                    Social Events
                                 </a>
                             </li>
                             <li class="list-group-item" id = "competitionresults">
@@ -390,12 +410,22 @@
                             </li>
                             <li class="list-group-item" id="createsocietyeventLink">
                                 <a class="notop" href="javascript:void(0)">
-                                    Add Society Event
+                                    Add Golf Society Days
                                 </a>
                             </li>
                             <li class="list-group-item" id="editsocietyeventsLink">
                                 <a class="notop" href="javascript:void(0)">
-                                    Edit Society Events
+                                    Edit Golf Society Days
+                                </a>
+                            </li>
+                            <li class="list-group-item" id="createsocialeventLink">
+                                <a class="notop" href="javascript:void(0)">
+                                    Add Social Events
+                                </a>
+                            </li>
+                            <li class="list-group-item" id="editsocialeventsLink">
+                                <a class="notop" href="javascript:void(0)">
+                                    Edit Social Events
                                 </a>
                             </li>
                             <li class="list-group-item" id="addcompetitionresultsLink">
@@ -505,11 +535,11 @@
                             <div class="well  text-center" >
                                 
                                     <div class = "hidden-md hidden-lg hidden-xl">
-                                        <h3 style="display:inline-block">Society events</h3>
+                                        <h3 style="display:inline-block">Golf Society Days</h3>
                                     </div>
                                     <div class = "hidden-sm hidden-xs">
                                         <img class = "img-rounded" src="img/societyevents.png" style="display:inline-block;vertical-align: middle" alt="" align="left"> 
-                                        <h1 style="display:inline-block">Society events</h1>
+                                        <h1 style="display:inline-block">Golf Society Days</h1>
                                         <img class = "img-rounded" style="display:inline-block;vertical-align: middle" src="img/societyevents.png" alt=""  align="right" >
                                 </div>
                             </div>
@@ -533,6 +563,43 @@
                             
                         </div>
                         <!-- Society events panel definition ends -->
+                        
+                        
+                        
+                        <!-- Society events panel definition begins -->
+                        <div id="socialeventscontent" style="display:none">
+                            <div class="well  text-center" >
+                                
+                                    <div class = "hidden-md hidden-lg hidden-xl">
+                                        <h3 style="display:inline-block">Social Events</h3>
+                                    </div>
+                                    <div class = "hidden-sm hidden-xs">
+                                        <img class = "img-rounded" src="img/societyevents.png" style="display:inline-block;vertical-align: middle" alt="" align="left"> 
+                                        <h1 style="display:inline-block">Social Events</h1>
+                                        <img class = "img-rounded" style="display:inline-block;vertical-align: middle" src="img/societyevents.png" alt=""  align="right" >
+                                </div>
+                            </div>
+
+                            <table id = "socialeventstable" class=  "table table-hover">
+                                <thead>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                            
+                            <div class = "text-center well">
+                                <div class="list-group" id="socialeventlist">
+                                </div> 
+                                <button type="button" class="btn btn-primary btn-arrow-left" style = "margin-bottom: 20px" id = "socialeventprevyearbtn">Prev</button>
+                                <button type="button" class="btn btn-primary" style = "margin-left: 20px; margin-right: 20px; margin-bottom: 20px" id = "socialeventlistbtn">2017</button>
+                                <button type="button" class="btn btn-primary btn-arrow-right" style = "margin-bottom: 20px" id = "socialeventnextyearbtn">Next</button>
+                            </div>
+                            
+                            
+                        </div>
+                        <!-- Society events panel definition ends -->                        
+                        
                         
                         <!-- Competition results panel definition begins -->
                         <div id="competitionresultscontent" style="display:none">
@@ -1018,7 +1085,7 @@
                         <!-- Edit Society Events definition begins -->
                         <div id="editsocietyevents" style="display:none">
                             <div class="well  text-center" >  
-                                <h1>Edit Society Events</h1>     
+                                <h1>Edit Golf Society Days</h1>     
                             </div>
                             <div class = "well" id = "editeventpanel">
                                 
@@ -1524,6 +1591,11 @@
                      $("#societyeventscontent").show();
                 });
                 
+                $("#glofmenu").on("click", "#socialeventslisting", function(event){;  // show society events 
+                     hideAll();
+                     $("#socialeventscontent").show();
+                });
+                
                 //small devices
                 
                 $("#glofmenu-sm").on("click", "#committee", function(event){;  // show committee 
@@ -1564,6 +1636,11 @@
                 $("#glofmenu-sm").on("click", "#societyeventslisting", function(event){;  // show society events 
                      hideAll();
                      $("#societyeventscontent").show();
+                });
+                
+                $("#glofmenu-sm").on("click", "#socialeventslisting", function(event){;  // show society events 
+                     hideAll();
+                     $("#socialeventscontent").show();
                 });
                 
                 //Logged user links (from top menu):
@@ -1780,6 +1857,7 @@
                     $("#editcommittee").hide();
                     $("#createsocietyevent").hide();
                     $("#societyeventscontent").hide();
+                    $("#socialeventscontent").hide();
                     $("#competitionresultscontent").hide();
                     $("#playeroftheyearcontent").hide();
                     $("#editsocietyevents").hide();
@@ -1815,6 +1893,7 @@
             var user = User();
             const MEMBERS = [];
             const SOCIETY_EVENTS = [];
+            const SOCIAL_EVENTS = [];
             const COMPETITION_RESULT = [];
             let EDIT_COMPETITION_RESULT = [];
             const ALL_COMPETITION_RESULTS = [];
@@ -1829,6 +1908,10 @@
             let societyEditEventsYear = 0;
             let activeEditEvent = 0;
             let activeEvent = 0;
+            let socialEventsYear = 0;
+            let socialEditEventsYear = 0;
+            let activeEditSocialEvent = 0;
+            let activeSocialEvent = 0;
             let activeCompetition = 0;
             let activeEditCompetition = 0;
             let competitionMemberSelected = false;
@@ -2405,6 +2488,31 @@
                     
                     updateSocietyEventList(SOCIETY_EVENTS[index]["year"]);
                     updateaditSocietyEventList(SOCIETY_EVENTS[index]["year"]);
+                    
+                });                      
+            }); 
+            
+            socket.on('socialeventslistingData', function(data){ 
+                $(document).ready(function() {
+                    for(let i = 0, length = data.length; i < length; i++){
+                        data[i]["month"] = parseInt(data[i]["month"], 10); 
+                       // data[i]["month"] = data[i]["month"];
+                        SOCIAL_EVENTS.push(data[i]);        
+                    }
+                    sortSocialEvents();
+                    
+                    let index = getLastSocialEventIndex();
+                    activeEditSocialEvent = index;
+                    activeSocialEvent = index;
+                    console.log('index '+index);
+                    updateSocialEventTable(index);
+                    updateaditSocialEventForm(index);
+                    
+                    socialEventsYear = SOCIAL_EVENTS[index]["year"];
+                    socialEditEventsYear = SOCIAL_EVENTS[index]["year"];
+                    
+                    updateSocialEventList(SOCIAL_EVENTS[index]["year"]);
+                    updateaditSocialEventList(SOCIAL_EVENTS[index]["year"]);
                     
                 });                      
             }); 
@@ -3326,7 +3434,23 @@
                         break;
                     }
                 }
-            }        
+            }       
+            
+            function updatesocialevent(event){   
+                for(let i = 0, length = SOCIAL_EVENTS.length; i < length; i++){
+                    if(SOCIAL_EVENTS[i]["id"] === event["id"]){
+                        SOCIAL_EVENTS[i]["occasion"] = event.occasion;
+                        SOCIAL_EVENTS[i]["venue"] = event.venue;
+                        SOCIAL_EVENTS[i]["price"] = event.price;
+                        SOCIAL_EVENTS[i]["year"] = event.year;
+                        SOCIAL_EVENTS[i]["month"] = event.month;
+                        SOCIAL_EVENTS[i]["day"] = event.day;
+                        SOCIAL_EVENTS[i]["organiser"] = event.organiser;
+                        SOCIAL_EVENTS[i]["notes"] = event.notes;
+                        break;
+                    }
+                }
+            }             
 
             function deleteavent(event){    
                 for(let i = 0, length = SOCIETY_EVENTS.length; i < length; i++){
@@ -4457,6 +4581,19 @@
 
             }
             
+            function updateSocialEventTable(idx){
+                
+                $('#socialeventstable').find('tbody').empty();
+                
+                if(idx > -1){
+                    let month = Number(SOCIAL_EVENTS[idx]["month"]);
+                    let day = Number(SOCIAL_EVENTS[idx]["day"]);
+                    $('#socialeventstable').find('tbody').append('<tr><td>Occasion:</td><td align="center">'+SOCIAL_EVENTS[idx]["occasion"]+'</td></tr>'+'<tr><td>Venue:</td><td align="center">'+SOCIAL_EVENTS[idx]["venue"]+'</td></tr>'+'<tr><td>Date:</td><td align="center">'+day+'/'+month+'/'+SOCIAL_EVENTS[idx]["year"]+'</td></tr>'+'<tr><td>Cost per Head:</td><td align="center">'+SOCIAL_EVENTS[idx]["price"]+'</td></tr>'+'<tr><td>Event Organiser:</td><td align="center">'+SOCIAL_EVENTS[idx]["organiser"]+'</td></tr>'+'<tr><td>Notes:</td><td align="center">'+SOCIAL_EVENTS[idx]["notes"]+'</td></tr>');
+                } else{
+                }
+
+            }            
+            
             function updateaditSocietyEventForm(idx){
                 if(idx > -1){
                     $('#editeventname').val(SOCIETY_EVENTS[idx]["name"]);
@@ -5027,6 +5164,21 @@
                 
             }
             
+            function getLastSocialEventIndex(){
+                let arr = [];
+                
+                for(let i=0, length = SOCIAL_EVENTS.length; i < length; i++){
+                    arr.push(Number(SOCIAL_EVENTS[i]['year']*10000)+Number(SOCIETY_EVENTS[i]['month']*100)+Number(SOCIETY_EVENTS[i]['day']));
+                    console.log(SOCIAL_EVENTS[i]['year']);
+                    console.log(SOCIAL_EVENTS[i]['month']);
+                    console.log(SOCIAL_EVENTS[i]['year']);
+                    console.log(Number(SOCIAL_EVENTS[i]['year']*10000)+Number(SOCIAL_EVENTS[i]['month']*100)+Number(SOCIAL_EVENTS[i]['day']));
+                }
+                
+                return indexOfMax(arr);
+                
+            }
+            
             function getOldestEventIndex(){
                 let arr = [];
                 
@@ -5141,6 +5293,12 @@
                 SOCIETY_EVENTS.sort(compareEvents);
                 activeEditEvent = -1;
                 activeEvent  = -1;
+            }
+            
+            function sortSocialEvents(){
+                SOCIAL_EVENTS.sort(compareEvents);
+                activeEditSocialEvent = -1;
+                activeSocialEvent  = -1;
             }
             
             function compareEvents(a,b) {
