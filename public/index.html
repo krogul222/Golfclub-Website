@@ -993,6 +993,13 @@
                             <div id = "editcontestcontent" style="position:relative">
                             </div>
                             
+                            <div class="well  text-center" >  
+                                <h1>Payments</h1>     
+                            </div>
+                            
+                            <div id = "editcontestpaymentscontent" style="position:relative">
+                            </div>
+                            
                           <button id="editcontestbtn" type="button" class="btn btn-primary btn-block" style="margin-top:20px;margin-bottom:20px;">
                                         Apply Changes
                             </button>
@@ -1006,6 +1013,9 @@
                             
                         </div>
                         <!-- Edit contest panel definition ends -->                          
+                        
+                        
+                        
                         
                         <!-- Add contest panel definition begins -->
                         <div id="addcontest" style="display:none">
@@ -1904,7 +1914,7 @@
             let rollYear;
             let editCompetitionYear = 0;
             let rollOfHonourCompetitions = [];
-            let societyEventsYear = 0;
+            let societyEventsYear = 2018;
             let societyEditEventsYear = 0;
             let activeEditEvent = 0;
             let activeEvent = 0;
@@ -2449,21 +2459,23 @@
                     let index = getLastCompetitionIndex();
                     activeCompetition = index;
                     activeEditCompetition = index;
-                    
-                    competitionYear = ALL_COMPETITION_RESULTS[activeCompetition]["year"];
-                    editCompetitionYear = ALL_COMPETITION_RESULTS[activeEditCompetition]["year"];
-                    playerYear = competitionYear; 
-                    rollYear = competitionYear;
-                    
-                    updateCompetitionTables(index);
-                    updateCompetitionList(competitionYear);
-                    
-                    updateaditCompetitionTables(index);
-                    updateaditCompetitionList(editCompetitionYear);
-                    
-                    updatePlayerOfTheYearTable(playerYear);
-                    updateRollOfHonour(rollYear);
-                    updateHallOfFame();
+                    if(index > -1){
+                        competitionYear = ALL_COMPETITION_RESULTS[activeCompetition]["year"];
+                        editCompetitionYear = ALL_COMPETITION_RESULTS[activeEditCompetition]["year"];
+                        playerYear = competitionYear; 
+                        rollYear = competitionYear;
+
+                        updateCompetitionTables(index);
+                        updateCompetitionList(competitionYear);
+
+                        updateaditCompetitionTables(index);
+                        updateaditCompetitionList(editCompetitionYear);
+
+                        updatePlayerOfTheYearTable(playerYear);
+                        updateRollOfHonour(rollYear);
+                        updateHallOfFame();
+                    }
+
                 });
             });
             
@@ -2841,6 +2853,7 @@
                     let id = $(this).attr('id');
                     
                     updateEditContestGrid(id);
+                    //updateEditContestTables(id);
                     //(id);
                     //activeCompetition = id;
                 });
@@ -2867,6 +2880,32 @@
                     }
                     
                     $("#contestcontent").find('#'+parent).text(name);*/
+                });
+                
+                $("#editcontestpaymentscontent").on("click", "a", function(event){
+                    let id = $(this).attr('id');
+                    
+                    //$("#editcontestpaymentscontent").find(id).text(name);
+                    
+                    if($(this).hasClass( "list-group-item-danger")){
+                        $(this).removeClass("list-group-item-danger");
+                        $(this).addClass("list-group-item-success");
+                        for(k = 0; k < ALL_CONTEST_RESULTS[editContestIndex].grid.length; k++){
+                            if(ALL_CONTEST_RESULTS[editContestIndex].grid[k].id == id){
+                                ALL_CONTEST_RESULTS[editContestIndex].grid[k].paid = 1;
+                                break;
+                            }
+                        }
+                    } else{
+                        $(this).removeClass("list-group-item-success");
+                        $(this).addClass("list-group-item-danger");
+                        for(k = 0; k < ALL_CONTEST_RESULTS[editContestIndex].grid.length; k++){
+                            if(ALL_CONTEST_RESULTS[editContestIndex].grid[k].id == id){
+                                ALL_CONTEST_RESULTS[editContestIndex].grid[k].paid = 0;
+                                break;
+                            }
+                        }
+                    }
                 });
                 
                 $("#editcontestcontent").on("click", "button", function(event){
@@ -3518,11 +3557,35 @@
                             contestEditThirdPlace.length = 0;
                             showEditContest(ALL_CONTEST_RESULTS[i].gridInfo.membersnumber,5,8*counter+10,1,8*counter+10, ALL_CONTEST_RESULTS[i].gridInfo.idStart, ALL_CONTEST_RESULTS[i].gridInfo.idParent,i, 0);
                             showEditThirdPlace();
+                            let paid = 'list-group-item-danger';
+                             $('#editcontestpaymentscontent').empty();
+                            for(let k = 0; k < ALL_CONTEST_RESULTS[i].grid.length; k++){
+                                
+                                        if(ALL_CONTEST_RESULTS[i].grid[k].paid == 1){
+                                            paid = 'list-group-item-success';
+                                        } else{
+                                            paid = 'list-group-item-danger';
+                                        }
+                                
+                                        if(Math.abs(ALL_CONTEST_RESULTS[i].grid[k].parentId-ALL_CONTEST_RESULTS[i].grid[k].id) == 1 || (Math.abs(ALL_CONTEST_RESULTS[i].grid[k].parentId-ALL_CONTEST_RESULTS[i].grid[k].id) == 2) && isParent(i, ALL_CONTEST_RESULTS[i].grid[k].id) == 0)
+                                        $('#editcontestpaymentscontent').append('<a class = "notop list-group-item text-center '+paid+'" href="javascript:void(0)" id="'+ALL_CONTEST_RESULTS[i].grid[k].id+'" >'+ALL_CONTEST_RESULTS[i].grid[k].name+'</a>');    
+                                    }     
+                            
                             break;
                         }
                     }
+                
             }     
-                    
+            
+            function isParent(i, id) {
+                for(let k = 0; k < ALL_CONTEST_RESULTS[i].grid.length; k++){
+                    if(ALL_CONTEST_RESULTS[i].grid[k].parentId == id){
+                        return 1;
+                    }
+                }
+                return 0;
+            }
+            
             function updateEditContestTables(i){
                     $('#editcontestcontent').empty();
                 
@@ -3535,6 +3598,23 @@
                        showEditContest(ALL_CONTEST_RESULTS[i].gridInfo.membersnumber,5,8*counter+10,1,8*counter+10, ALL_CONTEST_RESULTS[i].gridInfo.idStart, ALL_CONTEST_RESULTS[i].gridInfo.idParent,0,0);
                        showEditThirdPlace();
                     }
+                    let paid = 'list-group-item-danger';
+                    $('#editcontestpaymentscontent').empty();
+                    if(ALL_CONTEST_RESULTS[i]){
+                            for(let k = 0; k < ALL_CONTEST_RESULTS[i].grid.length; k++){
+                                
+                                        if(ALL_CONTEST_RESULTS[i].grid[k].paid == 1){
+                                            paid = 'list-group-item-success';
+                                        } else{
+                                            paid = 'list-group-item-danger';
+                                        }
+                                
+                                        if(Math.abs(ALL_CONTEST_RESULTS[i].grid[k].parentId-ALL_CONTEST_RESULTS[i].grid[k].id) == 1 || (Math.abs(ALL_CONTEST_RESULTS[i].grid[k].parentId-ALL_CONTEST_RESULTS[i].grid[k].id) == 2) && isParent(i, ALL_CONTEST_RESULTS[i].grid[k].id) == 0)
+                                        $('#editcontestpaymentscontent').append('<a class = "notop list-group-item text-center '+paid+'" href="javascript:void(0)" id="'+ALL_CONTEST_RESULTS[i].grid[k].id+'" >'+ALL_CONTEST_RESULTS[i].grid[k].name+'</a>');    
+                                    }       
+                    }
+
+                
             }
             
             function updateCompetition(competition){   
@@ -4641,7 +4721,7 @@
                 
                 $("#contestcontent").append('<button id="'+id+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r)*15)+Number(0))+'px; left: '+(k*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary"></button>');
                 
-                contestGrid.push({name: name, id: id, parentId: parent});
+                contestGrid.push({name: name, id: id, parentId: parent, paid: 0});
                 
                 if(num == 1){
                     /*$("#contestcontent").append('<p style="position:absolute; top: '+Number(Number((r)*15)+Number(0))+'px; left: '+k*130+'px; z-index: 1">bababa</p>');*/
@@ -4658,7 +4738,7 @@
                         $("#contestcontent").append('<button id="'+(id-Math.ceil(Math.abs(id-parent)/2))+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r-space/2)
                         *15)+Number(0))+'px; left: '+((k-1)*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');
                         
-                        contestGrid.push({name: name, id: (id-Math.ceil(Math.abs(id-parent)/2)), parentId: id});
+                        contestGrid.push({name: name, id: (id-Math.ceil(Math.abs(id-parent)/2)), parentId: id, paid: 0});
                     
                     } else{
                         generateContest(a,k-1,r-space/2,-1,space/2,(id-Math.ceil(Math.abs(id-parent)/2)), id);
@@ -4672,7 +4752,7 @@
                         
                         $("#contestcontent").append('<button id="'+(id+Math.floor(Math.abs(id-parent)/2))+'" type="button" style="width:'+width+'px;height:'+height+'px;position:absolute; top: '+Number(Number((r+space/2)*15)+Number(0))+'px; left: '+((k-1)*145)+'px; z-index: 1; font-size:'+fontsize+'px" class="btn btn-primary">'+name+'</button>');
                         
-                        contestGrid.push({name: name, id: (id+Math.floor(Math.abs(id-parent)/2)), parentId: id});
+                        contestGrid.push({name: name, id: (id+Math.floor(Math.abs(id-parent)/2)), parentId: id, paid: 0});
                         
                     } else{
                         generateContest(b,k-1,r+space/2,1,space/2,(id+Math.floor(Math.abs(id-parent)/2)), id);
@@ -5137,15 +5217,19 @@
             function getLastCompetitionIndex(){
                 let arr = [];
                 
-                for(let i=0, length = ALL_COMPETITION_RESULTS.length; i < length; i++){
+                if(ALL_COMPETITION_RESULTS.length > 0){
+                    for(let i=0, length = ALL_COMPETITION_RESULTS.length; i < length; i++){
                     arr.push(Number(ALL_COMPETITION_RESULTS[i]['year']*10000)+Number(ALL_COMPETITION_RESULTS[i]['month']*100)+Number(ALL_COMPETITION_RESULTS[i]['day']));
                     console.log(ALL_COMPETITION_RESULTS[i]['year']);
                     console.log(ALL_COMPETITION_RESULTS[i]['month']);
                     console.log(ALL_COMPETITION_RESULTS[i]['year']);
                     console.log(Number(ALL_COMPETITION_RESULTS[i]['year']*10000)+Number(ALL_COMPETITION_RESULTS[i]['month']*100)+Number(ALL_COMPETITION_RESULTS[i]['day']));
-                }
+                    }
                 
                 return indexOfMax(arr);
+                }
+                
+                return -1;
             }
                         
             
