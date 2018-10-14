@@ -2371,6 +2371,9 @@
                     sortMembersByName();
                     
                     $('#memberstable').find('tbody').empty();
+                    $('#editmemberslist').empty(); 
+                    $('#addcompetitionmemberlist').empty();    
+                    
                     
                     for(let i = 0, length = data.length; i < length; i++){       
                         updateMemberPanels(i);
@@ -4179,7 +4182,8 @@
                 $('#contestmemberslist').append('<a href="javascript:void(0)" class="list-group-item notop list-group-item-info" id="'+i+'">'+MEMBERS[i]["name"]+'</a><br>');
                         
                 //edit panel - adding members information
-                        
+                   
+                
                 $("#member"+i).append('<button id="deletemember" type="button" style="margin-top:20px" class="btn btn-danger btn-block">Delete Member</button>');                        
                         
                 $("#member"+i).append('<label for="editmemberusername" style="margin-top:20px">Username:</label><input type="text" class="form-control list-group-item" id="editmemberusername" placeholder="'+MEMBERS[i]["username"]+'" value="'+MEMBERS[i]["username"]+'" readonly>');
